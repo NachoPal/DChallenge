@@ -1,1 +1,1 @@
-export * from './action_top_nav';
+export * from './actions_open_challenges';

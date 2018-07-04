@@ -2,7 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   LANDING_PATH,
-  OPEN_CHALLENGES_PATH
+  OPEN_CHALLENGES_PATH,
+  ONGOING_CHALLENGES_PATH,
+  CLOSED_CHALLENGES_PATH,
 } from '../initializers/routes';
 
 const TopNav = ({location})  => {
@@ -20,7 +22,7 @@ const TopNav = ({location})  => {
 						<span className="icon-bar"></span>
 						<span className="icon-bar"></span>
 					</button>
-					<a className="navbar-brand" href="index.html">Bootstrap Navbar Menu Template</a>
+					<a className="navbar-brand" href="/">Bootstrap Navbar Menu Template</a>
 				</div>
 				<div className="collapse navbar-collapse" id="top-navbar-1">
 					<ul className="nav navbar-nav navbar-right">
@@ -30,12 +32,12 @@ const TopNav = ({location})  => {
               </Link>
             </li>
             <li>
-              <Link className={`nav-link ${location.pathname == OPEN_CHALLENGES_PATH ? "" : ""}`} to={OPEN_CHALLENGES_PATH}>
+              <Link className={`nav-link ${location.pathname == ONGOING_CHALLENGES_PATH ? "" : ""}`} to={OPEN_CHALLENGES_PATH}>
                 ONGOING
               </Link>
             </li>
             <li>
-              <Link className={`nav-link ${location.pathname == OPEN_CHALLENGES_PATH ? "" : ""}`} to={OPEN_CHALLENGES_PATH}>
+              <Link className={`nav-link ${location.pathname == CLOSED_CHALLENGES_PATH ? "" : ""}`} to={OPEN_CHALLENGES_PATH}>
                 CLOSED
               </Link>
             </li>

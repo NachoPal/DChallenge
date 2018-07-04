@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import TopNavReducer from './reducer_top_nav'
+import OpenChallengesReducer from './reducer_open_challenges'
 
 const rootReducer = combineReducers({
-  topNav: TopNavReducer
+  open: OpenChallengesReducer
 });
 
 export default rootReducer;

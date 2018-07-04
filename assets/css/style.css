@@ -192,5 +192,42 @@ div.wow h1 {
 }
 
 .navbar-inverse ul.navbar-nav li a.active {
-  color: #f4aa42;
+  color: #df6482;
+}
+
+.content {
+  padding-top: 82px;
+}
+
+.panel {
+  margin-bottom: 0px;
+}
+
+.even {
+    height: 165px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+button.play {
+  width: 100%;
+  background-color: #df6482;
+  border-color: #df6482;
+}
+
+.react-countdown-clock {
+  margin-left: 20px;
+}
+
+.panel-primary>.panel-heading {
+  /*background-color: #dd5511;*/
+  background-color: #666;
+  border-color: #666;
+  border-radius: 0;
+}
+
+.panel-primary {
+  border-color: #666;
+  border-radius: 0;
 }
