@@ -4,20 +4,18 @@ import { bindActionCreators } from 'redux';
 import { fetchOngoingChallenges } from '../actions';
 import _ from 'lodash';
 
-import Ongoing from './Ongoing';
+import Ongoing from '../components/Ongoing';
 
 class OngoingChallenges extends Component {
 
   constructor(props) {
     super(props);
-    console.log("Yes");
+    console.log("Se monta ONGOING");
     //DESCOMENTAR CUANDO SE HAGA EL FETCH DESDE WEB3
     //this.props.fetchOngoingChallenges();
   }
 
   renderOngoingChallenges() {
-    console.log(this.props);
-
     return this.props.ongoing.map( ongoing => {
       return(
         <Ongoing
@@ -26,6 +24,7 @@ class OngoingChallenges extends Component {
           description={ongoing.description}
           img={ongoing.img}
           enrolled={ongoing.enrolled}
+          accomplished={ongoing.accomplished}
           time={ongoing.time}
         />
       );

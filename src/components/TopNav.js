@@ -32,7 +32,7 @@ const TopNav = ({location})  => {
               </Link>
             </li>
             <li>
-              <Link className={`nav-link ${location.pathname == ONGOING_CHALLENGES_PATH ? "" : ""}`} to={OPEN_CHALLENGES_PATH}>
+              <Link className={`nav-link ${location.pathname == ONGOING_CHALLENGES_PATH ? "active" : ""}`} to={ONGOING_CHALLENGES_PATH}>
                 ONGOING
               </Link>
             </li>

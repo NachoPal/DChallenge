@@ -4,20 +4,18 @@ import { bindActionCreators } from 'redux';
 import { fetchOpenChallenges } from '../actions';
 import _ from 'lodash';
 
-import Open from './Open';
+import Open from '../components/Open';
 
 class OpenChallenges extends Component {
 
   constructor(props) {
     super(props);
-    console.log("Yes");
+    console.log("Se monta OPEN");
     //DESCOMENTAR CUANDO SE HAGA EL FETCH DESDE WEB3
     //this.props.fetchOpenChallenges();
   }
 
   renderOpenChallenges() {
-    console.log(this.props);
-
     return this.props.open.map( open => {
       return(
         <Open
