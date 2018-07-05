@@ -1,27 +1,54 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { setCurrentRoute } from '../actions'
+import { fetchClosedChallenges } from '../actions';
+import _ from 'lodash';
+
+import Closed from '../components/Closed';
 
 class ClosedChallenges extends Component {
 
   constructor(props) {
     super(props);
-    console.log("Yes");
-    this.props.setCurrentRoute(this.props.path);
+    console.log("Se monta CLOSED");
+    //DESCOMENTAR CUANDO SE HAGA EL FETCH DESDE WEB3
+    //this.props.fetchOngoingChallenges();
+  }
+
+  renderClosedChallenges() {
+    return this.props.closed.map( closed => {
+      return(
+        <Closed
+          key={closed.id.toString()}
+          title={closed.title}
+          description={closed.description}
+          img={closed.img}
+          enrolled={closed.enrolled}
+          accomplished={closed.accomplished}
+          time={closed.time}
+          raised={closed.raised}
+        />
+      );
+    });
   }
 
   render() {
     return (
-      <div className="row">
-        <h3>Soy Closed Challenges</h3>
+      <div className="content container">
+        <div className="row">
+          {this.renderClosedChallenges()}
+        </div>
       </div>
     );
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ setCurrentRoute }, dispatch);
+function mapStateToProps({closed}) {
+  return {closed}
 }
 
-export default connect(null, mapDispatchToProps)(OpenChallenges);
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ fetchClosedChallenges}, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ClosedChallenges);
