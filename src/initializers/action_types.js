@@ -5,4 +5,5 @@ export const FETCH_CLOSED_CHALLENGES = 'fetch_closed_challenges';
 
 //USER LOGIN
 export const USER_LOGIN = 'user_login';
-export const USER_LOGIN_CANCELED = 'user_login_canceled'
+export const USER_LOGIN_CANCELED = 'user_login_canceled';
+export const USER_LOGOUT = "user_logout";

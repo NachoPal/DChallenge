@@ -9,8 +9,59 @@ import {
   CLOSED_CHALLENGES_PATH,
 } from '../initializers/routes';
 import { userLogin } from '../actions';
+import { userLogout } from '../actions';
+import Avatar from 'react-avatar';
+import Modal from 'react-modal';
+
+Modal.setAppElement('.main-container');
+
+const modalStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)',
+  }
+};
 
 class TopNav extends Component {
+  renderYoursChallenges() {
+    if(this.props.user){
+      return(
+        <li>
+          <Link className={`nav-link ${this.props.location.pathname == OPEN_CHALLENGES_PATH ? "" : ""}`} to={OPEN_CHALLENGES_PATH}>
+            YOURS
+          </Link>
+        </li>
+      );
+    }
+  }
+
+  renderAccountArea() {
+    const { user } = this.props;
+
+    if(user){
+      return(
+        <li>
+          <Avatar name={user.name} src={user.avatar.uri} round="100%" size="50px"/>
+        </li>
+      );
+    }
+  }
+
+  renderLogButton() {
+    if(!this.props.user) {
+      return(
+        <li><a className="btn btn-link-3" onClick={() => this.props.userLogin()} href="#">LOGIN</a></li>
+      );
+    }
+    return (
+      <li><a className="btn btn-link-3" onClick={() => this.props.userLogout()} href="#">LOGOUT</a></li>
+    );
+  }
+
   render() {
     console.log(this.props.user);
     const { pathname } = this.props.location;
@@ -44,16 +95,25 @@ class TopNav extends Component {
                     CLOSED
                   </Link>
                 </li>
-                <li>
-                  <Link className={`nav-link ${pathname == OPEN_CHALLENGES_PATH ? "" : ""}`} to={OPEN_CHALLENGES_PATH}>
-                    YOURS
-                  </Link>
-                </li>
-    						<li><a className="btn btn-link-3" onClick={() => this.props.userLogin()} href="#">LOGIN</a></li>
+                {this.renderYoursChallenges()}
+                {this.renderAccountArea()}
+                {this.renderLogButton()}
+
     					</ul>
     				</div>
     			</div>
     		</nav>
+
+        <ModalLogin />
+
+        <Modal
+          isOpen={true}
+          contentLabel="Example Modal"
+          className="modal-content"
+          overlayClassName="modal-overlay"
+        >
+          <h2>Soy un Modal Madafaka</h2>
+        </Modal>
       </div>
     );
   }
@@ -64,7 +124,7 @@ function mapStateToProps({user}) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ userLogin }, dispatch);
+  return bindActionCreators({ userLogin, userLogout }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TopNav);

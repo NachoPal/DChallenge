@@ -30,6 +30,7 @@
     "react-avatar": "^3.0.2",
     "react-countdown-clock": "^2.4.0",
     "react-dom": "16.3.2",
+    "react-modal": "^3.5.1",
     "react-redux": "5.0.7",
     "react-router-dom": "^4.2.2",
     "redux": "4.0.0",

@@ -1,14 +1,15 @@
 import {
   USER_LOGIN,
-  USER_LOGIN_CANCELED
+  USER_LOGIN_CANCELED,
+  USER_LOGOUT
 } from '../initializers/action_types';
 import uport from '../initializers/uport';
 
-export const userLogin = () => {
+export function userLogin() {
 
   return(dispatch) => {
     const userCredentials = uport.requestCredentials({
-      requested: ['name', 'country', 'avatar', 'name'],
+      requested: ['name', 'country', 'avatar', 'email', 'phone'],
       notifications: true // We want this if we want to recieve credentials
     });
 
@@ -25,5 +26,12 @@ export const userLogin = () => {
               payload: error
             });
         });
+  }
+}
+
+export function userLogout() {
+  return {
+    type: USER_LOGOUT,
+    payload: null
   }
 }
