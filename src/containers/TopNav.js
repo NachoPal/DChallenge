@@ -11,24 +11,16 @@ import {
 import { userLogin } from '../actions';
 import { userLogout } from '../actions';
 import Avatar from 'react-avatar';
-import Modal from 'react-modal';
-
-Modal.setAppElement('.main-container');
-
-const modalStyles = {
-  content : {
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)',
-  }
-};
+import ModalLogin from '../components/ModalLogin'
 
 class TopNav extends Component {
+  constructor(props) {
+		super(props); //Hereda del state de Componente
+		this.state = { clicked: false };
+	}
+
   renderYoursChallenges() {
-    if(this.props.user){
+    if(this.props.user.details){
       return(
         <li>
           <Link className={`nav-link ${this.props.location.pathname == OPEN_CHALLENGES_PATH ? "" : ""}`} to={OPEN_CHALLENGES_PATH}>
@@ -42,24 +34,36 @@ class TopNav extends Component {
   renderAccountArea() {
     const { user } = this.props;
 
-    if(user){
+    if(user.details){
       return(
         <li>
-          <Avatar name={user.name} src={user.avatar.uri} round="100%" size="50px"/>
+          <Avatar name={user.details.name} src={user.details.avatar.uri} round="100%" size="50px"/>
         </li>
       );
     }
   }
 
   renderLogButton() {
-    if(!this.props.user) {
+    if(!this.props.user.details) {
       return(
-        <li><a className="btn btn-link-3" onClick={() => this.props.userLogin()} href="#">LOGIN</a></li>
+        <li><a className="btn btn-link-3" onClick={this.onClickHandlerIn.bind(this)} href="#">LOGIN</a></li>
       );
     }
     return (
-      <li><a className="btn btn-link-3" onClick={() => this.props.userLogout()} href="#">LOGOUT</a></li>
+      <li><a className="btn btn-link-3" onClick={this.onClickHandlerOut.bind(this)} href="#">LOGOUT</a></li>
     );
+  }
+
+  onClickHandlerIn() {
+    if(this.props.user.logged == true) {
+      this.setState({clicked: true});
+    }
+    this.props.userLogin()
+  }
+
+  onClickHandlerOut() {
+    this.setState({clicked: false});
+    this.props.userLogout()
   }
 
   render() {
@@ -98,22 +102,11 @@ class TopNav extends Component {
                 {this.renderYoursChallenges()}
                 {this.renderAccountArea()}
                 {this.renderLogButton()}
-
     					</ul>
     				</div>
     			</div>
     		</nav>
-
-        <ModalLogin />
-
-        <Modal
-          isOpen={true}
-          contentLabel="Example Modal"
-          className="modal-content"
-          overlayClassName="modal-overlay"
-        >
-          <h2>Soy un Modal Madafaka</h2>
-        </Modal>
+        <ModalLogin user={this.props.user} clicked={this.state.clicked}/>
       </div>
     );
   }

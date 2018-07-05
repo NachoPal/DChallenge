@@ -246,11 +246,13 @@ video {
   border: 1px solid rgb(204, 204, 204);
   background: rgb(255, 255, 255);
   overflow: auto;
-  border-radius: 4px;
+  border-radius: 8px;
   outline: none;
   padding: 20px;
   margin-right: -50%;
   transform: translate(-50%, -50%);
+  height: 400px;
+  width: 400px;
 }
 
 .modal-overlay {
@@ -260,5 +262,5 @@ video {
   right: 0px;
   bottom: 0px;
   z-index: 2;
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(0, 0, 0, 0.5);
 }

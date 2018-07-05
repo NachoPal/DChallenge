@@ -16,7 +16,7 @@ class Landing extends Component {
           	<div className="container">
   				<div className="row">
   					<div className="col-sm-12 text wow fadeInLeft">
-  						<h1>Chanllenge yourself and win money</h1>
+  						<h1>Chanllenge yourself and earn money</h1>
   					</div>
   				</div>
               </div>
