@@ -231,3 +231,7 @@ button.play {
   border-color: #666;
   border-radius: 0;
 }
+
+video {
+  height: 160px;
+}
