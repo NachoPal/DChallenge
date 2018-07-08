@@ -7,6 +7,8 @@ contract DChallenge {
     bytes32 description;
     bytes32 descriptionExtra;
     uint bettingPrice;
+    uint openTime;
+    uint closeTime;
     bytes32 code;
     mapping(address => bool) participants;
   }
@@ -17,7 +19,7 @@ contract DChallenge {
                           uint id,
                           bytes32 thumbnail);
 
-  mapping(uit => Challenge) challenges;
+  mapping(uint => Challenge) challenges;
   uint challengesCounter;
 
 
@@ -28,9 +30,15 @@ contract DChallenge {
                            uint _closeTime)
                            external returns(bool) {
 
-    challenges[challengesCounter] = Challenge(_title, _description, 100 finney, 0, 0);
-    challengesCounter++;
+    challenges[challengesCounter] = Challenge({title: _title,
+                                               description: _description,
+                                               descriptionExtra: 0,
+                                               bettingPrice: 100 finney,
+                                               openTime: _openTime,
+                                               closeTime: _closeTime,
+                                               code: 0});
 
-    emit challengeCreation(_title, _description, _openTime, _closeTime, )
+    emit challengeCreation(_title, _openTime, _closeTime, challengesCounter, _thumbnail);
+    challengesCounter++;
   }
 }
