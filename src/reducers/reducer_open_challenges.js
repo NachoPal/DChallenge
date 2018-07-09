@@ -16,8 +16,10 @@ const open = [
 const INITIAL_STATE = open;
 
 export default function(state = INITIAL_STATE, action) {
+
   switch(action.type) {
     case FECTH_OPEN_CHALLENGES:
+      console.log(action.payload);
       return {...state, open };
     default:
       return INITIAL_STATE;

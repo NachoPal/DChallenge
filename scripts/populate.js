@@ -23,7 +23,7 @@ module.exports = function(callback) {
   };
 
   const challengeInputs = {
-    title: web3.utils.asciiToHex("Mi primer challenge"),
+    title: web3.utils.asciiToHex("Mi tercer challenge"),
     description: web3.utils.randomHex(32),
     thumbnail: web3.utils.randomHex(32),
     openTime: Math.floor((Date.now() + 28800000)/1000),
@@ -45,13 +45,13 @@ module.exports = function(callback) {
   //ProxyContract.deployed().catch(error => {console.log(error)});
   console.log(encodedFunctionCall("createChallenge", Object.values(challengeInputs)));
 
-  ProxyContract.deployed().then((instance) => {
-    instance.upgradeTo(implementationAddress, {from: proxyOptions.from})
-    .then((result) => {
+  //ProxyContract.deployed().then((instance) => {
+    //instance.upgradeTo(implementationAddress, {from: proxyOptions.from})
+    //.then((result) => {
       web3.eth.sendTransaction(proxyOptions)
-      .on('recepit', (recepit) => console.log(recepit))
+      .on('receipt', (recepit) => console.log(recepit))
       .on('error', (error) => console.log(error))
-    })
-    .catch((error) => {console.log(error)});
-  });
+    //})
+    //.catch((error) => {console.log(error)});
+  //});
 }
