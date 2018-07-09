@@ -19,7 +19,7 @@ contract DChallenge {
                           uint id,
                           bytes32 thumbnail);
 
-  mapping(uint => Challenge) challenges;
+  mapping(uint => Challenge) public challenges;
   uint challengesCounter;
 
 

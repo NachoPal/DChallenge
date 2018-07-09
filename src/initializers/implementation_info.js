@@ -1,78 +1,38 @@
-import { web3 } from './web3';
-import _ from 'lodash';
+const web3 = require('./web3.js');
+const _ =  require('lodash');
+const implementationContract = require('../../build/contracts/DChallenge.json')
 
-var abi = {
-  v0: [
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "name": "title",
-          "type": "bytes32"
-        },
-        {
-          "indexed": true,
-          "name": "openTime",
-          "type": "uint256"
-        },
-        {
-          "indexed": true,
-          "name": "closeTime",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "name": "id",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "name": "thumbnail",
-          "type": "bytes32"
-        }
-      ],
-      "name": "challengeCreation",
-      "type": "event"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "_title",
-          "type": "bytes32"
-        },
-        {
-          "name": "_description",
-          "type": "bytes32"
-        },
-        {
-          "name": "_thumbnail",
-          "type": "bytes32"
-        },
-        {
-          "name": "_openTime",
-          "type": "uint256"
-        },
-        {
-          "name": "_closeTime",
-          "type": "uint256"
-        }
-      ],
-      "name": "createChallenge",
-      "outputs": [
-        {
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    }
-  ]
+const networks_id = _.keys(implementationContract.networks);
+const id = networks_id[networks_id.length-1];
+
+const implementationAddress = implementationContract.networks[id].address;
+const implementationAbi = implementationContract.abi;
+
+const VERSION = "v0";
+
+const abi = { v0: implementationAbi };
+
+const abiByFunctionNames = {};
+_.map(abi, (value, key) => {
+  abiByFunctionNames[key] = _.mapKeys(abi[key],"name");
+});
+
+console.log(abiByFunctionNames);
+
+module.exports = {
+  implementationAddress: implementationAddress,
+
+  implementationAbi: implementationContract.abi,
+
+  encodedFunctionCall: (name, inputs) => {
+    return web3.eth.abi.encodeFunctionCall(abiByFunctionNames[VERSION][name], inputs);
+  },
+
+  encodedFunctionSignature: (name) => {
+    return web3.eth.abi.encodeFunctionSignature(abiByFunctionNames[VERSION][name]);
+  },
+
+  encodedEventSignature: (name) => {
+    return web3.eth.abi.encodeEventSignature(abiByFunctionNames[VERSION][name]);
+  }
 }
-
-const implementationAbi_V0 = _.mapKeys(abi["v0"],"name");
-export const createChallengeFunction_V0 = web3.eth.abi.encodeFunctionSignature(implementationAbi_V0["createChallenge"]);
-export const challengeCreationEvent = web3.eth.abi.encodeFunctionSignature(implementationAbi_V0["challengeCreation"]);

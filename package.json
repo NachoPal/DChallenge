@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "test": "mocha --compilers js:babel-core/register --require ./test/test_helper.js --recursive ./test",
-    "test:watch": "npm run test -- --watch"
+    "test:watch": "npm run test -- --watch",
+    "populate": "truffle exec ./scripts/populate.js"
   },
   "author": "Ignacio Palacios",
   "license": "ISC",
@@ -22,7 +23,9 @@
   "dependencies": {
     "@material-ui/core": "^1.3.1",
     "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-stage-1": "^6.1.18",
+    "ganache-cli": "^6.1.5",
     "json-loader": "^0.5.7",
     "lodash": "^3.10.1",
     "qrcode-terminal": "^0.12.0",
@@ -37,6 +40,7 @@
     "redux": "4.0.0",
     "redux-promise": "^0.6.0",
     "redux-thunk": "^2.3.0",
+    "truffle-contract": "^3.0.6",
     "uport-connect": "^0.7.3"
   }
 }

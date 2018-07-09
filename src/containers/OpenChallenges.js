@@ -12,7 +12,7 @@ class OpenChallenges extends Component {
     super(props);
     console.log("Se monta OPEN");
     //DESCOMENTAR CUANDO SE HAGA EL FETCH DESDE WEB3
-    //this.props.fetchOpenChallenges();
+    this.props.fetchOpenChallenges();
   }
 
   renderOpenChallenges() {
