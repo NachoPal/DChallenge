@@ -13,10 +13,6 @@ const open = [
   {id: 4, title: "Challenge #4", description: "Very difficult challenge my maaaaaama", img: `${URL_BASE}call-transaction-640x300.jpg`, enrolled: 98, time: 500},
   {id: 5, title: "Challenge #4", description: "Very difficult challenge my maaaaaama", img: `${URL_BASE}abi-640x300.jpg`, enrolled: 98, time: 500}];
 //-------------------------------------------------
-const logPayloadModel = {
-  data: null,
-
-}
 
 const INITIAL_STATE = null;
 
@@ -24,10 +20,11 @@ export default function(state = INITIAL_STATE, action) {
 
   switch(action.type) {
     case FECTH_OPEN_CHALLENGES:
-      console.log("AQUIIII", action.payload);
-      return action.payload ;
+      const newChallenges = action.payload;
+      return { ... state, ...newChallenges };
     case UPDATE_OPEN_CHALLENGES:
-      return {...state, open };
+      const newChallenge = action.payload;
+      return { ...newChallenge, ...state };
     default:
       return INITIAL_STATE;
   }

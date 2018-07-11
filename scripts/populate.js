@@ -18,22 +18,26 @@ module.exports = function(callback) {
     }
   }
 
-  proxyContract.deployed().then((instance) => {
-    instance.implementation().then( result => {
-        if(result == '0x0000000000000000000000000000000000000000') {
-          instance.upgradeTo(implementationAddress, {from: web3.eth.defaultAccount})
-          .then((result) => {
-            for (var i = 0; i < 5; i++) {
-              web3.eth.sendTransaction(proxyOptions("createChallenge", challengeInputs(i)))
-              .on('receipt', (recepit) => {
-                console.log(recepit);
-                console.log(`Created challenge #${i}`);
-              })
-              .on('error', (error) => console.log(error))
-            }
-          })
-          .catch((error) => {console.log(error)});
-        }
+  web3.eth.getAccounts().then((accounts) => {
+    web3.eth.defaultAccount = accounts[0];
+
+    proxyContract.deployed().then((instance) => {
+      instance.implementation().then( result => {
+          if(result == '0x0000000000000000000000000000000000000000') {
+            instance.upgradeTo(implementationAddress, {from: web3.eth.defaultAccount})
+            .then((result) => {
+              for (var i = 0; i < 5; i++) {
+                web3.eth.sendTransaction(proxyOptions("createChallenge", challengeInputs(i)))
+                .on('receipt', (recepit) => {
+                  console.log(recepit);
+                  console.log(`Created challenge #${i}`);
+                })
+                .on('error', (error) => console.log(error))
+              }
+            })
+            .catch((error) => {console.log(error)});
+          }
+      })
     })
-  })
+  });
 }

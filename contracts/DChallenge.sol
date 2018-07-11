@@ -41,4 +41,5 @@ contract DChallenge {
     emit challengeCreation(_title, _openTime, _closeTime, challengesCounter, _thumbnail);
     challengesCounter++;
   }
+
 }
