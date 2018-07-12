@@ -5,28 +5,37 @@ import { fetchOpenChallenges, updateOpenChallenges } from '../actions';
 import _ from 'lodash';
 import web3 from './../initializers/web3';
 
-import Open from '../components/Open';
+import OpenItem from '../components/OpenItem';
 
 class OpenChallenges extends Component {
 
   constructor(props) {
     super(props);
-    console.log("Se monta OPEN");
-    if(!this.props.open) {
+    console.log("-----------------OPEN - CONSTRUCTOR");
+    //if(!this.props.open) {
       this.props.fetchOpenChallenges();
       this.props.updateOpenChallenges();
-    }
+    //}
+  }
+
+  componentWillUpdate(nextState) {
+    console.log("-----------------OPEN - WILL UPDATE");
+    console.log("OPEN PROPS", this.props);
+    console.log("OPEN PROPS NEW", nextState);
+
   }
 
   renderOpenChallenges() {
+
     const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/';
     if(this.props.open) {
-      console.log("RENDER", this.props.open)
       return _.map(this.props.open, (value, key) => {
-        console.log(value.openTime - (Date.now()/1000));
+        console.log("LIST TIME", value.openTime - (Date.now()/1000));
         return(
-          <Open
+          <OpenItem
             key={value.id}
+            transactionHash={key}
+            id={value.id}
             title={value.title}
             description={value.description}
             img= {`${URL_BASE}token-640x300.jpg`}//{value.img}
@@ -39,6 +48,7 @@ class OpenChallenges extends Component {
   }
 
   render() {
+    console.log("ME RE-RENDERIZO CHALLENGES");
     return (
       <div className="content container">
         <div className="row">
@@ -49,8 +59,8 @@ class OpenChallenges extends Component {
   }
 }
 
-function mapStateToProps({open}) {
-  return {open}
+function mapStateToProps({ open }) {
+  return { open };
 }
 
 function mapDispatchToProps(dispatch) {

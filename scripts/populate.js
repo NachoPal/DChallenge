@@ -30,7 +30,6 @@ module.exports = function(callback) {
                 web3.eth.sendTransaction(proxyOptions("createChallenge", challengeInputs(i)))
                 .on('receipt', (recepit) => {
                   console.log(recepit);
-                  console.log(`Created challenge #${i}`);
                 })
                 .on('error', (error) => console.log(error))
               }
@@ -38,6 +37,7 @@ module.exports = function(callback) {
             .catch((error) => {console.log(error)});
           }
       })
+      console.log("Popupation success")
     })
   });
 }

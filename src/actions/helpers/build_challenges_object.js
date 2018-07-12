@@ -38,9 +38,7 @@ export default (logs, dispatch, action) => {
             }
         });
   });
-
-    decodedLogs = _.orderBy(decodedLogs, 'openTime', 'desc');
-    console.log('UPDATE',decodedLogs);
+    decodedLogs = _.orderBy(decodedLogs, 'openTime', 'asc');
     return dispatch({
              type: action,
              payload: _.mapKeys(decodedLogs, 'transactionHash')

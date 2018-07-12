@@ -15,7 +15,7 @@ module.exports = function(callback) {
       closeTime: Math.floor((Date.now() + (closeTime * 1000))/1000)
     }
 
-  web3.eth.getAccounts().then((accounts) => {  
+  web3.eth.getAccounts().then((accounts) => {
     web3.eth.defaultAccount = accounts[0];
     web3.eth.sendTransaction(proxyOptions("createChallenge", challengeInputs))
     .on('receipt', (recepit) => {

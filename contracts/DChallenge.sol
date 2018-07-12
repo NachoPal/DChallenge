@@ -1,8 +1,15 @@
 pragma solidity ^0.4.24;
 
 contract DChallenge {
+  event challengeCreation(bytes32 indexed title,
+                          uint indexed openTime,
+                          uint indexed closeTime,
+                          uint id,
+                          bytes32 thumbnail);
 
-  struct Challenge {
+ event userParticipation(uint indexed challengeId, address indexed userId);
+
+ struct Challenge {
     bytes32 title;
     bytes32 description;
     bytes32 descriptionExtra;
@@ -12,12 +19,6 @@ contract DChallenge {
     bytes32 code;
     mapping(address => bool) participants;
   }
-
-  event challengeCreation(bytes32 indexed title,
-                          uint indexed openTime,
-                          uint indexed closeTime,
-                          uint id,
-                          bytes32 thumbnail);
 
   mapping(uint => Challenge) public challenges;
   uint challengesCounter;
@@ -40,6 +41,15 @@ contract DChallenge {
 
     emit challengeCreation(_title, _openTime, _closeTime, challengesCounter, _thumbnail);
     challengesCounter++;
+  }
+
+  function participate(uint _challengeId) {
+    challenges[_challengeId].participants[msg.sender] = true;
+    emit userParticipation(_challengeId, msg.sender);
+  }
+
+  function isParticipating(uint _challengeId) view returns(bool) {
+    return challenges[_challengeId].participants[msg.sender];
   }
 
 }
