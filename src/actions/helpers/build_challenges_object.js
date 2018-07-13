@@ -1,10 +1,11 @@
 import web3 from '../../initializers/web3';
-import { getAbiByFunctionNames, decodeParameters } from '../../helpers/helper_web3';
+import { getAbiByFunctionNames, decodeParameters, encodedEventSignature } from '../../helpers/helper_web3';
 import { implementationAbi } from '../../initializers/implementation_info';
-import { proxyOptions } from '../../initializers/proxy_info';
+import { proxyOptions, proxyAddress } from '../../initializers/proxy_info';
 
 export default (logs, dispatch, action) => {
   var promises = [];
+  var promises2 = [];
 
   var decodedLogs = _.map( logs, (log) => {
                         var decoded = web3.eth.abi.decodeLog(
@@ -35,13 +36,35 @@ export default (logs, dispatch, action) => {
               decodedLog.openTime = parseInt(decodedLog.openTime);
               decodedLog.closeTime = parseInt(decodedLog.closeTime);
               decodedLog.title = web3.utils.hexToString(decodedLog.title);
+              decodedLog["participants"] = null;
+
+              promises2.push(web3.eth.getPastLogs({
+                fromBlock: 1,
+                address: proxyAddress,
+                topics: [
+                  encodedEventSignature("userParticipation", implementationAbi),
+                  web3.eth.abi.encodeParameter('uint256', decodedLog.id)
+                ]
+              }));
             }
         });
-  });
-    decodedLogs = _.orderBy(decodedLogs, 'openTime', 'asc');
-    return dispatch({
-             type: action,
-             payload: _.mapKeys(decodedLogs, 'transactionHash')
-           });
+    });
+
+
+
+    var count = 0;
+
+    Promise.all(promises2).then(logs => {
+      _.map(logs, log => {
+        decodedLogs[count].participants = log.length;
+        count++;
+      });
+
+      decodedLogs = _.orderBy(decodedLogs, 'openTime', 'asc');
+      return dispatch({
+               type: action,
+               payload: _.mapKeys(decodedLogs, 'id')
+             });
+    });
   });
 }

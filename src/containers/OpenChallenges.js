@@ -30,17 +30,15 @@ class OpenChallenges extends Component {
     const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/';
     if(this.props.open) {
       return _.map(this.props.open, (value, key) => {
-        console.log("LIST TIME", value.openTime - (Date.now()/1000));
         return(
           <OpenItem
-            key={value.id}
-            transactionHash={key}
+            key={value.transactionHash}
             id={value.id}
-            title={value.title}
-            description={value.description}
+            item={value}
+            //title={value.title}
+            //description={value.description}
             img= {`${URL_BASE}token-640x300.jpg`}//{value.img}
-            enrolled={23} //{value.enrolled}
-            time={value.openTime - (Date.now()/1000)}
+            //time={value.openTime - (Date.now()/1000)}
           />
         );
       });

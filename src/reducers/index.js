@@ -7,7 +7,7 @@ import UserLoginReducer from './reducer_user_login';
 
 const rootReducer = combineReducers({
   open: OpenChallengesReducer,
-  openItem: OpenItemReducer,
+  //openItem: OpenItemReducer,
   ongoing: OngoingChallengesReducer,
   closed: ClosedChallengesReducer,
   user: UserLoginReducer

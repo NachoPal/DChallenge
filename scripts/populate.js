@@ -13,8 +13,8 @@ module.exports = function(callback) {
       title: web3.utils.asciiToHex(`My challenge #${index}`),
       description: web3.utils.randomHex(32),
       thumbnail: web3.utils.randomHex(32),
-      openTime: Math.floor((Date.now() + 28800000)/1000),
-      closeTime: Math.floor((Date.now() + (28800000 * index))/1000)
+      openTime: Math.floor((Date.now() + (10000000 * index))/1000),
+      closeTime: Math.floor((Date.now() + (1000000 * (index + 1))/1000))
     }
   }
 

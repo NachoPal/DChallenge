@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {
-  fetchNumberOfParticipants,
-  updateNumberOfParticipants
-} from '../actions';
+import { updateNumberOfParticipants } from '../actions';
 import CountDownTimer from './CountDownTimer';
 import ReactCountdownClock from 'react-countdown-clock';
 
@@ -12,8 +9,8 @@ import ReactCountdownClock from 'react-countdown-clock';
 class OpenItem extends Component {
   constructor(props) {
     super(props);
-    this.props.fetchNumberOfParticipants(this.props.id);
-    this.props.updateNumberOfParticipants(this.props.id);
+    //this.props.fetchNumberOfParticipants(this.props.item.id);
+    this.props.updateNumberOfParticipants(this.props.item.id);
   }
 
   componentWillUpdate(nextState) {
@@ -21,47 +18,29 @@ class OpenItem extends Component {
 
   }
 
-  shouldComponentUpdate(nextProps) {
-    console.log(this.props);
-
-    const id = this.props.id;
-    if(id == nextProps.openItem.idToUpdate) {
-        return true;
-    } else {
-      return false;
-    }
-  }
-
-  renderParticipants(id) {
-    console.log(this.props.openItem);
-    if(this.props.openItem.items) {
-      return this.props.openItem.items[id].number;
-    }else {
-      return 0;
-    }
-  }
-
   render() {
-    console.log(`-----------------ITEM ${this.props.id}-RE REDENRIZA`);
+    const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/';
+    const { item } = this.props;
+    console.log(`-----------------ITEM ${item.id}-RE REDENRIZA`);
     return(
       <div className="row panel panel-primary open-challenge">
-        <div className="panel-heading">{this.props.title}</div>
+        <div className="panel-heading">{item.title}</div>
         <div className="panel-body">
           <div className="col-md-2 even">
             <div className="row enrrolled">
-              <b>{this.renderParticipants(this.props.id)} </b>
+              <b>{item.participants} </b>
               participants
             </div>
-              <CountDownTimer seconds={this.props.time} size={80} color="#000" />
+              <CountDownTimer date={item.openTime} size={80} color="#000" />
             <div className="row">
               <button type="button" className="btn btn-success play">PARTICIPATE</button>
             </div>
           </div>
           <div className="col-md-4">
-              <img src={this.props.img} className="img-responsive" alt="Challenge thumbnail" />
+              <img src={`${URL_BASE}token-640x300.jpg`} className="img-responsive" alt="Challenge thumbnail" />
           </div>
           <div className="col-md-6">
-            {this.props.description}
+            {item.description}
           </div>
       </div>
     </div>
@@ -69,15 +48,14 @@ class OpenItem extends Component {
   }
 }
 
-function mapStateToProps({ openItem }) {
-  return { openItem };
-}
+// function mapStateToProps({ open }) {
+//   return { open };
+// }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    fetchNumberOfParticipants,
     updateNumberOfParticipants
   }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(OpenItem);
+export default connect(null, mapDispatchToProps)(OpenItem);

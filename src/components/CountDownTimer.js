@@ -1,17 +1,27 @@
 import React, { Component } from 'react';
-import ReactCountdownClock from 'react-countdown-clock';
+//import { render } from 'react-dom';
+import Countdown from 'react-countdown-now';
 
-class CountDownTimer extends Component {
-  // shouldComponentUpdate() {
-  //   return true;
-  // }
-  render(){
-    return (
-      <div className="row count-down">
-        <ReactCountdownClock seconds={this.props.seconds} size={80} color="#000"/>
-      </div>
-    );
+const Completionist = () => <span>You are good to go!</span>;
+
+const renderer = ({ hours, minutes, seconds, completed }) => {
+  if (completed) {
+    // Render a completed state
+    return <span>FINISHED</span>;
+  } else {
+    // Render a countdown
+    return <span>{hours}:{minutes}:{seconds}</span>;
   }
+};
+
+const CountDownTimer = (props) => {
+  return (
+    <div className="row count-down">
+        <Countdown date={props.date * 1000}
+          renderer={renderer}
+        />
+    </div>
+  );
 }
 
 export default CountDownTimer;

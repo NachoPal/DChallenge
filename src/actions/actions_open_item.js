@@ -7,26 +7,6 @@ import {
 } from '../initializers/action_types';
 import { encodedEventSignature } from '../helpers/helper_web3';
 
-export function fetchNumberOfParticipants(challengeId) {
-
-  return (dispatch) => {
-    web3.eth.getPastLogs({
-      fromBlock: 1,
-      address: proxyAddress,
-      topics: [
-        encodedEventSignature("userParticipation", implementationAbi),
-        web3.eth.abi.encodeParameter('uint256', challengeId)
-      ]
-    }).then((logs) => {
-        console.log('PARTICIPANTS', logs.length)
-        return dispatch({
-          type: FETCH_NUMBER_OF_PARTICIPANTS,
-          payload: {id: challengeId, number:logs.length}
-        });
-    });
-  }
-}
-
 export function updateNumberOfParticipants(challengeId) {
   return dispatch => {
     const subscription = web3.eth.subscribe('logs', {
@@ -38,6 +18,7 @@ export function updateNumberOfParticipants(challengeId) {
     }, (error, result) => {
         if(!error) console.log(result);
     }).on("data", (logs) => {
+      console.log("Devuelve data", logs);
       return dispatch({
         type: UPDATE_NUMBER_OF_PARTICIPANTS,
         payload: challengeId
