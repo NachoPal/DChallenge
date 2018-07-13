@@ -9,13 +9,7 @@ import ReactCountdownClock from 'react-countdown-clock';
 class OpenItem extends Component {
   constructor(props) {
     super(props);
-    //this.props.fetchNumberOfParticipants(this.props.item.id);
     this.props.updateNumberOfParticipants(this.props.item.id);
-  }
-
-  componentWillUpdate(nextState) {
-    //console.log(`-----------------ITEM ${nextState.id}- WILL UPDATE`);
-
   }
 
   render() {
@@ -47,10 +41,6 @@ class OpenItem extends Component {
     );
   }
 }
-
-// function mapStateToProps({ open }) {
-//   return { open };
-// }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({

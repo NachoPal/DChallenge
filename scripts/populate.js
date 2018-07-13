@@ -6,8 +6,6 @@ module.exports = function(callback) {
   const implementation = require('../src/initializers/implementation_info.js');
   const implementationAddress = implementation.implementationAddress;
 
-
-
   const challengeInputs = (index) => {
     return {
       title: web3.utils.asciiToHex(`My challenge #${index}`),
@@ -29,7 +27,7 @@ module.exports = function(callback) {
               for (var i = 0; i < 5; i++) {
                 web3.eth.sendTransaction(proxyOptions("createChallenge", challengeInputs(i)))
                 .on('receipt', (recepit) => {
-                  console.log(recepit);
+                  //console.log(recepit);
                 })
                 .on('error', (error) => console.log(error))
               }

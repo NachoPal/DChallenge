@@ -18,7 +18,6 @@ export function updateNumberOfParticipants(challengeId) {
     }, (error, result) => {
         if(!error) console.log(result);
     }).on("data", (logs) => {
-      console.log("Devuelve data", logs);
       return dispatch({
         type: UPDATE_NUMBER_OF_PARTICIPANTS,
         payload: challengeId
