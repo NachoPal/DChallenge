@@ -3,12 +3,27 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { updateNumberOfParticipants } from '../actions';
 import CountDownTimer from './CountDownTimer';
+import ModalParticipate from '../components/ModalParticipate';
 
 
 class OpenItem extends Component {
   constructor(props) {
     super(props);
     this.props.updateNumberOfParticipants(this.props.item.id);
+    this.state = { modalIsOpen: false };
+    this.participate = this.participate.bind(this);
+  }
+
+  participate() {
+    if(!this.props.user.logged) {
+      this.openModal();
+    } else {
+      //Sign transaction
+    }
+  }
+
+  openModal() {
+    this.setState({modalIsOpen: true});
   }
 
   render() {
@@ -26,7 +41,7 @@ class OpenItem extends Component {
             </div>
               <CountDownTimer date={item.openTime} message={"ONGOING"} size={80} color="#000" />
             <div className="row">
-              <button type="button" className="btn btn-success play">PARTICIPATE</button>
+              <button type="button" onClick={this.participate} className="btn btn-success play">PARTICIPATE</button>
             </div>
           </div>
           <div className="col-md-4">
@@ -36,9 +51,14 @@ class OpenItem extends Component {
             {item.description}
           </div>
       </div>
+      <ModalParticipate isOpen={this.state.modalIsOpen} this={this} />
     </div>
     );
   }
+}
+
+function mapStateToProps({ user }) {
+  return {user};
 }
 
 function mapDispatchToProps(dispatch) {
@@ -47,4 +67,4 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-export default connect(null, mapDispatchToProps)(OpenItem);
+export default connect(mapStateToProps, mapDispatchToProps)(OpenItem);

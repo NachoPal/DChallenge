@@ -251,7 +251,7 @@ video {
   padding: 20px;
   margin-right: -50%;
   transform: translate(-50%, -50%);
-  height: 400px;
+  /* height: 400px; */
   width: 400px;
 }
 
@@ -263,4 +263,9 @@ video {
   bottom: 0px;
   z-index: 2;
   background-color: rgba(0, 0, 0, 0.5);
+}
+
+button.close {
+  font-size: 36px;
+  font-weight: 300;
 }
