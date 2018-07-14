@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {
-  FECTH_OPEN_CHALLENGES,
+  FETCH_OPEN_CHALLENGES,
   UPDATE_OPEN_CHALLENGES,
   FETCH_NUMBER_OF_PARTICIPANTS,
   UPDATE_NUMBER_OF_PARTICIPANTS
@@ -11,10 +11,11 @@ const INITIAL_STATE = null;
 export default function(state = INITIAL_STATE, action) {
 
   switch(action.type) {
-    case FECTH_OPEN_CHALLENGES:
+    case FETCH_OPEN_CHALLENGES:
       return action.payload;
 
     case UPDATE_OPEN_CHALLENGES:
+      console.log("entro en el reducer UPDATE_OPEN_CHALLENGES", action.payload);
       const newChallenge = action.payload;
       return { ...newChallenge, ...state };
 
@@ -36,7 +37,7 @@ export default function(state = INITIAL_STATE, action) {
       var itemToUpdate = newState[action.payload];
       itemToUpdate.participants = itemToUpdate.participants + 1;
       return { ...state, [action.payload]: itemToUpdate }
-      
+
     default:
       return {...state };
   }

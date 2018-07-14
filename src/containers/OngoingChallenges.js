@@ -4,34 +4,33 @@ import { bindActionCreators } from 'redux';
 import { fetchOngoingChallenges } from '../actions';
 import _ from 'lodash';
 
-import Ongoing from '../components/Ongoing';
+import OngoingItem from '../components/OngoingItem';
 
 class OngoingChallenges extends Component {
 
   constructor(props) {
     super(props);
-    console.log("Se monta ONGOING");
-    //DESCOMENTAR CUANDO SE HAGA EL FETCH DESDE WEB3
-    //this.props.fetchOngoingChallenges();
+    this.props.fetchOngoingChallenges();
+    //this.props.updateOngoingChallenges();
   }
 
   renderOngoingChallenges() {
-    return this.props.ongoing.map( ongoing => {
-      return(
-        <Ongoing
-          key={ongoing.id.toString()}
-          title={ongoing.title}
-          description={ongoing.description}
-          img={ongoing.img}
-          enrolled={ongoing.enrolled}
-          accomplished={ongoing.accomplished}
-          time={ongoing.time}
-        />
-      );
-    });
+    const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/';
+    if(this.props.ongoing) {
+      return _.map(this.props.ongoing, (value, key) => {
+        return(
+          <OngoingItem
+            key={value.transactionHash}
+            item={value}
+            img= {`${URL_BASE}token-640x300.jpg`}
+          />
+        );
+      });
+    }
   }
 
   render() {
+    console.log("ME RE-RENDERIZO ONGOING");
     return (
       <div className="content container">
         <div className="row">

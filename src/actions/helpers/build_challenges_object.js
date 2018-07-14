@@ -2,11 +2,15 @@ import web3 from '../../initializers/web3';
 import { getAbiByFunctionNames, decodeParameters, encodedEventSignature } from '../../helpers/helper_web3';
 import { implementationAbi } from '../../initializers/implementation_info';
 import { proxyOptions, proxyAddress } from '../../initializers/proxy_info';
+import {
+  FETCH_OPEN_CHALLENGES,
+  FETCH_ONGOING_CHALLENGES,
+  UPDATE_OPEN_CHALLENGES
+} from '../../initializers/action_types';
 
 export default (logs, dispatch, action) => {
   var promises = [];
   var promises2 = [];
-
   var decodedLogs = _.map( logs, (log) => {
                         var decoded = web3.eth.abi.decodeLog(
                                         getAbiByFunctionNames(implementationAbi)["challengeCreation"].inputs,
@@ -38,6 +42,15 @@ export default (logs, dispatch, action) => {
               decodedLog.title = web3.utils.hexToString(decodedLog.title);
               decodedLog["participants"] = null;
 
+              if(decodedLog.openTime > Date.now()) {
+                decodedLog["status"] = "open";
+              }else if(decodedLog.openTime <= Date.now() && decodedLog.closeTime > Date.now()) {
+                decodedLog["status"] = "ongoing";
+              }else if(decodedLog.closeTime < Date.now()) {
+                decodedLog["status"] = "closed";
+              }
+              console.log("Challenges",decodedLogs);
+
               promises2.push(web3.eth.getPastLogs({
                 fromBlock: 1,
                 address: proxyAddress,
@@ -46,6 +59,9 @@ export default (logs, dispatch, action) => {
                   web3.eth.abi.encodeParameter('uint256', decodedLog.id)
                 ]
               }));
+
+              //AQUI HAGO LA LLAMADA AL EVENTO DE CHALLENGE SUBMISSION
+              decodedLog["submissions"] = 0;
             }
         });
     });
@@ -60,7 +76,26 @@ export default (logs, dispatch, action) => {
         count++;
       });
 
-      decodedLogs = _.orderBy(decodedLogs, 'openTime', 'asc');
+      decodedLogs = decodedLogs.filter( (decodedLog) => {
+        switch(action) {
+          case FETCH_OPEN_CHALLENGES || UPDATE_OPEN_CHALLENGES:
+            return decodedLog.status == "open";
+            case UPDATE_OPEN_CHALLENGES:
+              return decodedLog.status == "open";
+          case FETCH_ONGOING_CHALLENGES:
+            return decodedLog.status == "ongoing";
+        }
+      });
+
+      switch(action) {
+        case FETCH_OPEN_CHALLENGES || UPDATE_OPEN_CHALLENGES:
+          decodedLogs = _.orderBy(decodedLogs, 'openTime', 'asc');
+        case FETCH_ONGOING_CHALLENGES:
+          decodedLogs = _.orderBy(decodedLogs, 'closeTime', 'asc');
+      }
+
+      console.log(decodedLogs);
+
       return dispatch({
                type: action,
                payload: _.mapKeys(decodedLogs, 'id')

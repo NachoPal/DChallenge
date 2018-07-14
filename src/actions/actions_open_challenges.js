@@ -2,7 +2,7 @@ const web3 = require('../initializers/web3');
 import { proxyAddress } from '../initializers/proxy_info';
 import { implementationAbi } from '../initializers/implementation_info';
 import {
-  FECTH_OPEN_CHALLENGES,
+  FETCH_OPEN_CHALLENGES,
   UPDATE_OPEN_CHALLENGES
 } from '../initializers/action_types';
 import { encodedEventSignature } from '../helpers/helper_web3';
@@ -16,7 +16,8 @@ export function fetchOpenChallenges() {
       address: proxyAddress,
       topics: [encodedEventSignature("challengeCreation", implementationAbi)]
     }).then((logs) => {
-          buildChallengesObject(logs, dispatch, FECTH_OPEN_CHALLENGES)
+          console.log("Lista de todos los logs", logs);
+          buildChallengesObject(logs, dispatch, FETCH_OPEN_CHALLENGES)
       });
   }
 }
@@ -29,6 +30,7 @@ export function updateOpenChallenges() {
     }, (error, result) => {
         if(!error) console.log(result);
     }).on("data", (logs) => {
+      console.log("ESTE ES EL NUEVO CHALLENGE!!!", logs);
       buildChallengesObject([logs], dispatch, UPDATE_OPEN_CHALLENGES)
     }).on("changed", (logs) => {
       console.log(logs);

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {
-  FECTH_CLOSED_CHALLENGES
+  FETCH_CLOSED_CHALLENGES
 } from '../initializers/action_types';
 
 //BORRAR CUANDO SE HAGA EL FETCH DESDE WEB3
@@ -17,7 +17,7 @@ const INITIAL_STATE = open;
 
 export default function(state = INITIAL_STATE, action) {
   switch(action.type) {
-    case FECTH_CLOSED_CHALLENGES:
+    case FETCH_CLOSED_CHALLENGES:
       return {...state, open };
     default:
       return INITIAL_STATE;

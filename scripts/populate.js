@@ -11,8 +11,8 @@ module.exports = function(callback) {
       title: web3.utils.asciiToHex(`My challenge #${index}`),
       description: web3.utils.randomHex(32),
       thumbnail: web3.utils.randomHex(32),
-      openTime: Math.floor((Date.now() + (10000000 * index))/1000),
-      closeTime: Math.floor((Date.now() + (1000000 * (index + 1))/1000))
+      openTime: Math.floor(Date.now() + (100000 * index)),
+      closeTime: Math.floor(Date.now() + (100000 * index * 2))
     }
   }
 
@@ -24,7 +24,7 @@ module.exports = function(callback) {
           if(result == '0x0000000000000000000000000000000000000000') {
             instance.upgradeTo(implementationAddress, {from: web3.eth.defaultAccount})
             .then((result) => {
-              for (var i = 0; i < 5; i++) {
+              for (var i = 1; i <= 5; i++) {
                 web3.eth.sendTransaction(proxyOptions("createChallenge", challengeInputs(i)))
                 .on('receipt', (recepit) => {
                   //console.log(recepit);
