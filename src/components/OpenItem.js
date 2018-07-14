@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { updateNumberOfParticipants } from '../actions';
+import {
+  updateNumberOfParticipants,
+  participate
+} from '../actions';
 import CountDownTimer from './CountDownTimer';
 import ModalParticipate from '../components/ModalParticipate';
+import web3meta from "../initializers/web3_metamask";
 
 
 class OpenItem extends Component {
@@ -18,7 +22,7 @@ class OpenItem extends Component {
     if(!this.props.user.logged) {
       this.openModal();
     } else {
-      //Sign transaction
+      this.props.participate(this.props.item.id);
     }
   }
 
@@ -63,7 +67,8 @@ function mapStateToProps({ user }) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    updateNumberOfParticipants
+    updateNumberOfParticipants,
+    participate
   }, dispatch);
 }
 

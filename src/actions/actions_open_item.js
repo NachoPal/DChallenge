@@ -1,10 +1,33 @@
 import web3 from '../initializers/web3';
-import { proxyAddress } from '../initializers/proxy_info';
+import web3meta from "../initializers/web3_metamask";
+import { proxyAddress, proxyOptions } from '../initializers/proxy_info';
 import { implementationAbi } from '../initializers/implementation_info';
 import {
-  UPDATE_NUMBER_OF_PARTICIPANTS
+  UPDATE_NUMBER_OF_PARTICIPANTS,
+  PARTICIPATE
 } from '../initializers/action_types';
 import { encodedEventSignature } from '../helpers/helper_web3';
+
+export function participate(challengeId) {
+  return dispatch => {
+    web3meta.eth.getAccounts((error, accounts) => {
+      web3meta.eth.defaultAccount = accounts[0];
+      console.log(accounts);
+
+      web3meta.eth.sendTransaction(proxyOptions("participate", {id: challengeId}), (error, txHash) => {
+        if(!error) {
+          console.log("TRANSACTION", txHash);
+          return dispatch({
+            type: PARTICIPATE,
+            payload: challengeId
+          });
+        } else {
+          console.log("ERROR", error);
+        }
+      });
+    });
+  }
+}
 
 export function updateNumberOfParticipants(challengeId) {
   return dispatch => {

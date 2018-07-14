@@ -14,6 +14,7 @@ export default function(state = INITIAL_STATE, action) {
       return {...state, details: null};
 
     default:
-      return INITIAL_STATE;
+      //return INITIAL_STATE;
+      return {...state}
   }
 }
