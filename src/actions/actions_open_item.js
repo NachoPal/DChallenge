@@ -1,5 +1,6 @@
 import web3 from '../initializers/web3';
 import web3meta from "../initializers/web3_metamask";
+var mnid = require('mnid');
 import { proxyAddress, proxyOptions } from '../initializers/proxy_info';
 import { implementationAbi } from '../initializers/implementation_info';
 import {
@@ -8,15 +9,21 @@ import {
 } from '../initializers/action_types';
 import { encodedEventSignature } from '../helpers/helper_web3';
 
-export function participate(challengeId) {
+export function participate(challengeId, userAddress, callback) {
   return dispatch => {
     web3meta.eth.getAccounts((error, accounts) => {
       web3meta.eth.defaultAccount = accounts[0];
       console.log(accounts);
 
-      web3meta.eth.sendTransaction(proxyOptions("participate", {id: challengeId}), (error, txHash) => {
+      const inputs = {
+        challengeId: challengeId,
+        userAddress: mnid.decode(userAddress).address
+      }
+
+      web3meta.eth.sendTransaction(proxyOptions("participate", inputs), (error, txHash) => {
         if(!error) {
           console.log("TRANSACTION", txHash);
+          callback();
           return dispatch({
             type: PARTICIPATE,
             payload: challengeId

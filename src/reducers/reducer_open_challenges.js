@@ -13,6 +13,7 @@ export default function(state = INITIAL_STATE, action) {
 
   switch(action.type) {
     case FETCH_OPEN_CHALLENGES:
+    console.log("LOGS DE PARTICIPATE",action.payload)
       return action.payload;
 
     case UPDATE_OPEN_CHALLENGES:
@@ -38,7 +39,7 @@ export default function(state = INITIAL_STATE, action) {
       var itemToUpdate = newState[action.payload];
       itemToUpdate.participants = itemToUpdate.participants + 1;
       return { ...state, [action.payload]: itemToUpdate }
-      
+
     default:
       return {...state };
   }

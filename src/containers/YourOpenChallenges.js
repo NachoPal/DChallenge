@@ -1,24 +1,24 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchOpenChallenges, updateOpenChallenges } from '../actions';
+import { fetchYourOpenChallenges } from '../actions';
 import _ from 'lodash';
 import web3 from './../initializers/web3';
 
 import OpenItem from '../components/OpenItem';
 
-class OpenChallenges extends Component {
+class YourOpenChallenges extends Component {
 
   constructor(props) {
     super(props);
-    this.props.fetchOpenChallenges();
-    this.props.updateOpenChallenges();
+    this.props.fetchYourOpenChallenges();
+    //this.props.updateOpenChallenges();
   }
 
   renderOpenChallenges() {
     const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/';
-    if(this.props.open) {
-      return _.map(this.props.open, (value, key) => {
+    if(this.props.yourOpen) {
+      return _.map(this.props.yourOpen, (value, key) => {
         return(
           <OpenItem
             key={value.transactionHash}
@@ -34,7 +34,7 @@ class OpenChallenges extends Component {
   render() {
     console.log("ME RE-RENDERIZO OPEN");
     return (
-      <div className={"content container"}>
+      <div className={"yours-content container"}>
         <div className="row">
           {this.renderOpenChallenges()}
         </div>
@@ -43,15 +43,14 @@ class OpenChallenges extends Component {
   }
 }
 
-function mapStateToProps({ open }) {
-  return { open };
+function mapStateToProps({ yourOpen }) {
+  return { yourOpen };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    fetchOpenChallenges,
-    updateOpenChallenges
+    fetchYourOpenChallenges
   }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(OpenChallenges);
+export default connect(mapStateToProps, mapDispatchToProps)(YourOpenChallenges);

@@ -12,7 +12,8 @@ module.exports = function(callback) {
       description: web3.utils.randomHex(32),
       thumbnail: web3.utils.randomHex(32),
       openTime: Math.floor((Date.now() + (openTime * 1000))),
-      closeTime: Math.floor((Date.now() + (closeTime * 1000)))
+      closeTime: Math.floor((Date.now() + (closeTime * 1000))),
+      bettingPrice: 100
     }
 
   web3.eth.getAccounts().then((accounts) => {

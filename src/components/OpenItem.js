@@ -8,6 +8,7 @@ import {
 import CountDownTimer from './CountDownTimer';
 import ModalParticipate from '../components/ModalParticipate';
 import web3meta from "../initializers/web3_metamask";
+import { YOUR_CHALLENGES_PATH } from "../initializers/routes";
 
 
 class OpenItem extends Component {
@@ -22,7 +23,12 @@ class OpenItem extends Component {
     if(!this.props.user.logged) {
       this.openModal();
     } else {
-      this.props.participate(this.props.item.id);
+      this.props.participate(
+        this.props.item.id,
+        this.props.user.details.address,
+        //"2orFcEzp7tndZ1rdzxSMuHG6msqPsjziMNS",
+        () => this.props.history.push(YOUR_CHALLENGES_PATH)
+      );
     }
   }
 
@@ -31,6 +37,7 @@ class OpenItem extends Component {
   }
 
   render() {
+    console.log(this.props);
     const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/';
     const { item } = this.props;
     console.log(`-----------------ITEM ${item.id}-RE REDENRIZA`);

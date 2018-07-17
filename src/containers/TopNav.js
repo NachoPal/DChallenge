@@ -7,6 +7,7 @@ import {
   OPEN_CHALLENGES_PATH,
   ONGOING_CHALLENGES_PATH,
   CLOSED_CHALLENGES_PATH,
+  YOUR_CHALLENGES_PATH
 } from '../initializers/routes';
 import { userLogin } from '../actions';
 import { userLogout } from '../actions';
@@ -20,15 +21,16 @@ class TopNav extends Component {
 	}
 
   renderYoursChallenges() {
-    if(this.props.user.details){
+    //if(this.props.user.details){
       return(
-        <li>
-          <Link className={`nav-link ${this.props.location.pathname == OPEN_CHALLENGES_PATH ? "" : ""}`} to={OPEN_CHALLENGES_PATH}>
+        <li className="yours">
+          <span className="glyphicon glyphicon-star" aria-hidden="true"></span>
+          <Link className={`nav-link ${this.props.location.pathname == YOUR_CHALLENGES_PATH ? "active" : ""} yours` } to={YOUR_CHALLENGES_PATH}>
             YOURS
           </Link>
         </li>
       );
-    }
+    //}
   }
 
   renderAccountArea() {

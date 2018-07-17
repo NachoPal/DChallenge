@@ -1,22 +1,17 @@
 pragma solidity ^0.4.24;
 
 contract DChallenge {
-  event challengeCreation(bytes32 indexed title,
-                          uint indexed openTime,
-                          uint indexed closeTime,
-                          uint id,
+  event challengeCreation(uint indexed id,
+                          bytes32 indexed title,
+                          bytes32 description,
                           bytes32 thumbnail);
 
- event userParticipation(uint indexed challengeId, address indexed userId);
+ event userParticipation(uint indexed challengeId, address indexed userAddress);
 
  struct Challenge {
-    bytes32 title;
-    bytes32 description;
-    bytes32 descriptionExtra;
     uint bettingPrice;
     uint openTime;
     uint closeTime;
-    bytes32 code;
     mapping(address => bool) participants;
   }
 
@@ -28,24 +23,25 @@ contract DChallenge {
                            bytes32 _description,
                            bytes32 _thumbnail,
                            uint _openTime,
-                           uint _closeTime)
+                           uint _closeTime,
+                           uint _bettingPrice)
                            external returns(bool) {
 
-    challenges[challengesCounter] = Challenge({title: _title,
-                                               description: _description,
-                                               descriptionExtra: 0,
-                                               bettingPrice: 100 finney,
+    challenges[challengesCounter] = Challenge({bettingPrice: _bettingPrice,
                                                openTime: _openTime,
-                                               closeTime: _closeTime,
-                                               code: 0});
+                                               closeTime: _closeTime});
 
-    emit challengeCreation(_title, _openTime, _closeTime, challengesCounter, _thumbnail);
+    emit challengeCreation(challengesCounter, _title, _description, _thumbnail);
     challengesCounter++;
   }
 
-  function participate(uint _challengeId) {
+  function participate(uint _challengeId, address _userAddress) {
     challenges[_challengeId].participants[msg.sender] = true;
-    emit userParticipation(_challengeId, msg.sender);
+    //With uPort
+    //emit userParticipation(_challengeId, msg.sender);
+
+    //Whitout uPort
+    emit userParticipation(_challengeId, _userAddress);
   }
 
   function isParticipating(uint _challengeId) view returns(bool) {

@@ -40,10 +40,12 @@
     "react-redux": "5.0.7",
     "react-router-dom": "^4.3.1",
     "react-simple-countdown": "^1.2.1",
+    "react-swipeable-views": "^0.12.15",
     "redux": "4.0.0",
     "redux-promise": "^0.6.0",
     "redux-thunk": "^2.3.0",
     "truffle-contract": "^3.0.6",
+    "underscore": "^1.9.1",
     "uport-connect": "^0.7.3"
   }
 }
