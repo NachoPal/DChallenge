@@ -22,7 +22,7 @@ export default class ModalSubmit extends Component {
         onRequestClose={() => {this.props.this.state.modalIsOpen}}
         shouldCloseOnOverlayClick={true}
         contentLabel="Submit"
-        className="modal-content"
+        className="modal-content-code"
         overlayClassName="modal-overlay"
       >
         <button className="close" onClick={this.closeModal}><span aria-hidden="true">&times;</span></button>

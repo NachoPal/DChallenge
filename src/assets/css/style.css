@@ -219,6 +219,11 @@ button.play {
 
 .react-countdown-clock {
   margin-left: 20px;
+  display: inline;
+}
+
+.react-countdown-clock canvas {
+  margin-top: -7px;
 }
 
 .panel-primary>.panel-heading {
@@ -253,6 +258,24 @@ video {
   transform: translate(-50%, -50%);
   /* height: 400px; */
   width: 400px;
+}
+
+.modal-content-code {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  border: 1px solid rgb(204, 204, 204);
+  background: rgb(255, 255, 255);
+  overflow: auto;
+  border-radius: 8px;
+  outline: none;
+  padding: 20px;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  /* height: 400px; */
+  width: 600px;
 }
 
 .modal-overlay {
@@ -290,4 +313,17 @@ a.nav-link.yours {
 .yours-content {
   padding-top: 0px;
   padding-right: 45px;
+}
+
+.inline {
+  display: inline;
+}
+
+.code-h3 {
+  display: inline;
+}
+
+button.counting-submit {
+  margin-bottom: 13px;
+  margin-right: 17px;
 }
