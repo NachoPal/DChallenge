@@ -1,38 +1,28 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchYourOpenChallenges } from '../actions';
+import { fetchYourOngoingChallenges } from '../actions';
 import _ from 'lodash';
 import web3 from './../initializers/web3';
 
-import OpenItem from '../components/OpenItem';
+import OngoingItem from '../components/OngoingItem';
 
-class YourOpenChallenges extends Component {
+class YourOngoingChallenges extends Component {
 
   constructor(props) {
     super(props);
-    console.log("Constructor",this.props);
     if(this.props.user.logged == true) {
-      this.props.fetchYourOpenChallenges(this.props.user.details.address);
+      this.props.fetchYourOngoingChallenges(this.props.user.details.address);
     }
-
     //this.props.updateOpenChallenges();
   }
 
-  // componentWillmount() {
-  //   console.log("mount",this.props);
-  //   if(this.props.user.logged == true) {
-  //     const userAddress = mnid.decode(this.props.user.details.address).address
-  //     this.props.fetchYourOpenChallenges(address);
-  //   }
-  // }
-
-  renderOpenChallenges() {
+  renderOngoingChallenges() {
     const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/';
-    if(this.props.yourOpen) {
-      return _.map(this.props.yourOpen, (value, key) => {
+    if(this.props.yourOngoing) {
+      return _.map(this.props.yourOngoing, (value, key) => {
         return(
-          <OpenItem
+          <OngoingItem
             key={value.transactionHash}
             item={value}
             img= {`${URL_BASE}token-640x300.jpg`}
@@ -49,21 +39,21 @@ class YourOpenChallenges extends Component {
     return (
       <div className={"yours-content container"}>
         <div className="row">
-          {this.renderOpenChallenges()}
+          {this.renderOngoingChallenges()}
         </div>
       </div>
     );
   }
 }
 
-function mapStateToProps({ yourOpen, user }) {
-  return { yourOpen, user };
+function mapStateToProps({ yourOngoing, user }) {
+  return { yourOngoing, user };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    fetchYourOpenChallenges
+    fetchYourOngoingChallenges
   }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(YourOpenChallenges);
+export default connect(mapStateToProps, mapDispatchToProps)(YourOngoingChallenges);

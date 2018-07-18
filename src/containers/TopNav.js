@@ -17,11 +17,16 @@ import ModalLogin from '../components/ModalLogin'
 class TopNav extends Component {
   constructor(props) {
 		super(props); //Hereda del state de Componente
+    if(sessionStorage.getItem('user')) {
+      this.props.user.details = JSON.parse(sessionStorage.getItem('user'));
+      this.props.user.logged = true;
+    }
+
 		this.state = { clicked: false };
 	}
 
   renderYoursChallenges() {
-    //if(this.props.user.details){
+    if(this.props.user.details){
       return(
         <li className="yours">
           <span className="glyphicon glyphicon-star" aria-hidden="true"></span>
@@ -30,7 +35,7 @@ class TopNav extends Component {
           </Link>
         </li>
       );
-    //}
+    }
   }
 
   renderAccountArea() {

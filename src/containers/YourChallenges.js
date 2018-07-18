@@ -8,8 +8,8 @@ import Typography from '@material-ui/core/Typography';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import OngoingChallenges from './OngoingChallenges';
 import YourOpenChallenges from './YourOpenChallenges';
+import YourOngoingChallenges from './YourOngoingChallenges';
 
 const styles = {
   root: {
@@ -49,7 +49,7 @@ class YourChallenges extends React.Component {
         </Paper>
         <div className="container">
           {value === 'open' && <YourOpenChallenges user={this.props.user}/>}
-          {value === 'ongoing' && <YourOpenChallenges user={this.props.user}/>}
+          {value === 'ongoing' && <YourOngoingChallenges user={this.props.user}/>}
           {value === 'closed' && <YourOpenChallenges user={this.props.user}/>}
           {/* {value === 'ongoing' && <YourOngoingChallenges user={this.props.user}/>} */}
           {/*value === 'closed' && <YourOpenChallenges applyClass="yours"/>*/}

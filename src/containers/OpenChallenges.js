@@ -25,6 +25,7 @@ class OpenChallenges extends Component {
             item={value}
             img= {`${URL_BASE}token-640x300.jpg`}
             history={this.props.history}
+            yours={false}
           />
         );
       });

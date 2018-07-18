@@ -23,6 +23,7 @@ class OngoingChallenges extends Component {
             key={value.transactionHash}
             item={value}
             img= {`${URL_BASE}token-640x300.jpg`}
+            yours={false}
           />
         );
       });

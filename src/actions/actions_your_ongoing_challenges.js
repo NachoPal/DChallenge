@@ -3,15 +3,17 @@ var mnid = require('mnid');
 import { proxyAddress } from '../initializers/proxy_info';
 import { implementationAbi } from '../initializers/implementation_info';
 import {
-  FETCH_YOUR_OPEN_CHALLENGES
+  FETCH_YOUR_ONGOING_CHALLENGES
 } from '../initializers/action_types';
 //import { encodedEventSignature } from '../helpers/helper_web3';
 import buildChallengesObject from './helpers/build_challenges_object';
 import { getAbiByFunctionNames, encodedEventSignature } from '../helpers/helper_web3';
 
 
-export function fetchYourOpenChallenges(userAddress) {
+export function fetchYourOngoingChallenges(userAddress) {
   userAddress = web3.utils.padLeft(mnid.decode(userAddress).address, 64);
+  console.log("UserAddress",userAddress);
+  console.log("Is address", web3.utils.isAddress(userAddress));
   return (dispatch) => {
     web3.eth.getPastLogs({
       fromBlock: 1,
@@ -36,7 +38,7 @@ export function fetchYourOpenChallenges(userAddress) {
           topics: [encodedEventSignature("challengeCreation", implementationAbi), challengesId]
         }).then((logs) => {
           console.log("Porfi",logs);
-            buildChallengesObject(logs, dispatch, FETCH_YOUR_OPEN_CHALLENGES)
+            buildChallengesObject(logs, dispatch, FETCH_YOUR_ONGOING_CHALLENGES)
           });
 
         //console.log("Lista de todos los logs", logs);

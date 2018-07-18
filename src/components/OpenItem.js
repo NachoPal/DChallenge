@@ -17,6 +17,7 @@ class OpenItem extends Component {
     this.props.updateNumberOfParticipants(this.props.item.id);
     this.state = { modalIsOpen: false };
     this.participate = this.participate.bind(this);
+    //this.renderParticipateButton = this.renderParticipateButton.bind(this);
   }
 
   participate() {
@@ -36,6 +37,17 @@ class OpenItem extends Component {
     this.setState({modalIsOpen: true});
   }
 
+  renderParticipateButton() {
+    console.log("Entra", this.props);
+    if(this.props.yours == false) {
+      return(
+        <div className="row">
+          <button type="button" onClick={this.participate} className="btn btn-success play">PARTICIPATE</button>
+        </div>
+      );
+    }
+  }
+
   render() {
     console.log(this.props);
     const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/';
@@ -50,10 +62,10 @@ class OpenItem extends Component {
               <b>{item.participants} </b>
               participants
             </div>
-              <CountDownTimer date={item.openTime} message={"ONGOING"} size={80} color="#000" />
-            <div className="row">
-              <button type="button" onClick={this.participate} className="btn btn-success play">PARTICIPATE</button>
-            </div>
+            <div>Entry fee - <b>{item.bettingPrice / 1000}</b> ETH</div>
+            <div>Jackpot - <b>{(item.bettingPrice / 1000) * item.participants}</b> ETH</div>
+            <CountDownTimer date={item.openTime} message={"ONGOING"} size={80} color="#000" />
+            {this.renderParticipateButton()}
           </div>
           <div className="col-md-4">
               <img src={`${URL_BASE}token-640x300.jpg`} className="img-responsive" alt="Challenge thumbnail" />

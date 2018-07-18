@@ -6,6 +6,7 @@ import {
   FETCH_OPEN_CHALLENGES,
   FETCH_YOUR_OPEN_CHALLENGES,
   FETCH_ONGOING_CHALLENGES,
+  FETCH_YOUR_ONGOING_CHALLENGES,
   UPDATE_OPEN_CHALLENGES
 } from '../../initializers/action_types';
 
@@ -81,11 +82,13 @@ export default (logs, dispatch, action) => {
         switch(action) {
           case FETCH_OPEN_CHALLENGES:
             return decodedLog.status == "open";
-          case UPDATE_OPEN_CHALLENGES || FETCH_YOUR_OPEN_CHALLENGES:
+          case UPDATE_OPEN_CHALLENGES:
             return decodedLog.status == "open";
           case FETCH_YOUR_OPEN_CHALLENGES:
             return decodedLog.status == "open";
           case FETCH_ONGOING_CHALLENGES:
+            return decodedLog.status == "ongoing";
+          case FETCH_YOUR_ONGOING_CHALLENGES:
             return decodedLog.status == "ongoing";
         }
       });

@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import {
-  FETCH_YOUR_OPEN_CHALLENGES,
   FETCH_YOUR_ONGOING_CHALLENGES,
   // UPDATE_OPEN_CHALLENGES,
   // FETCH_NUMBER_OF_PARTICIPANTS,
@@ -13,7 +12,7 @@ const INITIAL_STATE = null;
 export default function(state = INITIAL_STATE, action) {
 
   switch(action.type) {
-    case FETCH_YOUR_OPEN_CHALLENGES:
+    case FETCH_YOUR_ONGOING_CHALLENGES:
       //return action.payload;
       console.log("LOGS DE PARTICIPATE",action.payload)
       return action.payload;

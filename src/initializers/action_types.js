@@ -5,6 +5,7 @@ export const UPDATE_OPEN_CHALLENGES = 'update_open_challenges';
 export const PARTICIPATE = 'participate';
 
 export const FETCH_YOUR_OPEN_CHALLENGES = 'fetch_your_open_challenges';
+export const FETCH_YOUR_ONGOING_CHALLENGES = 'fetch_your_ongoing_challenges';
 
 //Ongoing
 export const FETCH_ONGOING_CHALLENGES = 'fetch_ongoing_challenges';
@@ -21,3 +22,6 @@ export const UPDATE_NUMBER_OF_PARTICIPANTS = 'update_number_of_participants'
 export const USER_LOGIN = 'user_login';
 export const USER_LOGIN_CANCELED = 'user_login_canceled';
 export const USER_LOGOUT = "user_logout";
+
+//SUMBIT CHALLENGE
+export const GET_CONFIRMED_BLOCK = "get_confirmed_block";
