@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import Modal from 'react-modal';
 import Loading from 'react-loading-components';
 import Code from './Code';
+import VideoUplaoder from './VideoUploader'
 
 Modal.setAppElement('.main-container');
 
@@ -29,6 +30,11 @@ export default class ModalSubmit extends Component {
         <div className="row">
           <Code />
           {/* <SubmitChallengeForm /> */}
+        </div>
+        <div>
+          <div className="row">
+            <VideoUplaoder challengeId={this.props.this.props.item.id}/>
+          </div>
         </div>
       </Modal>
     );

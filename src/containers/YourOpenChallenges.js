@@ -28,14 +28,14 @@ class YourOpenChallenges extends Component {
   // }
 
   renderOpenChallenges() {
-    const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/';
+    const URL_BASE = "https://ipfs.infura.io/ipfs/";
     if(this.props.yourOpen) {
       return _.map(this.props.yourOpen, (value, key) => {
         return(
           <OpenItem
             key={value.transactionHash}
             item={value}
-            img= {`${URL_BASE}token-640x300.jpg`}
+            img= {`${URL_BASE}Qmb13iwEfsE2GiMiQPPdCzuqfVFHUhD4nQR7nHbiEBjmgZ`}
             history={this.props.history}
             yours={true}
           />

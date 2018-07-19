@@ -25,3 +25,6 @@ export const USER_LOGOUT = "user_logout";
 
 //SUMBIT CHALLENGE
 export const GET_CONFIRMED_BLOCK = "get_confirmed_block";
+export const ACCEPT_BUTTON_CLICKED = "accept_button_clicked";
+export const VIDEO_SUBMITTED = "video_submited";
+export const SUBMIT_TO_BLOCKCHAIN = "submit_to_blockchain";

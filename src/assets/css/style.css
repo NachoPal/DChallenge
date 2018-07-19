@@ -327,3 +327,11 @@ button.counting-submit {
   margin-bottom: 13px;
   margin-right: 17px;
 }
+
+video#video-submit {
+  margin-top: 20px;
+}
+
+#video-submit-loader svg {
+  margin-top: 20px;
+}

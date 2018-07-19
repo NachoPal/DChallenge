@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import web3 from "../initializers/web3";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { getConfirmedBlockNumber } from '../actions';
+import {
+  getConfirmedBlockNumber,
+  acceptButtonClicked
+} from '../actions';
 import ReactCountdownClock from 'react-countdown-clock';
 
 class Code extends Component {
@@ -12,6 +15,7 @@ class Code extends Component {
     this.stopIntervals = this.stopIntervals.bind(this);
     this.setIntervals = this.setIntervals.bind(this);
     this.getBlock = this.getBlock.bind(this);
+    //this.acceptButtonClicked = this.acceptButtonClicked.bind(this);
   }
 
   componentDidMount() {
@@ -23,6 +27,7 @@ class Code extends Component {
   }
 
   setIntervals() {
+    this.props.acceptButtonClicked(false);
     this.props.getConfirmedBlockNumber(this.props.user.details.address)
     this.setState({counting: true});
 
@@ -40,6 +45,7 @@ class Code extends Component {
   }
 
   stopIntervals(onClick) {
+    this.props.acceptButtonClicked(true);
     clearInterval(this.intervalMine); //Only for Development
     this.setState({counting: false});
   }
@@ -72,7 +78,7 @@ class Code extends Component {
     if(this.state.counting == true){
       return <button type="button" onClick={this.stopIntervals} className="btn btn-success counting-submit">ACCEPT</button>
     } else if(this.state.counting == false) {
-      return <button type="button" onClick={this.setIntervals} className="btn btn-success counting-submit">RESUME</button>
+      return <button type="button" onClick={this.setIntervals} className="btn btn-success counting-submit">RESET</button>
     }
   }
 
@@ -109,7 +115,8 @@ function mapStateToProps({ submit, user }) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    getConfirmedBlockNumber
+    getConfirmedBlockNumber,
+    acceptButtonClicked
   }, dispatch);
 }
 
