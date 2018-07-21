@@ -27,4 +27,5 @@ export const USER_LOGOUT = "user_logout";
 export const GET_CONFIRMED_BLOCK = "get_confirmed_block";
 export const ACCEPT_BUTTON_CLICKED = "accept_button_clicked";
 export const VIDEO_SUBMITTED = "video_submited";
-export const SUBMIT_TO_BLOCKCHAIN = "submit_to_blockchain";
+export const SUBMIT_CHALLENGE = "submit_challenge";
+export const ERROR_SUBMIT_CHALLENGE = "error_submit_challenge";

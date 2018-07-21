@@ -33,7 +33,6 @@ class OpenChallenges extends Component {
   }
 
   render() {
-    console.log("ME RE-RENDERIZO OPEN");
     return (
       <div className={"content container"}>
         <div className="row">

@@ -20,13 +20,13 @@ class OngoingItem extends Component {
   }
 
   submit() {
-    console.log("submit");
     this.openModal();
   }
 
   openModal() {
     this.setState({modalIsOpen: true});
   }
+
 
   renderActionButton() {
     if(this.props.yours == false) {
@@ -36,11 +36,11 @@ class OngoingItem extends Component {
         </div>
       );
     } else if(this.props.yours == true) {
-      return(
-        <div className="row">
-          <button type="button" className="btn btn-success play" onClick={this.submit}>SUBMIT</button>
-        </div>
-      );
+        return(
+          <div className="row">
+            <button type="button" className="btn btn-success play" onClick={this.submit}>SUBMIT</button>
+          </div>
+        );
     }
   }
 

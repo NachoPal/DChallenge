@@ -38,7 +38,6 @@ class OpenItem extends Component {
   }
 
   renderParticipateButton() {
-    console.log("Entra", this.props);
     if(this.props.yours == false) {
       return(
         <div className="row">
@@ -49,10 +48,8 @@ class OpenItem extends Component {
   }
 
   render() {
-    console.log(this.props);
     const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/';
     const { item } = this.props;
-    console.log(`-----------------ITEM ${item.id}-RE REDENRIZA`);
     return(
       <div className="row panel panel-primary open-challenge">
         <div className="panel-heading">{item.title}</div>

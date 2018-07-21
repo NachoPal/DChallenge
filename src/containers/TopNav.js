@@ -74,7 +74,6 @@ class TopNav extends Component {
   }
 
   render() {
-    console.log(this.props.user);
     const { pathname } = this.props.location;
     return (
       <div>

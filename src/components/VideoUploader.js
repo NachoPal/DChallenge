@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
   submitVideo,
-  submitToBlockchain
+  submitChallenge
 } from '../actions';
 import Loading from 'react-loading-components';
 
@@ -13,7 +13,7 @@ class VideoUplaoder extends Component {
     super(props);
     this.captureFile = this.captureFile.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-    this.onSubmitToBlockchain = this.onSubmitToBlockchain.bind(this);
+    this.onSubmitChallenge = this.onSubmitChallenge.bind(this);
     this.state = {submitting: false};
   }
 
@@ -29,21 +29,19 @@ class VideoUplaoder extends Component {
   convertToBuffer(reader) {
     const buffer = Buffer.from(reader.result);
     this.setState({buffer});
-    console.log(this.state.buffer);
   }
 
   onSubmit(event) {
     event.preventDefault();
     this.setState({submitting: true});
-    console.log("Entra en submit");
     this.props.submitVideo(this.state.buffer);
   }
 
-  onSubmitToBlockchain(event) {
+  onSubmitChallenge(event) {
     event.preventDefault();
     const video = document.getElementById("video-submit");
     const duration = Math.floor(video.duration);
-    this.props.submitToBlockchain({
+    this.props.submitChallenge({
       ...this.props.submit,
       videoDuration: duration,
       id: this.props.challengeId
@@ -52,7 +50,6 @@ class VideoUplaoder extends Component {
   }
 
   renderVideo() {
-    console.log("SUBMITING", this.state);
     if(this.props.submit.videoSubmitted == true){
       if(this.state.submitting == true) {
         this.setState({submitting: false});
@@ -69,8 +66,8 @@ class VideoUplaoder extends Component {
             <button
               type="button"
               className="btn btn-success play"
-              onClick={this.onSubmitToBlockchain}>
-              SUBMIT
+              onClick={this.onSubmitChallenge}>
+              SEND
             </button>
           </div>
         </div>
@@ -95,7 +92,6 @@ class VideoUplaoder extends Component {
   }
 
   render() {
-      console.log("Video rerenderiza", this.props.submit);
     if(this.props.submit.codeAccepted == true){
       return(
         <div >
@@ -123,7 +119,7 @@ function mapStateToProps({ submit }) {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     submitVideo,
-    submitToBlockchain
+    submitChallenge
   }, dispatch);
 }
 

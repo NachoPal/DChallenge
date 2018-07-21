@@ -29,13 +29,11 @@ export function fetchYourOpenChallenges(userAddress) {
         const challengesId = _.map(decodedLogs, decodedLog => {
           return '0x' + web3.utils.padLeft(web3.utils.toBN(decodedLog.challengeId).toString(16),64);
         });
-        console.log("CHALLENGE ID", challengesId);
         web3.eth.getPastLogs({
           fromBlock: 1,
           address: proxyAddress,
           topics: [encodedEventSignature("challengeCreation", implementationAbi), challengesId]
         }).then((logs) => {
-          console.log("Porfi",logs);
             buildChallengesObject(logs, dispatch, FETCH_YOUR_OPEN_CHALLENGES)
           });
 

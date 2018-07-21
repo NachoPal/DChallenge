@@ -16,7 +16,6 @@ export function fetchOpenChallenges() {
       address: proxyAddress,
       topics: [encodedEventSignature("challengeCreation", implementationAbi)]
     }).then((logs) => {
-          console.log("Lista de todos los logs", logs);
           buildChallengesObject(logs, dispatch, FETCH_OPEN_CHALLENGES)
       });
   }
@@ -30,10 +29,8 @@ export function updateOpenChallenges() {
     }, (error, result) => {
         if(!error) console.log(result);
     }).on("data", (logs) => {
-      console.log("ESTE ES EL NUEVO CHALLENGE!!!", logs);
       buildChallengesObject([logs], dispatch, UPDATE_OPEN_CHALLENGES)
     }).on("changed", (logs) => {
-      console.log(logs);
     });
   }
 }

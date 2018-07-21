@@ -14,7 +14,6 @@ export function userLogin() {
     });
 
     userCredentials.then( response => {
-      console.log('RESPONSE', response);
       sessionStorage.setItem('user', JSON.stringify(response));
       dispatch({
               type: USER_LOGIN,

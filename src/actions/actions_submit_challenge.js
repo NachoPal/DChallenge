@@ -1,13 +1,18 @@
 const web3 = require('../initializers/web3');
+import web3meta from '../initializers/web3_metamask';
 import ipfs from '../initializers/ipfs';
 var mnid = require('mnid');
+import _ from 'lodash';
+import { proxyOptions } from '../initializers/proxy_info';
+//import { implementationAbi } from '../initializers/implementation_info';
 // import { proxyAddress } from '../initializers/proxy_info';
 // import { implementationAbi } from '../initializers/implementation_info';
 import {
   GET_CONFIRMED_BLOCK,
   ACCEPT_BUTTON_CLICKED,
   VIDEO_SUBMITTED,
-  SUBMIT_TO_BLOCKCHAIN
+  SUBMIT_CHALLENGE,
+  ERROR_SUBMIT_CHALLENGE
 } from '../initializers/action_types';
 //import { encodedEventSignature } from '../helpers/helper_web3';
 //import buildChallengesObject from './helpers/build_challenges_object';
@@ -24,12 +29,10 @@ export function getConfirmedBlockNumber(userAddress) {
       const confirmedBlock = currentBlock - 6;
       web3.eth.getBlock(confirmedBlock)
       .then(result =>{
-        console.log("code", result);
         const userAddressParam = {type: 'address', value: userAddress};
         const confirmedHashParam = {type: 'bytes32', value: result.hash};
         var code = web3.utils.soliditySha3(userAddressParam, confirmedHashParam);
-        console.log("code",code);
-        code = code.slice(2,6).toUpperCase();
+
         return dispatch({
                  type: GET_CONFIRMED_BLOCK,
                  payload: {
@@ -64,12 +67,35 @@ export function submitVideo(buffer) {
   }
 }
 
-export function submitToBlockchain(state) {
+export function submitChallenge(state) {
   return (dispatch) => {
-    console.log("STATEEEEE", state);
-    return dispatch({
-      type: SUBMIT_TO_BLOCKCHAIN,
-      payload: state
+
+    web3meta.eth.getAccounts((error, accounts) => {
+      web3meta.eth.defaultAccount = accounts[0];
+
+      const inputs = {
+        id: state.id,
+        confirmedBlock: state.confirmedBlock,
+        code: state.code,
+        videoDuration: state.videoDuration,
+        ipfsHash: state.ipfsHash,
+        userAddress: state.userAddress
+      }
+
+      web3meta.eth.sendTransaction(proxyOptions("submit", inputs), (error, txHash) => {
+        if(!error) {
+          //callback();
+          return dispatch({
+            type: SUBMIT_CHALLENGE,
+            payload: state
+          });
+        } else {
+          return dispatch({
+            type: ERROR_SUBMIT_CHALLENGE,
+            payload: error
+          });
+        }
+      });
     });
   }
 }

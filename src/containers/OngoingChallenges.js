@@ -11,6 +11,7 @@ class OngoingChallenges extends Component {
   constructor(props) {
     super(props);
     this.props.fetchOngoingChallenges();
+    console.log("ONGOING CONSTRUCTOR")
     //this.props.updateOngoingChallenges();
   }
 
@@ -31,7 +32,6 @@ class OngoingChallenges extends Component {
   }
 
   render() {
-    console.log("ME RE-RENDERIZO ONGOING");
     return (
       <div className="content container">
         <div className="row">
@@ -42,8 +42,8 @@ class OngoingChallenges extends Component {
   }
 }
 
-function mapStateToProps({ongoing}) {
-  return {ongoing}
+function mapStateToProps({ ongoing, user }) {
+  return { ongoing, user }
 }
 
 function mapDispatchToProps(dispatch) {

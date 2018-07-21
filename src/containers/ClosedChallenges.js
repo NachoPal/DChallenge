@@ -10,7 +10,6 @@ class ClosedChallenges extends Component {
 
   constructor(props) {
     super(props);
-    console.log("Se monta CLOSED");
     //DESCOMENTAR CUANDO SE HAGA EL FETCH DESDE WEB3
     //this.props.fetchOngoingChallenges();
   }

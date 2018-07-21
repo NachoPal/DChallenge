@@ -13,6 +13,8 @@ import {
 export default (logs, dispatch, action) => {
   var promises = [];
   var promises2 = [];
+  var promises3 = [];
+
   var decodedLogs = _.map( logs, (log) => {
                         var decoded = web3.eth.abi.decodeLog(
                                         getAbiByFunctionNames(implementationAbi)["challengeCreation"].inputs,
@@ -40,6 +42,7 @@ export default (logs, dispatch, action) => {
         decodedLogs[count]["openTime"] = parseInt(parameters.openTime);
         decodedLogs[count]["closeTime"] = parseInt(parameters.closeTime);
         decodedLogs[count]["participants"] = null;
+        decodedLogs[count]["submissions"] = null;
 
         if(decodedLogs[count].openTime > Date.now()) {
           decodedLogs[count]["status"] = "open";
@@ -48,8 +51,6 @@ export default (logs, dispatch, action) => {
         }else if(decodedLogs.closeTime < Date.now()) {
           decodedLogs[count]["status"] = "closed";
         }
-
-        console.log("DecodedLOgs",decodedLogs)
 
         promises2.push(web3.eth.getPastLogs({
           fromBlock: 1,
@@ -60,54 +61,60 @@ export default (logs, dispatch, action) => {
           ]
         }));
 
-        //AQUI HAGO LA LLAMADA AL EVENTO DE CHALLENGE SUBMISSION
-        decodedLogs[count]["submissions"] = 0;
-
+        //AQUI HAGO LA LLAMADA AL EVENTO DE CHALLENGE SUBMISSIO
+        //decodedLogs[count]["submissions"] = 0;
+        promises3.push(web3.eth.getPastLogs({
+          fromBlock: 1,
+          address: proxyAddress,
+          topics: [
+            encodedEventSignature("challengeSubmission", implementationAbi),
+            web3.eth.abi.encodeParameter('uint256', decodedLogs[count].id)
+          ]
+        }));
         count++;
     });
 
-
-
-    var count = 0;
-
     Promise.all(promises2).then(logs => {
+      var count = 0;
       _.map(logs, log => {
         decodedLogs[count].participants = log.length;
         count++;
       });
 
-      console.log("DecodedLOgs2",decodedLogs)
+      Promise.all(promises3).then(logs => {
+        var count = 0;
+        _.map(logs, log => {
+          decodedLogs[count].submissions = log.length;
+          count++;
+        });
 
-      decodedLogs = decodedLogs.filter( (decodedLog) => {
+        decodedLogs = decodedLogs.filter( (decodedLog) => {
+          switch(action) {
+            case FETCH_OPEN_CHALLENGES:
+              return decodedLog.status == "open";
+            case UPDATE_OPEN_CHALLENGES:
+              return decodedLog.status == "open";
+            case FETCH_YOUR_OPEN_CHALLENGES:
+              return decodedLog.status == "open";
+            case FETCH_ONGOING_CHALLENGES:
+              return decodedLog.status == "ongoing";
+            case FETCH_YOUR_ONGOING_CHALLENGES:
+              return decodedLog.status == "ongoing";
+          }
+        });
+
         switch(action) {
-          case FETCH_OPEN_CHALLENGES:
-            return decodedLog.status == "open";
-          case UPDATE_OPEN_CHALLENGES:
-            return decodedLog.status == "open";
-          case FETCH_YOUR_OPEN_CHALLENGES:
-            return decodedLog.status == "open";
+          case FETCH_OPEN_CHALLENGES || UPDATE_OPEN_CHALLENGES:
+            decodedLogs = _.orderBy(decodedLogs, 'openTime', 'asc');
           case FETCH_ONGOING_CHALLENGES:
-            return decodedLog.status == "ongoing";
-          case FETCH_YOUR_ONGOING_CHALLENGES:
-            return decodedLog.status == "ongoing";
+            decodedLogs = _.orderBy(decodedLogs, 'closeTime', 'asc');
         }
+
+        return dispatch({
+                 type: action,
+                 payload: _.mapKeys(decodedLogs, 'id')
+               });
       });
-
-      console.log("DecodedLOgs3",decodedLogs)
-
-      switch(action) {
-        case FETCH_OPEN_CHALLENGES || UPDATE_OPEN_CHALLENGES:
-          decodedLogs = _.orderBy(decodedLogs, 'openTime', 'asc');
-        case FETCH_ONGOING_CHALLENGES:
-          decodedLogs = _.orderBy(decodedLogs, 'closeTime', 'asc');
-      }
-
-      console.log("Pute",decodedLogs);
-
-      return dispatch({
-               type: action,
-               payload: _.mapKeys(decodedLogs, 'id')
-             });
     });
   });
 }

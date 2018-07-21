@@ -35,7 +35,6 @@ class YourOngoingChallenges extends Component {
   }
 
   render() {
-    console.log("ME RE-RENDERIZO OPEN");
     return (
       <div className={"yours-content container"}>
         <div className="row">

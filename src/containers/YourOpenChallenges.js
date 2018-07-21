@@ -11,7 +11,6 @@ class YourOpenChallenges extends Component {
 
   constructor(props) {
     super(props);
-    console.log("Constructor",this.props);
     if(this.props.user.logged == true) {
       this.props.fetchYourOpenChallenges(this.props.user.details.address);
     }
@@ -45,7 +44,6 @@ class YourOpenChallenges extends Component {
   }
 
   render() {
-    console.log("ME RE-RENDERIZO OPEN");
     return (
       <div className={"yours-content container"}>
         <div className="row">

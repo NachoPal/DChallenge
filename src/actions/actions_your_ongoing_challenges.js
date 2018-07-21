@@ -12,8 +12,6 @@ import { getAbiByFunctionNames, encodedEventSignature } from '../helpers/helper_
 
 export function fetchYourOngoingChallenges(userAddress) {
   userAddress = web3.utils.padLeft(mnid.decode(userAddress).address, 64);
-  console.log("UserAddress",userAddress);
-  console.log("Is address", web3.utils.isAddress(userAddress));
   return (dispatch) => {
     web3.eth.getPastLogs({
       fromBlock: 1,
@@ -31,13 +29,12 @@ export function fetchYourOngoingChallenges(userAddress) {
         const challengesId = _.map(decodedLogs, decodedLog => {
           return '0x' + web3.utils.padLeft(web3.utils.toBN(decodedLog.challengeId).toString(16),64);
         });
-        console.log("CHALLENGE ID", challengesId);
+
         web3.eth.getPastLogs({
           fromBlock: 1,
           address: proxyAddress,
           topics: [encodedEventSignature("challengeCreation", implementationAbi), challengesId]
         }).then((logs) => {
-          console.log("Porfi",logs);
             buildChallengesObject(logs, dispatch, FETCH_YOUR_ONGOING_CHALLENGES)
           });
 

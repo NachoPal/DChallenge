@@ -13,7 +13,6 @@ export function participate(challengeId, userAddress, callback) {
   return dispatch => {
     web3meta.eth.getAccounts((error, accounts) => {
       web3meta.eth.defaultAccount = accounts[0];
-      console.log(accounts);
 
       const inputs = {
         challengeId: challengeId,

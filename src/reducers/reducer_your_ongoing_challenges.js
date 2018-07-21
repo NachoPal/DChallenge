@@ -14,7 +14,6 @@ export default function(state = INITIAL_STATE, action) {
   switch(action.type) {
     case FETCH_YOUR_ONGOING_CHALLENGES:
       //return action.payload;
-      console.log("LOGS DE PARTICIPATE",action.payload)
       return action.payload;
 
     // case UPDATE_OPEN_CHALLENGES:

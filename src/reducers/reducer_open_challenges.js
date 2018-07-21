@@ -13,11 +13,9 @@ export default function(state = INITIAL_STATE, action) {
 
   switch(action.type) {
     case FETCH_OPEN_CHALLENGES:
-    console.log("LOGS DE PARTICIPATE",action.payload)
       return action.payload;
 
     case UPDATE_OPEN_CHALLENGES:
-      console.log("entro en el reducer UPDATE_OPEN_CHALLENGES", action.payload);
       const newChallenge = action.payload;
       return { ...newChallenge, ...state };
 

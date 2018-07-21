@@ -33,7 +33,7 @@ class Code extends Component {
 
     //Only for development
     this.intervalMine = setInterval(() => {
-      this.mine(15000);
+      this.mine(15);
     }, 15000);
   }
 
@@ -46,7 +46,7 @@ class Code extends Component {
 
   stopIntervals(onClick) {
     this.props.acceptButtonClicked(true);
-    clearInterval(this.intervalMine); //Only for Development
+    //clearInterval(this.intervalMine); //Only for Development
     this.setState({counting: false});
   }
 
@@ -67,14 +67,12 @@ class Code extends Component {
           id: new Date().getSeconds()
         },
         (err, resp) => {
-          console.log("exito");
         });
       }
     });
   }
 
   renderButton() {
-    console.log("state", this.state)
     if(this.state.counting == true){
       return <button type="button" onClick={this.stopIntervals} className="btn btn-success counting-submit">ACCEPT</button>
     } else if(this.state.counting == false) {
@@ -83,17 +81,18 @@ class Code extends Component {
   }
 
   render() {
-    console.log("Confirmed Block", this.props.submit.confirmedBlock);
     return(
       <div>
         <div className="inline">
           {this.renderButton()}
         </div>
         <div className="inline">
-          {/* <div className="col-md-6"> */}
-            <h3 className="code-h3">CODE: <b>{this.props.submit.code}</b></h3>
-          {/* </div> */}
-          {/* <div className="col-md-6"> */}
+          <h3 className="code-h3">
+            CODE:
+            <b>
+              {this.props.submit.code.slice(2,6).toUpperCase()}
+            </b>
+          </h3>
         </div>
         <div className="inline">
             <ReactCountdownClock seconds={this.state.seconds}
