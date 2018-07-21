@@ -15,6 +15,14 @@ class OngoingChallenges extends Component {
     //this.props.updateOngoingChallenges();
   }
 
+  componentWillUpdate() {
+    console.log("ONGOING UPDATE");
+  }
+
+  componentDidMount() {
+    console.log("ONGOING DID MOUNT");
+  }
+
   renderOngoingChallenges() {
     const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/';
     if(this.props.ongoing) {

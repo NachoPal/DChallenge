@@ -26,6 +26,7 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-stage-1": "^6.1.18",
     "css-loader": "^1.0.0",
+    "ethereum-bridge": "^0.6.1",
     "ganache-cli": "^6.1.6",
     "ipfs-api": "^22.2.4",
     "json-loader": "^0.5.7",

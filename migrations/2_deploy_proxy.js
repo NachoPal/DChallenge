@@ -3,5 +3,8 @@ var OwnedUpgradeabilityProxy = artifacts.require("./OwnedUpgradeabilityProxy.sol
 
 module.exports = function(deployer) {
   //deployer.deploy(Players);
-  deployer.deploy(OwnedUpgradeabilityProxy);
+  deployer.deploy(
+    OwnedUpgradeabilityProxy,
+    {value: 500000000000000000}
+  );
 };
