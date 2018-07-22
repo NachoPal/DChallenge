@@ -20,7 +20,7 @@ contract OwnedUpgradeabilityProxy is UpgradeabilityProxy {
   /**
   * @dev the constructor sets the original owner of the contract to the sender account.
   */
-  constructor() public {
+  constructor() payable public {
     setUpgradeabilityOwner(msg.sender);
   }
 
