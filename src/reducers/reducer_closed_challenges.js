@@ -3,10 +3,7 @@ import {
   FETCH_CLOSED_CHALLENGES
 } from '../initializers/action_types';
 
-//BORRAR CUANDO SE HAGA EL FETCH DESDE WEB3
-const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/'
-
-const INITIAL_STATE = open;
+const INITIAL_STATE = null;
 
 export default function(state = INITIAL_STATE, action) {
   switch(action.type) {

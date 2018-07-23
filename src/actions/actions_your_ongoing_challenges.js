@@ -7,7 +7,11 @@ import {
 } from '../initializers/action_types';
 //import { encodedEventSignature } from '../helpers/helper_web3';
 import buildChallengesObject from './helpers/build_challenges_object';
-import { getAbiByFunctionNames, encodedEventSignature } from '../helpers/helper_web3';
+import {
+  getAbiByFunctionNames,
+  encodedEventSignature,
+  numberTo32bytes 
+} from '../helpers/helper_web3';
 
 
 export function fetchYourOngoingChallenges(userAddress) {
@@ -27,7 +31,7 @@ export function fetchYourOngoingChallenges(userAddress) {
                             return decoded;
                         });
         const challengesId = _.map(decodedLogs, decodedLog => {
-          return '0x' + web3.utils.padLeft(web3.utils.toBN(decodedLog.challengeId).toString(16),64);
+          return numberTo32bytes(decodeLog.challengeId);
         });
 
         web3.eth.getPastLogs({

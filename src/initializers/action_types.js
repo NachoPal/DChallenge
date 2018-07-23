@@ -29,3 +29,6 @@ export const ACCEPT_BUTTON_CLICKED = "accept_button_clicked";
 export const VIDEO_SUBMITTED = "video_submited";
 export const SUBMIT_CHALLENGE = "submit_challenge";
 export const ERROR_SUBMIT_CHALLENGE = "error_submit_challenge";
+
+//SINGLE CHALLENGE
+export const FETCH_CHALLENGE = "fetch_challenge";

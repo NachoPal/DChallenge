@@ -226,10 +226,17 @@ button.play {
   margin-top: -7px;
 }
 
-.panel-primary>.panel-heading {
+.panel-primary .panel-heading {
   /*background-color: #dd5511;*/
   background-color: #666;
   border-color: #666;
+  border-radius: 0;
+}
+
+.panel-primary .panel-heading:hover {
+  /*background-color: #dd5511;*/
+  background-color: #df6482;
+  border-color: #df6482;
   border-radius: 0;
 }
 
@@ -334,4 +341,8 @@ video#video-submit {
 
 #video-submit-loader svg {
   margin-top: 20px;
+}
+
+a.title-link {
+  color: white;
 }

@@ -4,7 +4,10 @@ import { bindActionCreators } from 'redux';
 import { updateNumberOfSubmissions } from '../actions';
 import CountDownTimer from './CountDownTimer';
 import ModalSubmit from '../components/ModalSubmit';
-
+import { Link } from 'react-router-dom';
+import {
+  CHALLENGE_PATH
+} from "../initializers/routes";
 
 class OngoingItem extends Component {
   constructor(props) {
@@ -47,10 +50,11 @@ class OngoingItem extends Component {
   render() {
     const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/';
     const { item } = this.props;
-    console.log(`-----------------ITEM ${item.id}-RE REDENRIZA`);
     return(
       <div className="row panel panel-primary open-challenge">
-        <div className="panel-heading">{item.title}</div>
+        <Link className="title-link" to={`${CHALLENGE_PATH}/${item.id}`}>
+          <div className="panel-heading">{item.title}</div>
+        </Link>
         <div className="panel-body">
           <div className="col-md-2 even">
             <div className="row enrrolled"><b>{`${item.submissions}/${item.participants}`}</b> submissions</div>

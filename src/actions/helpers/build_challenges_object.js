@@ -7,7 +7,8 @@ import {
   FETCH_YOUR_OPEN_CHALLENGES,
   FETCH_ONGOING_CHALLENGES,
   FETCH_YOUR_ONGOING_CHALLENGES,
-  UPDATE_OPEN_CHALLENGES
+  UPDATE_OPEN_CHALLENGES,
+  FETCH_CHALLENGE
 } from '../../initializers/action_types';
 
 export default (logs, dispatch, action) => {
@@ -87,7 +88,7 @@ export default (logs, dispatch, action) => {
           decodedLogs[count].submissions = log.length;
           count++;
         });
-
+        console.log("DecodedLogs before filter", decodedLogs);
         decodedLogs = decodedLogs.filter( (decodedLog) => {
           switch(action) {
             case FETCH_OPEN_CHALLENGES:
@@ -100,6 +101,8 @@ export default (logs, dispatch, action) => {
               return decodedLog.status == "ongoing";
             case FETCH_YOUR_ONGOING_CHALLENGES:
               return decodedLog.status == "ongoing";
+            default:
+              return decodedLog.participants >= 0;
           }
         });
 
@@ -110,9 +113,18 @@ export default (logs, dispatch, action) => {
             decodedLogs = _.orderBy(decodedLogs, 'closeTime', 'asc');
         }
 
+        var payload = null;
+
+        if(action == FETCH_CHALLENGE) {
+          console.log("LOGS", decodedLogs);
+          payload = decodedLogs[0];
+        } else {
+          payload = _.mapKeys(decodedLogs, 'id')
+        }
+
         return dispatch({
                  type: action,
-                 payload: _.mapKeys(decodedLogs, 'id')
+                 payload: payload
                });
       });
     });

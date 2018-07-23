@@ -6,9 +6,12 @@ import {
   participate
 } from '../actions';
 import CountDownTimer from './CountDownTimer';
+import { Link } from 'react-router-dom';
 import ModalParticipate from '../components/ModalParticipate';
-import web3meta from "../initializers/web3_metamask";
-import { YOUR_CHALLENGES_PATH } from "../initializers/routes";
+import {
+  YOUR_CHALLENGES_PATH,
+  CHALLENGE_PATH
+} from "../initializers/routes";
 
 
 class OpenItem extends Component {
@@ -52,7 +55,9 @@ class OpenItem extends Component {
     const { item } = this.props;
     return(
       <div className="row panel panel-primary open-challenge">
-        <div className="panel-heading">{item.title}</div>
+        <Link className="title-link" to={`${CHALLENGE_PATH}/${item.id}`}>
+          <div className="panel-heading">{item.title}</div>
+        </Link>
         <div className="panel-body">
           <div className="col-md-2 even">
             <div className="row enrrolled">

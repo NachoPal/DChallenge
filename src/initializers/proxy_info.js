@@ -28,7 +28,7 @@ module.exports = {
     return {
       from: web3.eth.defaultAccount,
       to: address,
-      gas: 6721975,
+      gas: 3000000,
       data: encodedFunctionCall(functionName, Object.values(inputs), implementationAbi)
     };
   }

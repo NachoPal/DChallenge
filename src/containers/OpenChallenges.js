@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchOpenChallenges, updateOpenChallenges } from '../actions';
 import _ from 'lodash';
-import web3 from './../initializers/web3';
-
+import Loading from 'react-loading-components';
 import OpenItem from '../components/OpenItem';
 
 class OpenChallenges extends Component {
@@ -17,29 +16,37 @@ class OpenChallenges extends Component {
 
   renderOpenChallenges() {
     const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/';
-    if(this.props.open) {
-      return _.map(this.props.open, (value, key) => {
-        return(
-          <OpenItem
-            key={value.transactionHash}
-            item={value}
-            img= {`${URL_BASE}token-640x300.jpg`}
-            history={this.props.history}
-            yours={false}
-          />
-        );
-      });
-    }
+    return _.map(this.props.open, (value, key) => {
+      return(
+        <OpenItem
+          key={value.transactionHash}
+          item={value}
+          img= {`${URL_BASE}token-640x300.jpg`}
+          history={this.props.history}
+          yours={false}
+        />
+      );
+    });
   }
 
   render() {
-    return (
-      <div className={"content container"}>
-        <div className="row">
-          {this.renderOpenChallenges()}
+    if(!_.isEmpty(this.props.ongoing)) {
+      return (
+        <div className={"content container"}>
+          <div className="row">
+            {this.renderOpenChallenges()}
+          </div>
         </div>
-      </div>
-    );
+      );
+    } else {
+      return(
+        <div className={"content container"}>
+          <div className="row" style={{marginTop: "200px"}}>
+            <Loading type='bars' width={150} height={150} fill='#df6482' />
+          </div>
+        </div>
+      );
+    }
   }
 }
 

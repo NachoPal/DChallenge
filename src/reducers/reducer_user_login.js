@@ -3,7 +3,7 @@ import {
   USER_LOGOUT
 } from '../initializers/action_types';
 
-const INITIAL_STATE = {logged: false, details: null};
+const INITIAL_STATE = {logged: false, details: null, challenges: null};
 
 export default function(state = INITIAL_STATE, action) {
   switch(action.type) {

@@ -14,11 +14,23 @@ export function userLogin() {
     });
 
     userCredentials.then( response => {
-      sessionStorage.setItem('user', JSON.stringify(response));
-      dispatch({
-              type: USER_LOGIN,
-              payload: response
-            });
+      web3.eth.getPastLogs({
+        fromBlock: 1,
+        address: proxyAddress,
+        topics: [
+          encodedEventSignature("userParticipaton", implementationAbi),
+          null,
+          userAddressTo32bytes(response.address)
+        ]
+      }).then((logs) => {
+            //buildChallengesObject(logs, dispatch, FETCH_OPEN_CHALLENGES)
+            console.log("LOGS USER", logs);
+            sessionStorage.setItem('user', JSON.stringify(response));
+            dispatch({
+                    type: USER_LOGIN,
+                    payload: response
+                  });
+        });
     })
     .catch( (error) => {
       dispatch({

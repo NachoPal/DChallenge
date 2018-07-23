@@ -1,5 +1,4 @@
 const web3 = require('../initializers/web3');
-var mnid = require('mnid');
 import { proxyAddress } from '../initializers/proxy_info';
 import { implementationAbi } from '../initializers/implementation_info';
 import {
@@ -7,11 +6,15 @@ import {
 } from '../initializers/action_types';
 //import { encodedEventSignature } from '../helpers/helper_web3';
 import buildChallengesObject from './helpers/build_challenges_object';
-import { getAbiByFunctionNames, encodedEventSignature } from '../helpers/helper_web3';
+import {
+  getAbiByFunctionNames,
+  encodedEventSignature,
+  userAddressTo32Bytes
+} from '../helpers/helper_web3';
 
 
 export function fetchYourOpenChallenges(userAddress) {
-  userAddress = web3.utils.padLeft(mnid.decode(userAddress).address, 64);
+  userAddress = userAddressTo32bytes(userAddress)
   return (dispatch) => {
     web3.eth.getPastLogs({
       fromBlock: 1,
