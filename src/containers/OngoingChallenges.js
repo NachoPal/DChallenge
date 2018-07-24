@@ -25,19 +25,23 @@ class OngoingChallenges extends Component {
 
   renderOngoingChallenges() {
     const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/';
+    console.log("USER ONGOING",this.props.user);
+    console.log("CHALLENGES ONGOING",this.props.ongoing);
     return _.map(this.props.ongoing, (value, key) => {
-      return(
-        <OngoingItem
-          key={value.transactionHash}
-          item={value}
-          img= {`${URL_BASE}token-640x300.jpg`}
-          yours={false}
-        />
-      );
+      if(!_.includes(this.props.user.participating, key)){
+        return(
+          <OngoingItem
+            key={value.transactionHash}
+            item={value}
+            img= {`${URL_BASE}token-640x300.jpg`}
+          />
+        );
+      }
     });
   }
 
   render() {
+    console.log(this.props);
     if(!_.isEmpty(this.props.ongoing)) {
       return (
         <div className="content container">

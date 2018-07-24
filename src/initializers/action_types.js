@@ -22,6 +22,7 @@ export const UPDATE_NUMBER_OF_PARTICIPANTS = 'update_number_of_participants'
 export const USER_LOGIN = 'user_login';
 export const USER_LOGIN_CANCELED = 'user_login_canceled';
 export const USER_LOGOUT = "user_logout";
+export const FETCH_USER_CHALLENGES_INDEX = "fetch_user_challenges_index";
 
 //SUMBIT CHALLENGE
 export const GET_CONFIRMED_BLOCK = "get_confirmed_block";

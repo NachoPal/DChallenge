@@ -40,8 +40,8 @@ class OpenItem extends Component {
     this.setState({modalIsOpen: true});
   }
 
-  renderParticipateButton() {
-    if(this.props.yours == false) {
+  renderParticipateButton(challengeId) {
+    if(!_.includes(this.props.user.participating, challengeId)) {
       return(
         <div className="row">
           <button type="button" onClick={this.participate} className="btn btn-success play">PARTICIPATE</button>
@@ -67,7 +67,7 @@ class OpenItem extends Component {
             <div>Entry fee - <b>{item.bettingPrice / 1000}</b> ETH</div>
             <div>Jackpot - <b>{(item.bettingPrice / 1000) * item.participants}</b> ETH</div>
             <CountDownTimer date={item.openTime} message={"ONGOING"} size={80} color="#000" />
-            {this.renderParticipateButton()}
+            {this.renderParticipateButton(item.id)}
           </div>
           <div className="col-md-4">
               <img src={`${URL_BASE}token-640x300.jpg`} className="img-responsive" alt="Challenge thumbnail" />

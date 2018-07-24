@@ -10,28 +10,30 @@ import buildChallengesObject from './helpers/build_challenges_object';
 import {
   getAbiByFunctionNames,
   encodedEventSignature,
-  numberTo32bytes 
+  userAddressTo32Bytes,
+  numberTo32bytes
 } from '../helpers/helper_web3';
 
 
 export function fetchYourOngoingChallenges(userAddress) {
-  userAddress = web3.utils.padLeft(mnid.decode(userAddress).address, 64);
+  userAddress = userAddressTo32Bytes(userAddress);
+  console.log("Esto se ejecuta");
   return (dispatch) => {
     web3.eth.getPastLogs({
       fromBlock: 1,
       address: proxyAddress,
-      topics: [encodedEventSignature("userParticipation", implementationAbi), null, userAddress]
+      topics: [encodedEventSignature("challengeParticipation", implementationAbi), null, userAddress]
     }).then((logs) => {
       var decodedLogs = _.map( logs, (log) => {
 
                             var decoded = web3.eth.abi.decodeLog(
-                                            getAbiByFunctionNames(implementationAbi)["userParticipation"].inputs,
+                                            getAbiByFunctionNames(implementationAbi)["challengeParticipation"].inputs,
                                             log.data,
                                             [log.topics[1],log.topics[2]]);
                             return decoded;
                         });
         const challengesId = _.map(decodedLogs, decodedLog => {
-          return numberTo32bytes(decodeLog.challengeId);
+          return numberTo32bytes(decodedLog.id);
         });
 
         web3.eth.getPastLogs({

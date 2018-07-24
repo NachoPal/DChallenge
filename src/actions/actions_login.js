@@ -1,9 +1,19 @@
 import {
   USER_LOGIN,
   USER_LOGIN_CANCELED,
-  USER_LOGOUT
+  USER_LOGOUT,
+  FETCH_USER_CHALLENGES_INDEX,
+
 } from '../initializers/action_types';
 import uport from '../initializers/uport';
+import {
+  userAddressTo32Bytes,
+  encodedEventSignature
+} from '../helpers/helper_web3';
+import { implementationAbi, } from '../initializers/implementation_info';
+import { proxyAddress } from '../initializers/proxy_info';
+import getChallengesIndex from './helpers/get_challenges_index';
+import web3 from '../initializers/web3';
 
 export function userLogin() {
 
@@ -14,23 +24,13 @@ export function userLogin() {
     });
 
     userCredentials.then( response => {
-      web3.eth.getPastLogs({
-        fromBlock: 1,
-        address: proxyAddress,
-        topics: [
-          encodedEventSignature("userParticipaton", implementationAbi),
-          null,
-          userAddressTo32bytes(response.address)
-        ]
-      }).then((logs) => {
-            //buildChallengesObject(logs, dispatch, FETCH_OPEN_CHALLENGES)
-            console.log("LOGS USER", logs);
-            sessionStorage.setItem('user', JSON.stringify(response));
-            dispatch({
-                    type: USER_LOGIN,
-                    payload: response
-                  });
-        });
+      console.log("Loging re", response);
+      //console.log("HOOOOLLLAAAAAA", userAddressTo32bytes(response.address));
+      //sessionStorage.setItem('user', JSON.stringify(response));
+      dispatch({
+              type: USER_LOGIN,
+              payload: response
+            });
     })
     .catch( (error) => {
       dispatch({
@@ -46,5 +46,37 @@ export function userLogout() {
   return {
     type: USER_LOGOUT,
     payload: null
+  }
+}
+
+export function fetchUserChallengesIndex(user, callback) {
+  return(dispatch) => {
+    web3.eth.getPastLogs({
+      fromBlock: 1,
+      address: proxyAddress,
+      topics: [
+        encodedEventSignature("challengeParticipation", implementationAbi),
+        null,
+        userAddressTo32Bytes(user.details.address)
+      ]
+    }).then((logs) => {
+      const participatingIndex = getChallengesIndex(logs, "challengeParticipation");
+      web3.eth.getPastLogs({
+        fromBlock: 1,
+        address: proxyAddress,
+        topics: [
+          encodedEventSignature("challengeSubmission", implementationAbi),
+          null,
+          userAddressTo32Bytes(user.details.address)
+        ]
+      }).then((logs) => {
+        const submissionIndex = getChallengesIndex(logs, "challengeSubmission");
+        callback({...user, participating: participatingIndex, submissions: submissionIndex});
+        return dispatch({
+          type: FETCH_USER_CHALLENGES_INDEX,
+          payload: {participating: participatingIndex, submissions: submissionIndex}
+        });
+      });
+    });
   }
 }

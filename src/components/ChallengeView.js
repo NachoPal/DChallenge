@@ -45,30 +45,27 @@ class ChallengeView extends Component {
       return this.renderOngoingChallenge(challenge);
   }
 
-  renderOngoingChallenge(challenge) {
-    return(
-        <div className={"content container"}>
-          <div className="row">
-            <h2>{challenge.title}</h2>
-          </div>
-          <div className="row">
-            <div className="col-md-4 even">
-              <div className="row">
-                <img src={`${URL_BASE}token-640x300.jpg`} className="img-responsive" alt="Challenge thumbnail" />
-              </div>
-              <div className="row enrrolled">
-                <b>{`${challenge.submissions}/${challenge.participants}`}</b> submissions
-              </div>
-              <div>Jackpot - <b>{(challenge.bettingPrice / 1000) * challenge.participants}</b> ETH</div>
-              <CountDownTimer date={challenge.closeTime} message={"ONGOING"} size={80} color="#000" />
-            </div>
-            <div className="col-md-8">
-              {challenge.description}
-            </div>
-          </div>
-          <ModalParticipate isOpen={this.state.modalIsOpen} this={this} />
+  renderParticipateButton(challengeId) {
+    if(!_.includes(this.props.user.participating, challengeId)) {
+      return(
+        <div className="row">
+          <button type="button" onClick={this.participate} className="btn btn-success play">PARTICIPATE</button>
         </div>
-    );
+      );
+    }
+  }
+
+  renderSubmitButton(challengeId) {
+    const userHasParticipated = _.includes(this.props.user.participating, challengeId);
+    const userHasSubmitted = _.includes(this.props.user.submissions,challengeId);
+
+    if(userHasParticipated && !userHasSubmitted) {
+        return(
+          <div className="row">
+            <button type="button" className="btn btn-success play" onClick={this.submit}>SUBMIT</button>
+          </div>
+        );
+    }
   }
 
   renderOpenChallenge(challenge) {
@@ -80,6 +77,9 @@ class ChallengeView extends Component {
           <div className="row">
             <div className="col-md-4 even">
               <div className="row">
+                <h3>OPEN</h3>
+              </div>
+              <div className="row">
                 <img src={`${URL_BASE}token-640x300.jpg`} className="img-responsive" alt="Challenge thumbnail" />
               </div>
               <div className="row enrrolled">
@@ -89,9 +89,37 @@ class ChallengeView extends Component {
               <div>Entry fee - <b>{challenge.bettingPrice / 1000}</b> ETH</div>
               <div>Jackpot - <b>{(challenge.bettingPrice / 1000) * challenge.participants}</b> ETH</div>
               <CountDownTimer date={challenge.openTime} message={"ONGOING"} size={80} color="#000" />
+              {this.renderParticipateButton(challenge.id)}
+            </div>
+            <div className="col-md-8">
+              {challenge.description}
+            </div>
+          </div>
+          <ModalParticipate isOpen={this.state.modalIsOpen} this={this} />
+        </div>
+    );
+  }
+
+  renderOngoingChallenge(challenge) {
+    return(
+        <div className={"content container"}>
+          <div className="row">
+            <h2>{challenge.title}</h2>
+          </div>
+          <div className="row">
+            <div className="col-md-4 even">
               <div className="row">
-                <button type="button" onClick={this.participate} className="btn btn-success play">PARTICIPATE</button>
+                <h3>ONGOING</h3>
               </div>
+              <div className="row">
+                <img src={`${URL_BASE}token-640x300.jpg`} className="img-responsive" alt="Challenge thumbnail" />
+              </div>
+              <div className="row enrrolled">
+                <b>{`${challenge.submissions}/${challenge.participants}`}</b> submissions
+              </div>
+              <div>Jackpot - <b>{(challenge.bettingPrice / 1000) * challenge.participants}</b> ETH</div>
+              <CountDownTimer date={challenge.closeTime} message={"ONGOING"} size={80} color="#000" />
+              {this.renderSubmitButton(challenge.id)}
             </div>
             <div className="col-md-8">
               {challenge.description}

@@ -11,7 +11,7 @@ export function updateNumberOfSubmissions(challengeId) {
     const subscription = web3.eth.subscribe('logs', {
       address: proxyAddress,
       topics: [
-        encodedEventSignature("userParticipation", implementationAbi),
+        encodedEventSignature("challengeParticipation", implementationAbi),
         web3.eth.abi.encodeParameter('uint256', challengeId)
       ]
     }, (error, result) => {

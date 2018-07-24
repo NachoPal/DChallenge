@@ -9,7 +9,7 @@ contract DChallenge is usingOraclize {
     bytes32 thumbnail
   );
 
-  event userParticipation(uint indexed challengeId, address indexed userAddress);
+  event challengeParticipation(uint indexed id, address indexed userAddress);
 
   event challengeSubmission(
     uint indexed id,
@@ -117,11 +117,11 @@ contract DChallenge is usingOraclize {
   function participate(uint _challengeId, address _userAddress) public {
     //With uPort
     //challenges[_challengeId].participants[msg.sender] = true;
-    //emit userParticipation(_challengeId, msg.sender);
+    //emit challengeParticipation(_challengeId, msg.sender);
 
     //Whitout uPort
     challenges[_challengeId].participants[_userAddress] = true;
-    emit userParticipation(_challengeId, _userAddress);
+    emit challengeParticipation(_challengeId, _userAddress);
   }
 
   function submit (

@@ -36,7 +36,6 @@ class YourOpenChallenges extends Component {
             item={value}
             img= {`${URL_BASE}Qmb13iwEfsE2GiMiQPPdCzuqfVFHUhD4nQR7nHbiEBjmgZ`}
             history={this.props.history}
-            yours={true}
           />
         );
       });

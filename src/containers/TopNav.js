@@ -12,16 +12,19 @@ import {
 import { userLogin } from '../actions';
 import { userLogout } from '../actions';
 import Avatar from 'react-avatar';
-import ModalLogin from '../components/ModalLogin'
+import ModalLogin from '../components/ModalLogin';
+import AccountArea from '../containers/AccountArea';
 
 class TopNav extends Component {
   constructor(props) {
 		super(props); //Hereda del state de Componente
     if(sessionStorage.getItem('user')) {
-      this.props.user.details = JSON.parse(sessionStorage.getItem('user'));
-      this.props.user.logged = true;
+      const sessionUser = JSON.parse(sessionStorage.getItem('user'));
+      this.props.user.details = sessionUser.details;
+      this.props.user.logged = sessionUser.logged;
+      this.props.user.submissions = sessionUser.submissions;
+      this.props.user.participating = sessionUser.participating;
     }
-
 		this.state = { clicked: false };
 	}
 
@@ -40,12 +43,9 @@ class TopNav extends Component {
 
   renderAccountArea() {
     const { user } = this.props;
-
     if(user.details){
       return(
-        <li>
-          <Avatar name={user.details.name} src={user.details.avatar.uri} round="100%" size="50px"/>
-        </li>
+        <AccountArea />
       );
     }
   }
@@ -65,7 +65,7 @@ class TopNav extends Component {
     if(this.props.user.logged == true) {
       this.setState({clicked: true});
     }
-    this.props.userLogin()
+    this.props.userLogin();
   }
 
   onClickHandlerOut() {

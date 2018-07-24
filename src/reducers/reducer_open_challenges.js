@@ -4,7 +4,8 @@ import {
   UPDATE_OPEN_CHALLENGES,
   FETCH_NUMBER_OF_PARTICIPANTS,
   UPDATE_NUMBER_OF_PARTICIPANTS,
-  PARTICIPATE
+  PARTICIPATE,
+  USER_LOGIN
 } from '../initializers/action_types';
 
 const INITIAL_STATE = null;
@@ -37,7 +38,6 @@ export default function(state = INITIAL_STATE, action) {
       var itemToUpdate = newState[action.payload];
       itemToUpdate.participants = itemToUpdate.participants + 1;
       return { ...state, [action.payload]: itemToUpdate }
-
     default:
       return {...state };
   }

@@ -31,14 +31,11 @@ class OngoingItem extends Component {
   }
 
 
-  renderActionButton() {
-    if(this.props.yours == false) {
-      return(
-        <div className="row">
-          <button type="button" className="btn btn-success play">SEE MORE</button>
-        </div>
-      );
-    } else if(this.props.yours == true) {
+  renderSubmitButton(challengeId) {
+    const userHasParticipated = _.includes(this.props.user.participating, challengeId);
+    const userHasSubmitted = _.includes(this.props.user.submissions, challengeId);
+
+    if(userHasParticipated && !userHasSubmitted) {
         return(
           <div className="row">
             <button type="button" className="btn btn-success play" onClick={this.submit}>SUBMIT</button>
@@ -62,7 +59,7 @@ class OngoingItem extends Component {
             <div className="row count-down">
               <CountDownTimer date={item.closeTime} message={"CLOSED"} size={80} color="#000" />
             </div>
-            {this.renderActionButton()}
+            {this.renderSubmitButton(item.id)}
           </div>
           <div className="col-md-4">
             <img src={`${URL_BASE}token-640x300.jpg`} className="img-responsive" alt="Challenge thumbnail" />
@@ -77,10 +74,14 @@ class OngoingItem extends Component {
   }
 }
 
+function mapStateToProps({ user }) {
+  return { user };
+}
+
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     updateNumberOfSubmissions
   }, dispatch);
 }
 
-export default connect(null, mapDispatchToProps)(OngoingItem);
+export default connect(mapStateToProps, mapDispatchToProps)(OngoingItem);

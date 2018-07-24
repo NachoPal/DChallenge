@@ -57,7 +57,7 @@ export default (logs, dispatch, action) => {
           fromBlock: 1,
           address: proxyAddress,
           topics: [
-            encodedEventSignature("userParticipation", implementationAbi),
+            encodedEventSignature("challengeParticipation", implementationAbi),
             web3.eth.abi.encodeParameter('uint256', decodedLogs[count].id)
           ]
         }));
@@ -88,7 +88,7 @@ export default (logs, dispatch, action) => {
           decodedLogs[count].submissions = log.length;
           count++;
         });
-        console.log("DecodedLogs before filter", decodedLogs);
+
         decodedLogs = decodedLogs.filter( (decodedLog) => {
           switch(action) {
             case FETCH_OPEN_CHALLENGES:

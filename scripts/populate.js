@@ -15,7 +15,7 @@ module.exports = function(callback) {
       description: web3.utils.randomHex(32),
       thumbnail: web3.utils.randomHex(32),
       openTime: Math.floor(Date.now() + (50000 * index)),
-      closeTime: Math.floor(Date.now() + (50000000 * index * 2)),
+      closeTime: Math.floor(Date.now() + (500000 * index * 2)),
       bettingPrice: 100
     }
   }
