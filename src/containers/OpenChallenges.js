@@ -29,7 +29,7 @@ class OpenChallenges extends Component {
           <OpenItem
             key={value.transactionHash}
             item={value}
-            img= {`${URL_BASE}token-640x300.jpg`}
+            //img= {`${URL_BASE}token-640x300.jpg`}
             history={this.props.history}
           />
         );

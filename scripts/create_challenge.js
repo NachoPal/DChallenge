@@ -13,12 +13,12 @@ module.exports = function(callback) {
       thumbnail: web3.utils.randomHex(32),
       openTime: Math.floor((Date.now() + (openTime * 1000))),
       closeTime: Math.floor((Date.now() + (closeTime * 1000))),
-      bettingPrice: 100
+      bettingPrice: 100000000000000000
     }
 
   web3.eth.getAccounts().then((accounts) => {
     web3.eth.defaultAccount = accounts[0];
-    web3.eth.sendTransaction(proxyOptions("createChallenge", challengeInputs))
+    web3.eth.sendTransaction(proxyOptions("createChallenge", challengeInputs, 0))
     .on('receipt', (recepit) => {
       console.log(recepit);
       console.log("Created challenge");

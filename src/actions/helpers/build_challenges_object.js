@@ -27,7 +27,7 @@ export default (logs, dispatch, action) => {
                     });
 
   _.map(decodedLogs, (decodedLog) => {
-      promises.push(web3.eth.call(proxyOptions('challenges', {id: parseInt(decodedLog.id)})));
+      promises.push(web3.eth.call(proxyOptions('challenges', {id: parseInt(decodedLog.id)}, 0)));
   });
 
 

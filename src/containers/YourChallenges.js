@@ -27,6 +27,7 @@ class YourChallenges extends React.Component {
   };
 
   render() {
+    console.log("YOUR CHALLENGES", this.props);
     const { classes } = this.props;
     const { value } = this.state;
 
@@ -48,9 +49,9 @@ class YourChallenges extends React.Component {
           </Tabs>
         </Paper>
         <div className="container">
-          {value === 'open' && <YourOpenChallenges user={this.props.user}/>}
-          {value === 'ongoing' && <YourOngoingChallenges user={this.props.user}/>}
-          {value === 'closed' && <YourOpenChallenges user={this.props.user}/>}
+          {value === 'open' && <YourOpenChallenges user={this.props.user} history={this.props.history}/>}
+          {value === 'ongoing' && <YourOngoingChallenges user={this.props.user} history={this.props.history}/>}
+          {value === 'closed' && <YourOpenChallenges user={this.props.user} history={this.props.history}/>}
           {/* {value === 'ongoing' && <YourOngoingChallenges user={this.props.user}/>} */}
           {/*value === 'closed' && <YourOpenChallenges applyClass="yours"/>*/}
         </div>

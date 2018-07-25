@@ -12,17 +12,32 @@ class ModalSubmit extends Component {
   constructor(props){
     super(props);
     this.closeModal = this.closeModal.bind(this);
+    console.log("MODAL SUBMIT", this.props);
   }
 
   closeModal() {
-    this.props.this.setState({modalIsOpen: false});
+    this.props.this.setState({modalSubmitIsOpen: false});
   }
 
   renderVideoUploader() {
     if(this.props.submit.challengeSubmissionError == false) {
-      return(
-        <VideoUplaoder challengeId={this.props.this.props.item.id}/>
-      );
+      if(this.props.from == "item") {
+        return(
+          <VideoUplaoder
+            challengeId={this.props.this.props.item.id}
+            history={this.props.history}
+            modal={this.props.this}
+          />
+        );
+      } else if(this.props.from == "view") {
+        return(
+          <VideoUplaoder
+            challengeId={this.props.this.props.challenge.id}
+            history={this.props.history}
+            modal={this.props.this}
+          />
+        );
+      }
     } else if(this.props.submit.challengeSubmissionError == true) {
       return(
         <p>You sent the video too late, reset the CODE generator and submit a NEW video</p>
@@ -34,7 +49,7 @@ class ModalSubmit extends Component {
     return(
       <Modal
         isOpen={this.props.isOpen}
-        onRequestClose={() => {this.props.this.state.modalIsOpen}}
+        onRequestClose={() => {this.props.this.state.modalSubmitIsOpen}}
         shouldCloseOnOverlayClick={true}
         contentLabel="Submit"
         className="modal-content-code"

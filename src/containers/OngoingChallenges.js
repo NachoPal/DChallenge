@@ -11,7 +11,7 @@ class OngoingChallenges extends Component {
   constructor(props) {
     super(props);
     this.props.fetchOngoingChallenges();
-    console.log("ONGOING CONSTRUCTOR")
+    console.log("ONGOING CONSTRUCTOR", this.props)
     //this.props.updateOngoingChallenges();
   }
 
@@ -33,7 +33,8 @@ class OngoingChallenges extends Component {
           <OngoingItem
             key={value.transactionHash}
             item={value}
-            img= {`${URL_BASE}token-640x300.jpg`}
+            history={this.props.history}
+            //img= {`${URL_BASE}token-640x300.jpg`}
           />
         );
       }

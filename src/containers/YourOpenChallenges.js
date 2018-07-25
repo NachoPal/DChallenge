@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { fetchYourOpenChallenges } from '../actions';
 import _ from 'lodash';
 import web3 from './../initializers/web3';
-
+import Loading from 'react-loading-components';
 import OpenItem from '../components/OpenItem';
 
 class YourOpenChallenges extends Component {
@@ -14,17 +14,7 @@ class YourOpenChallenges extends Component {
     if(this.props.user.logged == true) {
       this.props.fetchYourOpenChallenges(this.props.user.details.address);
     }
-
-    //this.props.updateOpenChallenges();
   }
-
-  // componentWillmount() {
-  //   console.log("mount",this.props);
-  //   if(this.props.user.logged == true) {
-  //     const userAddress = mnid.decode(this.props.user.details.address).address
-  //     this.props.fetchYourOpenChallenges(address);
-  //   }
-  // }
 
   renderOpenChallenges() {
     const URL_BASE = "https://ipfs.infura.io/ipfs/";
@@ -43,13 +33,23 @@ class YourOpenChallenges extends Component {
   }
 
   render() {
-    return (
-      <div className={"yours-content container"}>
-        <div className="row">
-          {this.renderOpenChallenges()}
+    if(!_.isEmpty(this.props.yourOpen)) {
+      return (
+        <div className={"yours-content container"}>
+          <div className="row">
+            {this.renderOpenChallenges()}
+          </div>
         </div>
-      </div>
-    );
+      );
+    } else {
+      return(
+        <div className={"content container"}>
+          <div className="row" style={{marginTop: "150px"}}>
+            <Loading type='bars' width={150} height={150} fill='#df6482' />
+          </div>
+        </div>
+      );
+    }
   }
 }
 

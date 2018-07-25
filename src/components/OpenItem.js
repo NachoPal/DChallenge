@@ -18,7 +18,7 @@ class OpenItem extends Component {
   constructor(props) {
     super(props);
     this.props.updateNumberOfParticipants(this.props.item.id);
-    this.state = { modalIsOpen: false };
+    this.state = { modalParticipateIsOpen: false };
     this.participate = this.participate.bind(this);
     //this.renderParticipateButton = this.renderParticipateButton.bind(this);
   }
@@ -30,6 +30,7 @@ class OpenItem extends Component {
       this.props.participate(
         this.props.item.id,
         this.props.user.details.address,
+        this.props.item.bettingPrice,
         //"2orFcEzp7tndZ1rdzxSMuHG6msqPsjziMNS",
         () => this.props.history.push(YOUR_CHALLENGES_PATH)
       );
@@ -37,7 +38,7 @@ class OpenItem extends Component {
   }
 
   openModal() {
-    this.setState({modalIsOpen: true});
+    this.setState({modalParticipateIsOpen: true});
   }
 
   renderParticipateButton(challengeId) {
@@ -64,8 +65,8 @@ class OpenItem extends Component {
               <b>{item.participants} </b>
               participants
             </div>
-            <div>Entry fee - <b>{item.bettingPrice / 1000}</b> ETH</div>
-            <div>Jackpot - <b>{(item.bettingPrice / 1000) * item.participants}</b> ETH</div>
+            <div>Entry fee - <b>{item.bettingPrice / Math.pow(10,18)}</b> ETH</div>
+            <div>Jackpot - <b>{(item.bettingPrice / Math.pow(10,18)) * item.participants}</b> ETH</div>
             <CountDownTimer date={item.openTime} message={"ONGOING"} size={80} color="#000" />
             {this.renderParticipateButton(item.id)}
           </div>
@@ -76,7 +77,7 @@ class OpenItem extends Component {
             {item.description}
           </div>
       </div>
-      <ModalParticipate isOpen={this.state.modalIsOpen} this={this} />
+      <ModalParticipate isOpen={this.state.modalParticipateIsOpen} this={this} />
     </div>
     );
   }

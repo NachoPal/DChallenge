@@ -15,6 +15,7 @@ class VideoUplaoder extends Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.onSubmitChallenge = this.onSubmitChallenge.bind(this);
     this.state = {submitting: false};
+    console.log("VIDEO", this.props);
   }
 
   captureFile(event) {
@@ -45,7 +46,11 @@ class VideoUplaoder extends Component {
       ...this.props.submit,
       videoDuration: duration,
       id: this.props.challengeId
-    });
+    }, () => {
+        this.props.modal.setState({modalSubmitIsOpen: false});
+        this.props.history.push(`/challenge/${this.props.challengeId}`);
+      }
+    );
 
   }
 
@@ -67,7 +72,7 @@ class VideoUplaoder extends Component {
               type="button"
               className="btn btn-success play"
               onClick={this.onSubmitChallenge}>
-              SEND
+              SUBMIT
             </button>
           </div>
         </div>
@@ -100,7 +105,7 @@ class VideoUplaoder extends Component {
             <label className="btn btn-default btn-file">
               <input type = "file" onChange = {this.captureFile}/>
             </label>
-            <button className="primary" type="submit">Submit</button>
+            <button className="primary" type="submit">Send</button>
           </form>
           {this.renderVideo()}
           {this.renderLoader()}

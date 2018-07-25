@@ -11,14 +11,14 @@ export default class ModalParticipate extends Component {
   }
 
   closeModal() {
-    this.props.this.setState({modalIsOpen: false});
+    this.props.this.setState({modalParticipateIsOpen: false});
   }
 
   render() {
     return(
       <Modal
         isOpen={this.props.isOpen}
-        onRequestClose={() => {this.props.this.state.modalIsOpen}}
+        onRequestClose={() => {this.props.this.state.modalParticipateIsOpen}}
         shouldCloseOnOverlayClick={true}
         contentLabel="Participate"
         className="modal-content"

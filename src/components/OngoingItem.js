@@ -12,14 +12,11 @@ import {
 class OngoingItem extends Component {
   constructor(props) {
     super(props);
-    this.state = { modalIsOpen: false };
+    this.state = { modalSubmitIsOpen: false };
     this.submit = this.submit.bind(this);
+    console.log("ITEM", props);
     //this.renderActionButton = this.renderActionButton.bind(this);
     //this.props.updateNumberOfParticipants(this.props.item.id);
-  }
-
-  openModal() {
-    this.setState({modalIsOpen: true});
   }
 
   submit() {
@@ -27,7 +24,7 @@ class OngoingItem extends Component {
   }
 
   openModal() {
-    this.setState({modalIsOpen: true});
+    this.setState({modalSubmitIsOpen: true});
   }
 
 
@@ -68,7 +65,11 @@ class OngoingItem extends Component {
             {item.description}
           </div>
         </div>
-        <ModalSubmit isOpen={this.state.modalIsOpen} this={this} />
+        <ModalSubmit
+          isOpen={this.state.modalSubmitIsOpen}
+          this={this}
+          history={this.props.history} 
+          from="item"/>
       </div>
     );
   }

@@ -3,12 +3,15 @@ import { proxyAddress } from '../initializers/proxy_info';
 import { implementationAbi } from '../initializers/implementation_info';
 import {
   FETCH_CHALLENGE,
+  FETCH_VIDEOS,
+  REMOVE_CHALLENGE_DATA
 } from '../initializers/action_types';
 import {
   encodedEventSignature,
   numberTo32bytes
  } from '../helpers/helper_web3';
 import buildChallengesObject from './helpers/build_challenges_object';
+import getVideosHash from './helpers/get_videos_hash';
 
 
 export function fetchChallenge(id) {
@@ -26,16 +29,26 @@ export function fetchChallenge(id) {
   }
 }
 
-// export function updateOpenChallenges() {
-//   return dispatch => {
-//     const subscription = web3.eth.subscribe('logs', {
-//       address: proxyAddress,
-//       topics: [encodedEventSignature("challengeCreation", implementationAbi)]
-//     }, (error, result) => {
-//         if(!error) console.log(result);
-//     }).on("data", (logs) => {
-//       buildChallengesObject([logs], dispatch, UPDATE_OPEN_CHALLENGES)
-//     }).on("changed", (logs) => {
-//     });
-//   }
-// }
+export function fetchVideos(id) {
+  return (dispatch) => {
+    web3.eth.getPastLogs({
+      fromBlock: 1,
+      address: proxyAddress,
+      topics: [
+        encodedEventSignature("challengeSubmission", implementationAbi),
+        numberTo32bytes(id)
+      ]
+    }).then((logs) => {
+          return getVideosHash(logs, dispatch, FETCH_VIDEOS);
+      });
+  }
+}
+
+export function removeChallengeData() {
+  return (dispatch) => {
+    return dispatch({
+      type: REMOVE_CHALLENGE_DATA,
+      payload: null
+    });
+  }
+}

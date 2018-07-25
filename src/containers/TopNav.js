@@ -70,7 +70,11 @@ class TopNav extends Component {
 
   onClickHandlerOut() {
     this.setState({clicked: false});
-    this.props.userLogout()
+    console.log("LOG OUT",this.props)
+    this.props.userLogout(
+      this.props.location.pathname,
+      () => this.props.history.push(OPEN_CHALLENGES_PATH)
+    );
   }
 
   render() {

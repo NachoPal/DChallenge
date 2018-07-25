@@ -346,3 +346,14 @@ video#video-submit {
 a.title-link {
   color: white;
 }
+
+h2.challenge-title {
+  padding-top: 7px;
+  background-color: #666;
+  color: white;
+}
+
+h3.border-title {
+  padding-top: 7px;
+  border: 1px black solid;
+}

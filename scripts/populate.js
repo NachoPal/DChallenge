@@ -16,7 +16,7 @@ module.exports = function(callback) {
       thumbnail: web3.utils.randomHex(32),
       openTime: Math.floor(Date.now() + (50000 * index)),
       closeTime: Math.floor(Date.now() + (500000 * index * 2)),
-      bettingPrice: 100
+      bettingPrice: 100000000000000000
     }
   }
 
@@ -41,8 +41,8 @@ module.exports = function(callback) {
             .then((result) => {
               console.log("Data init",encodedFunctionCall("initialize", Object.values(initializeInputs), implementationAbi));
               for (var i = 1; i <= 5; i++) {
-                console.log("Data participate", proxyOptions("createChallenge", challengeInputs(i)));
-                web3.eth.sendTransaction(proxyOptions("createChallenge", challengeInputs(i)))
+                console.log("Data participate", proxyOptions("createChallenge", challengeInputs(i), 0));
+                web3.eth.sendTransaction(proxyOptions("createChallenge", challengeInputs(i), 0))
                 .on('receipt', (recepit) => {
                   console.log(recepit);
                 })

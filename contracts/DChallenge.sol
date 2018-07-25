@@ -40,7 +40,8 @@ contract DChallenge is usingOraclize {
   uint public timeDelay;
   uint public secondsPerBlock;
 
-  mapping(bytes32=>bool) validOraclizeIds;
+  mapping(bytes32 => bool) validOraclizeIds;
+  mapping(address => uint) public balances;
 
 
   function initialize(uint _timeDelay, uint _secondsPerBlock) public {
@@ -100,7 +101,7 @@ contract DChallenge is usingOraclize {
     }
   }
 
-  function queryToCloseChallenge(uint _closeTime) payable public {
+  function queryToCloseChallenge(uint _closeTime) public payable {
     if (oraclize_getPrice("URL") > address(this).balance) {
       emit LogNewOraclizeQuery(challengesCounter, "Oraclize query was NOT sent, please add some ETH to cover for the query fee");
     } else {
@@ -114,13 +115,14 @@ contract DChallenge is usingOraclize {
     }
   }
 
-  function participate(uint _challengeId, address _userAddress) public {
+  function participate(uint _challengeId, address _userAddress) public payable {
     //With uPort
     //challenges[_challengeId].participants[msg.sender] = true;
     //emit challengeParticipation(_challengeId, msg.sender);
 
     //Whitout uPort
     challenges[_challengeId].participants[_userAddress] = true;
+    
     emit challengeParticipation(_challengeId, _userAddress);
   }
 
@@ -184,5 +186,9 @@ contract DChallenge is usingOraclize {
     require(validOraclizeIds[myid]);
     require(msg.sender == oraclize_cbAddress());
     closeChallenge();
+  }
+
+  function() payable {
+
   }
 }

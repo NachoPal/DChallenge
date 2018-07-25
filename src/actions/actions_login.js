@@ -5,6 +5,9 @@ import {
   FETCH_USER_CHALLENGES_INDEX,
 
 } from '../initializers/action_types';
+import {
+  YOUR_CHALLENGES_PATH
+} from '../initializers/routes';
 import uport from '../initializers/uport';
 import {
   userAddressTo32Bytes,
@@ -15,8 +18,8 @@ import { proxyAddress } from '../initializers/proxy_info';
 import getChallengesIndex from './helpers/get_challenges_index';
 import web3 from '../initializers/web3';
 
-export function userLogin() {
 
+export function userLogin() {
   return(dispatch) => {
     const userCredentials = uport.requestCredentials({
       requested: ['name', 'country', 'avatar', 'email', 'phone'],
@@ -25,8 +28,6 @@ export function userLogin() {
 
     userCredentials.then( response => {
       console.log("Loging re", response);
-      //console.log("HOOOOLLLAAAAAA", userAddressTo32bytes(response.address));
-      //sessionStorage.setItem('user', JSON.stringify(response));
       dispatch({
               type: USER_LOGIN,
               payload: response
@@ -41,8 +42,11 @@ export function userLogin() {
   }
 }
 
-export function userLogout() {
+export function userLogout(location, callback) {
   sessionStorage.removeItem('user');
+  if(location == YOUR_CHALLENGES_PATH) {
+    callback();
+  }
   return {
     type: USER_LOGOUT,
     payload: null

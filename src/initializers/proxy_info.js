@@ -24,11 +24,13 @@ module.exports = {
   proxyAbi: abi,
   proxyArtifact: artifact,
   proxyContract: Contract,
-  proxyOptions: (functionName, inputs) => {
+  proxyOptions: (functionName, inputs, value) => {
+    console.log(value);
     return {
       from: web3.eth.defaultAccount,
       to: address,
-      gas: 3000000,
+      value: value,
+      gas: 6654755,
       data: encodedFunctionCall(functionName, Object.values(inputs), implementationAbi)
     };
   }

@@ -67,7 +67,7 @@ export function submitVideo(buffer) {
   }
 }
 
-export function submitChallenge(state) {
+export function submitChallenge(state, callback) {
   return (dispatch) => {
 
     web3meta.eth.getAccounts((error, accounts) => {
@@ -82,9 +82,9 @@ export function submitChallenge(state) {
         userAddress: state.userAddress
       }
 
-      web3meta.eth.sendTransaction(proxyOptions("submit", inputs), (error, txHash) => {
+      web3meta.eth.sendTransaction(proxyOptions("submit", inputs, 0), (error, txHash) => {
         if(!error) {
-          //callback();
+          callback();
           return dispatch({
             type: SUBMIT_CHALLENGE,
             payload: state

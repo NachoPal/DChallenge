@@ -33,3 +33,5 @@ export const ERROR_SUBMIT_CHALLENGE = "error_submit_challenge";
 
 //SINGLE CHALLENGE
 export const FETCH_CHALLENGE = "fetch_challenge";
+export const FETCH_VIDEOS =  "fetch_videos";
+export const REMOVE_CHALLENGE_DATA = "remove_challenge_data";
