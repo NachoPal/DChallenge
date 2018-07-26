@@ -1,3 +1,5 @@
+pragma solidity ^0.4.24;
+
 import "oraclize-api/contracts/usingOraclize.sol";
 
 contract DChallenge is usingOraclize {
@@ -19,7 +21,13 @@ contract DChallenge is usingOraclize {
     string ipfsHash
   );
 
-  event challengeClosed(uint indexed id);
+  event challengeClosed(
+    uint indexed id,
+    bool indexed winner,
+    address indexed winnerAddress,
+    uint prizeAmount,
+    uint randomNumber
+    );
 
   event LogNewOraclizeQuery(uint indexed id, string message);
 
@@ -28,8 +36,10 @@ contract DChallenge is usingOraclize {
     uint bettingPrice;
     uint openTime;
     uint closeTime;
+    uint participantsCounter;
+    address[] submissions;
     mapping(address => bool) participants;
-    mapping(address => bool) submissions;
+    //mapping(address => bool) submissions;
   }
 
   mapping(uint => Challenge) public challenges;
@@ -70,7 +80,9 @@ contract DChallenge is usingOraclize {
 
     challenges[challengesCounter] = Challenge({bettingPrice: _bettingPrice,
                                                openTime: _openTime,
-                                               closeTime: _closeTime});
+                                               closeTime: _closeTime,
+                                               participantsCounter: 0,
+                                               submissions: new address[](0)});
 
     orderChallengesToCloseById(_closeTime);
     queryToCloseChallenge(challenges[challengesCounter].closeTime);
@@ -83,8 +95,11 @@ contract DChallenge is usingOraclize {
     uint id = challengesCounter;
     uint length = challengesClosingOrder.length;
     uint startIndex = challengesClosingOrderStartIndex;
+    //------------------------------
+    challengesClosingOrder.push(id);
+    //------------------------------
 
-    if(length == 0) {
+    /* if(length == 0) {
       challengesClosingOrder.push(id);
     } else {
       for(uint i=length-1; i <= startIndex; i--){
@@ -98,7 +113,7 @@ contract DChallenge is usingOraclize {
           challengesClosingOrder[i+1] = id;
         }
       }
-    }
+    } */
   }
 
   function queryToCloseChallenge(uint _closeTime) public payable {
@@ -109,7 +124,7 @@ contract DChallenge is usingOraclize {
       uint delay = (_closeTime/1000) - now;
       bytes32 queryId = oraclize_query(
                           delay,
-                          "URL", "https://www.random.org/integers/?num=1&min=1&max=100&col=1&base=10&format=plain&rnd=new"
+                          "URL", "https://www.random.org/integers/?num=1&min=1&max=10000&col=1&base=10&format=plain&rnd=new"
                         );
       validOraclizeIds[queryId] = true;
     }
@@ -122,7 +137,8 @@ contract DChallenge is usingOraclize {
 
     //Whitout uPort
     challenges[_challengeId].participants[_userAddress] = true;
-    
+    challenges[_challengeId].participantsCounter++;
+
     emit challengeParticipation(_challengeId, _userAddress);
   }
 
@@ -135,7 +151,7 @@ contract DChallenge is usingOraclize {
     address _userAddress
   )public returns(bool){
     require(verifySubmission(_blockNumber, _code, _userAddress, _videoDuration) == true);
-    challenges[_challengeId].submissions[_userAddress] == true;
+    challenges[_challengeId].submissions.push(_userAddress);
     emit challengeSubmission(_challengeId, _userAddress, _code, _videoDuration, _ipfsHash);
     return true;
   }
@@ -166,29 +182,38 @@ contract DChallenge is usingOraclize {
     return true;
   }
 
-  function closeChallenge() internal {
+  function closeChallenge(uint _randomNumber) internal {
     uint id = challengesClosingOrder[challengesClosingOrderStartIndex];
-    emit challengeClosed(id);
-
     delete challengesClosingOrder[challengesClosingOrderStartIndex];
     challengesClosingOrderStartIndex++;
+
+    if(challenges[id].submissions.length >= 1) {
+      address winnerAddress = chooseWinner(id, _randomNumber);
+      uint prizeAmount = givePrizeToWinner(id, winnerAddress);
+      emit challengeClosed(id, true, winnerAddress, prizeAmount, _randomNumber);
+    } else {
+      emit challengeClosed(id, false, address(0), 0, 0);
+    }
+  }
+
+  function chooseWinner(uint _challengeId, uint _randomNumber) internal view returns(address) {
+    uint winnerIndex = _randomNumber%((challenges[_challengeId].submissions.length - 1) + 1);
+    return challenges[_challengeId].submissions[winnerIndex];
+  }
+
+  function givePrizeToWinner(uint _challengeId, address _winnerAddress) internal returns(uint) {
+    uint prizeAmount = challenges[_challengeId].participantsCounter * challenges[_challengeId].bettingPrice;
+    balances[_winnerAddress] = balances[_winnerAddress] + prizeAmount;
+    return prizeAmount;
   }
 
   function isParticipating(uint _challengeId, address _userAddress) public view returns(bool) {
     return challenges[_challengeId].participants[_userAddress];
   }
 
-  function hasSubmitted(uint _challengeId, address _userAddress) public view returns(bool) {
-    return challenges[_challengeId].submissions[_userAddress];
-  }
-
-  function __callback(bytes32 myid, string result, bytes proof) public {
-    require(validOraclizeIds[myid]);
+  function __callback(bytes32 _myid, string _result, bytes _proof) public {
+    require(validOraclizeIds[_myid]);
     require(msg.sender == oraclize_cbAddress());
-    closeChallenge();
-  }
-
-  function() payable {
-
+    closeChallenge(parseInt(_result));
   }
 }

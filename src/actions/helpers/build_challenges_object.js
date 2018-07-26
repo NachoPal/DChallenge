@@ -7,6 +7,7 @@ import {
   FETCH_YOUR_OPEN_CHALLENGES,
   FETCH_ONGOING_CHALLENGES,
   FETCH_YOUR_ONGOING_CHALLENGES,
+  FETCH_CLOSED_CHALLENGES,
   UPDATE_OPEN_CHALLENGES,
   FETCH_CHALLENGE
 } from '../../initializers/action_types';
@@ -49,7 +50,7 @@ export default (logs, dispatch, action) => {
           decodedLogs[count]["status"] = "open";
         }else if(decodedLogs[count].openTime <= Date.now() && decodedLogs[count].closeTime > Date.now()) {
           decodedLogs[count]["status"] = "ongoing";
-        }else if(decodedLogs.closeTime < Date.now()) {
+        }else if(decodedLogs[count].closeTime < Date.now()) {
           decodedLogs[count]["status"] = "closed";
         }
 
@@ -89,6 +90,8 @@ export default (logs, dispatch, action) => {
           count++;
         });
 
+        console.log("Decoded logs", decodedLogs);
+
         decodedLogs = decodedLogs.filter( (decodedLog) => {
           switch(action) {
             case FETCH_OPEN_CHALLENGES:
@@ -101,26 +104,41 @@ export default (logs, dispatch, action) => {
               return decodedLog.status == "ongoing";
             case FETCH_YOUR_ONGOING_CHALLENGES:
               return decodedLog.status == "ongoing";
+            case FETCH_CLOSED_CHALLENGES:
+              return decodedLog.status == "closed";
             default:
               return decodedLog.participants >= 0;
           }
         });
 
+        console.log("Decoded logs2", decodedLogs);
+
         switch(action) {
-          case FETCH_OPEN_CHALLENGES || UPDATE_OPEN_CHALLENGES:
+          case FETCH_OPEN_CHALLENGES:
             decodedLogs = _.orderBy(decodedLogs, 'openTime', 'asc');
+            //return decodedLogs;
+          case UPDATE_OPEN_CHALLENGES:
+            decodedLogs = _.orderBy(decodedLogs, 'openTime', 'asc');
+            //return decodedLogs;
           case FETCH_ONGOING_CHALLENGES:
             decodedLogs = _.orderBy(decodedLogs, 'closeTime', 'asc');
+            //return decodedLogs;
+          case FETCH_CLOSED_CHALLENGES:
+            decodedLogs = _.orderBy(decodedLogs, 'closeTime', 'asc');
+            //return decodedLogs;
         }
+
+        console.log("Decoded logs 3", decodedLogs);
 
         var payload = null;
 
         if(action == FETCH_CHALLENGE) {
-          console.log("LOGS", decodedLogs);
           payload = decodedLogs[0];
         } else {
           payload = _.mapKeys(decodedLogs, 'id')
         }
+
+        console.log("PAYLOAD", payload);
 
         return dispatch({
                  type: action,

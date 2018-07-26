@@ -3,51 +3,63 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchClosedChallenges } from '../actions';
 import _ from 'lodash';
-
-import Closed from '../components/Closed';
+import Loading from 'react-loading-components';
+import ClosedItem from '../components/ClosedItem';
 
 class ClosedChallenges extends Component {
 
   constructor(props) {
     super(props);
-    //DESCOMENTAR CUANDO SE HAGA EL FETCH DESDE WEB3
-    //this.props.fetchOngoingChallenges();
+    this.props.fetchClosedChallenges();
+    //this.props.checkOraclizeLogs();
   }
 
   renderClosedChallenges() {
-    return this.props.closed.map( closed => {
-      return(
-        <Closed
-          key={closed.id.toString()}
-          title={closed.title}
-          description={closed.description}
-          img={closed.img}
-          enrolled={closed.enrolled}
-          accomplished={closed.accomplished}
-          time={closed.time}
-          raised={closed.raised}
-        />
-      );
+    const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/';
+    return _.map(this.props.closed, (value, key) => {
+      if(!_.includes(this.props.user.participating, key)){
+        return(
+          <ClosedItem
+            key={value.transactionHash}
+            item={value}
+            history={this.props.history}
+            //img= {`${URL_BASE}token-640x300.jpg`}
+          />
+        );
+      }
     });
   }
 
   render() {
-    return (
-      <div className="content container">
-        <div className="row">
-          {this.renderClosedChallenges()}
+    console.log(this.props);
+    if(!_.isEmpty(this.props.closed)) {
+      return (
+        <div className="content container">
+          <div className="row">
+            {this.renderClosedChallenges()}
+          </div>
         </div>
-      </div>
-    );
+      );
+    } else {
+      return(
+        <div className={"content container"}>
+          <div className="row" style={{marginTop: "200px"}}>
+            <Loading type='bars' width={150} height={150} fill='#df6482' />
+          </div>
+        </div>
+      );
+    }
   }
 }
 
-function mapStateToProps({closed}) {
-  return {closed}
+function mapStateToProps({ closed, user }) {
+  return { closed, user }
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchClosedChallenges}, dispatch);
+  return bindActionCreators({
+    fetchClosedChallenges,
+  }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClosedChallenges);

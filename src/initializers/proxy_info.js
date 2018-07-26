@@ -25,7 +25,6 @@ module.exports = {
   proxyArtifact: artifact,
   proxyContract: Contract,
   proxyOptions: (functionName, inputs, value) => {
-    console.log(value);
     return {
       from: web3.eth.defaultAccount,
       to: address,

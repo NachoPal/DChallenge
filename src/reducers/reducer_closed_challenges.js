@@ -8,8 +8,8 @@ const INITIAL_STATE = null;
 export default function(state = INITIAL_STATE, action) {
   switch(action.type) {
     case FETCH_CLOSED_CHALLENGES:
-      return {...state, open };
+      return action.payload;
     default:
-      return INITIAL_STATE;
+      return {...state};
   }
 }
