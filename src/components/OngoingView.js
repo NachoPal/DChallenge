@@ -66,7 +66,7 @@ class OngoingView extends Component {
               <div className="row enrrolled">
                 <b>{`${challenge.submissions}/${challenge.participants}`}</b> submissions
               </div>
-              <div className="row">Jackpot - <b>{(challenge.bettingPrice / 1000) * challenge.participants}</b> ETH</div>
+              <div className="row">Jackpot - <b>{(challenge.bettingPrice / Math.pow(10,18)) * challenge.participants}</b> ETH</div>
               <CountDownTimer date={challenge.closeTime} message={"ONGOING"} size={80} color="#000" />
               {this.renderSubmitButton(challenge.id)}
             </div>

@@ -8,6 +8,6 @@ export * from './actions_your_ongoing_challenges';
 
 export * from './actions_submit_challenge';
 
-export * from './actions_login';
+export * from './actions_user';
 
 export * from './actions_challenge_view';

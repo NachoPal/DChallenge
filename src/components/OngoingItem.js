@@ -52,7 +52,7 @@ class OngoingItem extends Component {
         <div className="panel-body">
           <div className="col-md-2 even">
             <div className="row enrrolled"><b>{`${item.submissions}/${item.participants}`}</b> submissions</div>
-            <div>Jackpot - <b>{(item.bettingPrice / 1000) * item.participants}</b> ETH</div>
+            <div>Jackpot - <b>{(item.bettingPrice / Math.pow(10,18)) * item.participants}</b> ETH</div>
             <div className="row count-down">
               <CountDownTimer date={item.closeTime} message={"CLOSED"} size={80} color="#000" />
             </div>
@@ -68,7 +68,7 @@ class OngoingItem extends Component {
         <ModalSubmit
           isOpen={this.state.modalSubmitIsOpen}
           this={this}
-          history={this.props.history} 
+          history={this.props.history}
           from="item"/>
       </div>
     );

@@ -3,10 +3,18 @@ import {
   USER_LOGOUT,
   FETCH_USER_CHALLENGES_INDEX,
   PARTICIPATE,
-  SUBMIT_CHALLENGE
+  SUBMIT_CHALLENGE,
+  FETCH_USER_BALANCE,
+  WITHDRAW_USER_BALANCE
 } from '../initializers/action_types';
 
-const INITIAL_STATE = {logged: false, details: null, participating: [], submissions: []};
+const INITIAL_STATE = {
+  logged: false,
+  details: null,
+  participating: [],
+  submissions: [],
+  balance: 0
+};
 
 export default function(state = INITIAL_STATE, action) {
   switch(action.type) {
@@ -27,8 +35,11 @@ export default function(state = INITIAL_STATE, action) {
     case SUBMIT_CHALLENGE:
       state.submissions.push(action.payload.id);
       return {...state, submissions: state.submissions}
+    case FETCH_USER_BALANCE:
+      return {...state, balance: action.payload}
+    case WITHDRAW_USER_BALANCE:
+      return {...state, balance: action.payload}
     default:
-      //return INITIAL_STATE;
       return {...state}
   }
 }

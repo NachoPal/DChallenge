@@ -3,16 +3,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Avatar from 'react-avatar';
 import { fetchUserChallengesIndex } from '../actions';
+import { Link } from 'react-router-dom';
+import { ACCOUNT_PATH } from '../initializers/routes';
 
 class AccountArea extends Component {
   constructor(props) {
     super(props);
   }
-
-  // componentWillUpdate(){
-  //   console.log("WILL UPDATE: LLAMO A COGER LOS INDICES")
-  //   this.props.fetchUserChallengesIndex(this.props.user, this.saveInSessionStorage);
-  // }
 
   componentDidMount() {
     console.log("DID MOUNT: LLAMO A COGER LOS INDICES")
@@ -24,9 +21,17 @@ class AccountArea extends Component {
   }
 
   render() {
+    const { details } = this.props.user;
     return(
       <li>
-        <Avatar name={this.props.user.details.name} src={this.props.user.details.avatar.uri} round="100%" size="50px"/>
+        <Link id="account" to={ACCOUNT_PATH}>
+          <Avatar
+            name={details.name}
+            src={details.avatar ? details.avatar.uri : null}
+            round="100%"
+            size="50px"
+          />
+        </Link>
       </li>
     );
   }

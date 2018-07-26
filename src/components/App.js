@@ -8,7 +8,8 @@ import {
   OPEN_CHALLENGES_PATH,
   LANDING_PATH,
   YOUR_CHALLENGES_PATH,
-  CHALLENGE_PATH
+  CHALLENGE_PATH,
+  ACCOUNT_PATH
 } from '../initializers/routes';
 import TopNav from '../containers/TopNav';
 import Landing from '../containers/Landing';
@@ -17,6 +18,7 @@ import OngoingChallenges from '../containers/OngoingChallenges';
 import ClosedChallenges from '../containers/ClosedChallenges';
 import YourChallenges from '../containers/YourChallenges';
 import ChallengeView from '../components/ChallengeView';
+import Account from '../components/Account';
 
 // const ChallengeViewWithProps = (props) => {
 //   return(
@@ -31,6 +33,7 @@ const App = function() {
             <Route path="/" component={TopNav}/>
           <Switch>
             <Route path={`${CHALLENGE_PATH}/:id`} component={ChallengeView} />
+            <Route path={ACCOUNT_PATH} component={Account} />
             <Route path={YOUR_CHALLENGES_PATH} component={YourChallenges} />
             <Route path={CLOSED_CHALLENGES_PATH} component={ClosedChallenges} />
             <Route path={ONGOING_CHALLENGES_PATH} component={OngoingChallenges} />

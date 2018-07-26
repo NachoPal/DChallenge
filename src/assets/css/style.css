@@ -357,3 +357,7 @@ h3.border-title {
   padding-top: 7px;
   border: 1px black solid;
 }
+
+a#account {
+  padding: 0px;
+}

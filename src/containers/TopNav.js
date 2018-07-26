@@ -11,7 +11,6 @@ import {
 } from '../initializers/routes';
 import { userLogin } from '../actions';
 import { userLogout } from '../actions';
-import Avatar from 'react-avatar';
 import ModalLogin from '../components/ModalLogin';
 import AccountArea from '../containers/AccountArea';
 

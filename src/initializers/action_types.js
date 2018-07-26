@@ -18,11 +18,13 @@ export const UPDATE_CLOSED_CHALLENGES = 'update_closed_challenges';
 export const FETCH_NUMBER_OF_PARTICIPANTS = 'fetch_number_of_participants'
 export const UPDATE_NUMBER_OF_PARTICIPANTS = 'update_number_of_participants'
 
-//USER LOGIN
+//USER
 export const USER_LOGIN = 'user_login';
 export const USER_LOGIN_CANCELED = 'user_login_canceled';
 export const USER_LOGOUT = "user_logout";
 export const FETCH_USER_CHALLENGES_INDEX = "fetch_user_challenges_index";
+export const FETCH_USER_BALANCE = 'fetch_user_balance';
+export const WITHDRAW_USER_BALANCE = 'withdraw_user_balance';
 
 //SUMBIT CHALLENGE
 export const GET_CONFIRMED_BLOCK = "get_confirmed_block";

@@ -14,7 +14,7 @@ export default function(state = INITIAL_STATE, action) {
     case FETCH_VIDEOS:
       return { ...state, videos: action.payload }
     case REMOVE_CHALLENGE_DATA:
-      return INITIAL_STATE;  
+      return INITIAL_STATE;
     default:
       return { ...state };
   }

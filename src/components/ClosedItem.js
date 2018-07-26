@@ -23,7 +23,7 @@ class ClosedItem extends Component {
         <div className="panel-body">
           <div className="col-md-2 even">
             <div className="row enrrolled"><b>{`${item.submissions}/${item.participants}`}</b> submissions</div>
-            <div>Jackpot - <b>{(item.bettingPrice / 1000) * item.participants}</b> ETH</div>
+            <div>Jackpot - <b>{(item.bettingPrice / Math.pow(10,18)) * item.participants}</b> ETH</div>
             <div className="row count-down">
               Closed: <CountDownTimer date={Date.now() - item.closeTime} message={"CLOSED"} size={80} color="#000" />
                ago

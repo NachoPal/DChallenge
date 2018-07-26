@@ -211,6 +211,14 @@ contract DChallenge is usingOraclize {
     return challenges[_challengeId].participants[_userAddress];
   }
 
+  function userWithdraw(uint _amount, address _userAddress) external {
+    balances[_userAddress] >= _amount;
+    // Remember to subtract the amount before
+    // sending to prevent re-entrancy attacks
+    balances[_userAddress] -= _amount;
+    msg.sender.transfer(_amount);
+  }
+
   function __callback(bytes32 _myid, string _result, bytes _proof) public {
     require(validOraclizeIds[_myid]);
     require(msg.sender == oraclize_cbAddress());

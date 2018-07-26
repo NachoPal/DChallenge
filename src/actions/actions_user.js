@@ -3,6 +3,8 @@ import {
   USER_LOGIN_CANCELED,
   USER_LOGOUT,
   FETCH_USER_CHALLENGES_INDEX,
+  FETCH_USER_BALANCE,
+  WITHDRAW_USER_BALANCE
 
 } from '../initializers/action_types';
 import {
@@ -11,12 +13,15 @@ import {
 import uport from '../initializers/uport';
 import {
   userAddressTo32Bytes,
-  encodedEventSignature
+  encodedEventSignature,
+  decodeParameters
 } from '../helpers/helper_web3';
-import { implementationAbi, } from '../initializers/implementation_info';
-import { proxyAddress } from '../initializers/proxy_info';
+import { implementationAbi } from '../initializers/implementation_info';
+import { proxyAddress, proxyOptions } from '../initializers/proxy_info';
 import getChallengesIndex from './helpers/get_challenges_index';
 import web3 from '../initializers/web3';
+import web3meta from '../initializers/web3_metamask';
+var mnid = require('mnid');
 
 
 export function userLogin() {
@@ -80,6 +85,48 @@ export function fetchUserChallengesIndex(user, callback) {
           type: FETCH_USER_CHALLENGES_INDEX,
           payload: {participating: participatingIndex, submissions: submissionIndex}
         });
+      });
+    });
+  }
+}
+
+export function fetchUserBalance(userAddress) {
+  return (dispatch) => {
+    userAddress = mnid.decode(userAddress).address;
+    const inputs = {
+      userAddress: userAddress
+    }
+    web3.eth.call(proxyOptions("balances", inputs, 0))
+    .then((balance) => {
+      balance = parseInt(decodeParameters("balances", implementationAbi, balance)["0"]);
+      return dispatch({
+        type: FETCH_USER_BALANCE,
+        payload: balance
+      });
+    });
+  }
+}
+
+export function withdrawBalance(userAddress, amount) {
+  return (dispatch) => {
+    web3meta.eth.getAccounts((error, accounts) => {
+      web3meta.eth.defaultAccount = accounts[0];
+
+      const inputs = {
+        amount: amount,
+        userAddress: mnid.decode(userAddress).address
+      }
+
+      console.log("Address",mnid.decode(userAddress).address)
+      web3meta.eth.sendTransaction(proxyOptions("userWithdraw", inputs, 0), (error, txHash) => {
+        if(!error) {
+          return dispatch({
+            type: WITHDRAW_USER_BALANCE,
+            patyload: 0
+          });
+        } else {
+          console.log("Withdraw error");
+        }
       });
     });
   }
