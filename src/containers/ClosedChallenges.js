@@ -17,7 +17,7 @@ class ClosedChallenges extends Component {
   renderClosedChallenges() {
     const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/';
     return _.map(this.props.closed, (value, key) => {
-      if(!_.includes(this.props.user.participating, key)){
+      //if(!_.includes(this.props.user.participating, key)){
         return(
           <ClosedItem
             key={value.transactionHash}
@@ -26,7 +26,7 @@ class ClosedChallenges extends Component {
             //img= {`${URL_BASE}token-640x300.jpg`}
           />
         );
-      }
+      //}
     });
   }
 

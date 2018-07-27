@@ -16,13 +16,15 @@ export default (logs, dispatch, action) => {
   var promises = [];
   var promises2 = [];
   var promises3 = [];
+  var promises4 = [];
+  //var challengeSubmissions = [];
 
   var decodedLogs = _.map( logs, (log) => {
                         var decoded = web3.eth.abi.decodeLog(
                                         getAbiByFunctionNames(implementationAbi)["challengeCreation"].inputs,
                                         log.data,
                                         _.drop(log.topics)
-                                        );
+                                      );
                         decoded.transactionHash = log.transactionHash;
                         return decoded;
                     });
@@ -73,6 +75,18 @@ export default (logs, dispatch, action) => {
             web3.eth.abi.encodeParameter('uint256', decodedLogs[count].id)
           ]
         }));
+
+        if(decodedLogs[count].status = "closed") {
+          promises4.push(web3.eth.getPastLogs({
+            fromBlock: 1,
+            address: proxyAddress,
+            topics: [
+              encodedEventSignature("challengeClosed", implementationAbi),
+              web3.eth.abi.encodeParameter('uint256', decodedLogs[count].id)
+            ]
+          }));
+        }
+
         count++;
     });
 
@@ -85,12 +99,23 @@ export default (logs, dispatch, action) => {
 
       Promise.all(promises3).then(logs => {
         var count = 0;
-        _.map(logs, log => {
+        var challengeSubmissions = _.map(logs, log => {
           decodedLogs[count].submissions = log.length;
+          decodedLogs[count]["submissionsData"] = [];
+
+          _.map(log, submission => {
+            decodedLogs[count]["submissionsData"].push(
+              web3.eth.abi.decodeLog(
+                getAbiByFunctionNames(implementationAbi)["challengeSubmission"].inputs,
+                submission.data,
+                _.drop(submission.topics)
+              ));
+            });
+            if(decodedLogs[count].submissions > 0) {
+              decodedLogs[count].submissionsData = _.mapKeys(decodedLogs[count].submissionsData, 'userAddress');
+            }
           count++;
         });
-
-        console.log("Decoded logs", decodedLogs);
 
         decodedLogs = decodedLogs.filter( (decodedLog) => {
           switch(action) {
@@ -111,24 +136,42 @@ export default (logs, dispatch, action) => {
           }
         });
 
-        console.log("Decoded logs2", decodedLogs);
+        Promise.all(promises4).then(logs => {
+          var count = 0;
+          _.map(logs, log => {
+            var decoded = web3.eth.abi.decodeLog(
+                            getAbiByFunctionNames(implementationAbi)["challengeClosed"].inputs,
+                            log[0].data,
+                            _.drop(log[0].topics)
+                          );
+            decodedLogs[count]["winner"] = decoded.winner;
+
+            if(decodedLogs[count].winner == true) {
+              decodedLogs[count]["winnerAddress"] = decoded.winnerAddress;
+              decodedLogs[count]["prizeAmount"] = decoded.prizeAmount;
+              decodedLogs[count]["randomNumber"] = decoded.randomNumber;
+
+              const winnerSubmission = decodedLogs[count].submissionsData[decoded.winnerAddress];
+              decodedLogs[count]["winnerVideo"] = {};
+              decodedLogs[count].winnerVideo["code"] = winnerSubmission.code;
+              decodedLogs[count].winnerVideo["videoDuration"] = winnerSubmission.videoDuration;
+              decodedLogs[count].winnerVideo["ipfsHash"] = winnerSubmission.ipfsHash;
+            }
+
+            count++;
+          });
+        });
 
         switch(action) {
           case FETCH_OPEN_CHALLENGES:
             decodedLogs = _.orderBy(decodedLogs, 'openTime', 'asc');
-            //return decodedLogs;
           case UPDATE_OPEN_CHALLENGES:
             decodedLogs = _.orderBy(decodedLogs, 'openTime', 'asc');
-            //return decodedLogs;
           case FETCH_ONGOING_CHALLENGES:
             decodedLogs = _.orderBy(decodedLogs, 'closeTime', 'asc');
-            //return decodedLogs;
           case FETCH_CLOSED_CHALLENGES:
             decodedLogs = _.orderBy(decodedLogs, 'closeTime', 'asc');
-            //return decodedLogs;
         }
-
-        console.log("Decoded logs 3", decodedLogs);
 
         var payload = null;
 
@@ -138,7 +181,7 @@ export default (logs, dispatch, action) => {
           payload = _.mapKeys(decodedLogs, 'id')
         }
 
-        console.log("PAYLOAD", payload);
+        //console.log("PAYLOAD", payload);
 
         return dispatch({
                  type: action,
