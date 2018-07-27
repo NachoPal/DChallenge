@@ -12,7 +12,6 @@ class AccountArea extends Component {
   }
 
   componentDidMount() {
-    console.log("DID MOUNT: LLAMO A COGER LOS INDICES")
     this.props.fetchUserChallengesIndex(this.props.user, this.saveInSessionStorage);
   }
 

@@ -63,8 +63,8 @@ class OpenView extends Component {
                 <b>{challenge.participants} </b>
                 participants
               </div>
-              <div>Entry fee - <b>{challenge.bettingPrice / 1000}</b> ETH</div>
-              <div>Jackpot - <b>{(challenge.bettingPrice / 1000) * challenge.participants}</b> ETH</div>
+              <div>Entry fee - <b>{challenge.bettingPrice / Math.pow(10,18)}</b> ETH</div>
+              <div>Jackpot - <b>{(challenge.bettingPrice / Math.pow(10,18)) * challenge.participants}</b> ETH</div>
               <CountDownTimer date={challenge.openTime} message={"ONGOING"} size={80} color="#000" />
               {this.renderParticipateButton(challenge.id)}
             </div>

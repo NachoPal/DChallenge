@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-//import CountDownTimer from './CountDownTimer';
 import { Link } from 'react-router-dom';
 import {
   CHALLENGE_PATH

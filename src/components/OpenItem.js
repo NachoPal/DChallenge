@@ -20,7 +20,6 @@ class OpenItem extends Component {
     this.props.updateNumberOfParticipants(this.props.item.id);
     this.state = { modalParticipateIsOpen: false };
     this.participate = this.participate.bind(this);
-    //this.renderParticipateButton = this.renderParticipateButton.bind(this);
   }
 
   participate() {
@@ -31,7 +30,6 @@ class OpenItem extends Component {
         this.props.item.id,
         this.props.user.details.address,
         this.props.item.bettingPrice,
-        //"2orFcEzp7tndZ1rdzxSMuHG6msqPsjziMNS",
         () => this.props.history.push(YOUR_CHALLENGES_PATH)
       );
     }

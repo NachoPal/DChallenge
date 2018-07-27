@@ -7,7 +7,6 @@ const isWinner = (winner) => {
 }
 
 const Video = ({ video, winner }) => {
-  //const { video } = this.props;
   return(
     <div className="row">
       <div className="col-md-4 even">

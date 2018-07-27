@@ -15,7 +15,6 @@ class VideoUplaoder extends Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.onSubmitChallenge = this.onSubmitChallenge.bind(this);
     this.state = {submitting: false};
-    console.log("VIDEO", this.props);
   }
 
   captureFile(event) {
@@ -51,7 +50,6 @@ class VideoUplaoder extends Component {
         this.props.history.push(`/challenge/${this.props.challengeId}`);
       }
     );
-
   }
 
   renderVideo() {

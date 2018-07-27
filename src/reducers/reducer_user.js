@@ -23,7 +23,6 @@ export default function(state = INITIAL_STATE, action) {
     case USER_LOGOUT:
       return {...state, logged: false, details: null, participating: [], submissions: []};
     case FETCH_USER_CHALLENGES_INDEX:
-      console.log("hasta el reducer con", action.payload.participating);
       return {
         ...state,
         participating: action.payload.participating,

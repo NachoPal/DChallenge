@@ -14,10 +14,16 @@ class Account extends Component {
   }
 
   withdraw() {
-    // console.log("USER",this.props.user);
-    // console.log("BALANCE", this.props.user.balance);
     const { user } = this.props;
     this.props.withdrawBalance(user.details.address, user.balance);
+  }
+
+  renderWithdrawButton() {
+    if(this.props.user.balance > 0) {
+      return(
+        <button type="button" className="btn btn-success play" onClick={this.withdraw}>WITHDRAW</button>
+      );
+    }
   }
 
   render() {
@@ -30,7 +36,6 @@ class Account extends Component {
             <Avatar
               name={details.name}
               src={details.avatar ? details.avatar.uri : null}
-              //round="100%"
               size="200px"
             />
           </div>
@@ -61,7 +66,7 @@ class Account extends Component {
                   <td><b>Balance:  </b></td>
                   <td>
                     {this.props.user.balance / Math.pow(10,18)} ETH
-                    <button type="button" className="btn btn-success play" onClick={this.withdraw}>WITHDRAW</button>
+                    {this.renderWithdrawButton()}
                   </td>
                 </tr>
               </tbody>

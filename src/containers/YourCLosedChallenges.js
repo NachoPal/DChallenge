@@ -14,7 +14,6 @@ class YourClosedChallenges extends Component {
     if(this.props.user.logged == true) {
       this.props.fetchYourClosedChallenges(this.props.user.details.address);
     }
-    //this.props.updateOpenChallenges();
   }
 
   renderClosedChallenges() {
@@ -25,7 +24,6 @@ class YourClosedChallenges extends Component {
           <ClosedItem
             key={value.transactionHash}
             item={value}
-            //img= {`${URL_BASE}token-640x300.jpg`}
             history={this.props.history}
           />
         );

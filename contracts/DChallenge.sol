@@ -96,24 +96,35 @@ contract DChallenge is usingOraclize {
     uint length = challengesClosingOrder.length;
     uint startIndex = challengesClosingOrderStartIndex;
     //------------------------------
-    challengesClosingOrder.push(id);
+    //challengesClosingOrder.push(id);
     //------------------------------
 
-    /* if(length == 0) {
+    if(length == 0) {
       challengesClosingOrder.push(id);
     } else {
-      for(uint i=length-1; i <= startIndex; i--){
-        if(i == length && _closeTime >= challenges[challengesClosingOrder[i]].closeTime) {
+      for(uint i=length-1; i >= startIndex; i--){
+        if(i == length-1 && _closeTime >= challenges[challengesClosingOrder[i]].closeTime) {
           challengesClosingOrder.push(id);
-        } else if(_closeTime >= challenges[challengesClosingOrder[i]].closeTime) {
+          break;
+        }
+        if(_closeTime >= challenges[challengesClosingOrder[i]].closeTime) {
           challengesClosingOrder.length = length + 1;
           for(uint j=length; j > i; j--) {
             challengesClosingOrder[j] = challengesClosingOrder[j - 1];
           }
           challengesClosingOrder[i+1] = id;
+          break;
+        }
+        if(i == startIndex) {
+          challengesClosingOrder.length = length + 1;
+          for(uint k=length; k > i; k--) {
+            challengesClosingOrder[k] = challengesClosingOrder[k - 1];
+          }
+          challengesClosingOrder[i] = id;
+          break;
         }
       }
-    } */
+    }
   }
 
   function queryToCloseChallenge(uint _closeTime) public payable {

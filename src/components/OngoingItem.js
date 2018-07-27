@@ -14,9 +14,6 @@ class OngoingItem extends Component {
     super(props);
     this.state = { modalSubmitIsOpen: false };
     this.submit = this.submit.bind(this);
-    console.log("ITEM", props);
-    //this.renderActionButton = this.renderActionButton.bind(this);
-    //this.props.updateNumberOfParticipants(this.props.item.id);
   }
 
   submit() {
@@ -26,7 +23,6 @@ class OngoingItem extends Component {
   openModal() {
     this.setState({modalSubmitIsOpen: true});
   }
-
 
   renderSubmitButton(challengeId) {
     const userHasParticipated = _.includes(this.props.user.participating, challengeId);

@@ -97,8 +97,11 @@ export default (logs, dispatch, action) => {
         // });
         //
         // decodedLogs[count] = decodedLogs[count][0];
+        const closedChallenges = (action == FETCH_CLOSED_CHALLENGES || action == FETCH_YOUR_CLOSED_CHALLENGES);
+        const fetchChallenge = (action == FETCH_CHALLENGE)
 
-        if(decodedLogs[count].status = "closed") {
+        if((decodedLogs[count].status == "closed" && closedChallenges) || (decodedLogs[count].status == "closed" && fetchChallenge)) {
+          console.log("ENTRA EN PROMISES 4");
           promises4.push(web3.eth.getPastLogs({
             fromBlock: 1,
             address: proxyAddress,
@@ -189,16 +192,16 @@ export default (logs, dispatch, action) => {
             count++;
           });
 
-          switch(action) {
-            case FETCH_OPEN_CHALLENGES:
-              decodedLogs = _.orderBy(decodedLogs, 'openTime', 'asc');
-            case UPDATE_OPEN_CHALLENGES:
-              decodedLogs = _.orderBy(decodedLogs, 'openTime', 'asc');
-            case FETCH_ONGOING_CHALLENGES:
-              decodedLogs = _.orderBy(decodedLogs, 'closeTime', 'asc');
-            case FETCH_CLOSED_CHALLENGES:
-              decodedLogs = _.orderBy(decodedLogs, 'closeTime', 'asc');
-          }
+          // switch(action) {
+          //   case FETCH_OPEN_CHALLENGES:
+          //     decodedLogs = _.orderBy(decodedLogs, 'openTime', 'asc');
+          //   case UPDATE_OPEN_CHALLENGES:
+          //     decodedLogs = _.orderBy(decodedLogs, 'openTime', 'asc');
+          //   case FETCH_ONGOING_CHALLENGES:
+          //     decodedLogs = _.orderBy(decodedLogs, 'closeTime', 'asc');
+          //   case FETCH_CLOSED_CHALLENGES:
+          //     decodedLogs = _.orderBy(decodedLogs, 'closeTime', 'asc');
+          // }
 
           var payload = null;
 
@@ -207,6 +210,17 @@ export default (logs, dispatch, action) => {
             payload = decodedLogs[0];
           } else {
             payload = _.mapKeys(decodedLogs, 'id')
+
+            switch(action) {
+              case FETCH_OPEN_CHALLENGES:
+                payload = _.orderBy(payload, 'openTime', 'asc');
+              case UPDATE_OPEN_CHALLENGES:
+                payload = _.orderBy(payload, 'openTime', 'asc');
+              case FETCH_ONGOING_CHALLENGES:
+                payload = _.orderBy(payload, 'closeTime', 'asc');
+              case FETCH_CLOSED_CHALLENGES:
+                payload = _.orderBy(payload, 'closeTime', 'asc');
+            }
           }
 
           //console.log("PAYLOAD", payload);

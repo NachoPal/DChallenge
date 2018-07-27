@@ -11,22 +11,10 @@ class OngoingChallenges extends Component {
   constructor(props) {
     super(props);
     this.props.fetchOngoingChallenges();
-    console.log("ONGOING CONSTRUCTOR", this.props)
-    //this.props.updateOngoingChallenges();
-  }
-
-  componentWillUpdate() {
-    console.log("ONGOING UPDATE");
-  }
-
-  componentDidMount() {
-    console.log("ONGOING DID MOUNT");
   }
 
   renderOngoingChallenges() {
     const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/';
-    console.log("USER ONGOING",this.props.user);
-    console.log("CHALLENGES ONGOING",this.props.ongoing);
     return _.map(this.props.ongoing, (value, key) => {
       if(!_.includes(this.props.user.participating, key)){
         return(
@@ -34,7 +22,6 @@ class OngoingChallenges extends Component {
             key={value.transactionHash}
             item={value}
             history={this.props.history}
-            //img= {`${URL_BASE}token-640x300.jpg`}
           />
         );
       }
@@ -42,7 +29,6 @@ class OngoingChallenges extends Component {
   }
 
   render() {
-    console.log(this.props);
     if(!_.isEmpty(this.props.ongoing)) {
       return (
         <div className="content container">

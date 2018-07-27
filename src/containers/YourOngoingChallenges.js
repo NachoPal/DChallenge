@@ -11,11 +11,9 @@ class YourOngoingChallenges extends Component {
 
   constructor(props) {
     super(props);
-    console.log("YOUR ONGOING", this.props);
     if(this.props.user.logged == true) {
       this.props.fetchYourOngoingChallenges(this.props.user.details.address);
     }
-    //this.props.updateOpenChallenges();
   }
 
   renderOngoingChallenges() {
@@ -26,7 +24,6 @@ class YourOngoingChallenges extends Component {
           <OngoingItem
             key={value.transactionHash}
             item={value}
-            //img= {`${URL_BASE}token-640x300.jpg`}
             history={this.props.history}
           />
         );

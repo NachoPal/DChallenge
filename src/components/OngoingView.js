@@ -21,7 +21,6 @@ class OngoingView extends Component {
   }
 
   openModalSubmit() {
-    console.log("Entra en opne modal")
     this.setState({modalSubmitIsOpen: true});
   }
 

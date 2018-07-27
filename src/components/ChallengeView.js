@@ -54,7 +54,6 @@ class ChallengeView extends Component {
   }
 
   render() {
-    console.log(this.props);
     if(!_.isEmpty(this.props.challenge.details)){
       return this.renderChallenge();
     } else {

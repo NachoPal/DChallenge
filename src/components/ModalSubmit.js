@@ -12,7 +12,6 @@ class ModalSubmit extends Component {
   constructor(props){
     super(props);
     this.closeModal = this.closeModal.bind(this);
-    console.log("MODAL SUBMIT", this.props);
   }
 
   closeModal() {

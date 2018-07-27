@@ -20,11 +20,6 @@ import YourChallenges from '../containers/YourChallenges';
 import ChallengeView from '../components/ChallengeView';
 import Account from '../components/Account';
 
-// const ChallengeViewWithProps = (props) => {
-//   return(
-//     <ChallengeView item={null} />
-//   );
-// }
 
 const App = function() {
   return (

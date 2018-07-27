@@ -16,7 +16,7 @@ import AccountArea from '../containers/AccountArea';
 
 class TopNav extends Component {
   constructor(props) {
-		super(props); //Hereda del state de Componente
+		super(props);
     if(sessionStorage.getItem('user')) {
       const sessionUser = JSON.parse(sessionStorage.getItem('user'));
       this.props.user.details = sessionUser.details;
@@ -69,7 +69,6 @@ class TopNav extends Component {
 
   onClickHandlerOut() {
     this.setState({clicked: false});
-    console.log("LOG OUT",this.props)
     this.props.userLogout(
       this.props.location.pathname,
       () => this.props.history.push(OPEN_CHALLENGES_PATH)

@@ -14,13 +14,6 @@ class OpenChallenges extends Component {
     this.props.updateOpenChallenges();
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    // if(nextProps.user != this.props.user){
-    //   this.props.fetchOpenChallenges();
-    // }
-    console.log("STATE", this.props);
-  }
-
   renderOpenChallenges() {
     const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/';
     return _.map(this.props.open, (value, key) => {
@@ -29,7 +22,6 @@ class OpenChallenges extends Component {
           <OpenItem
             key={value.transactionHash}
             item={value}
-            //img= {`${URL_BASE}token-640x300.jpg`}
             history={this.props.history}
           />
         );
@@ -38,7 +30,6 @@ class OpenChallenges extends Component {
   }
 
   render() {
-    console.log("RENDER", this.props);
     if(!_.isEmpty(this.props.open)) {
       return (
         <div className={"content container"}>

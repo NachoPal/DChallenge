@@ -14,8 +14,8 @@ module.exports = function(callback) {
       title: web3.utils.asciiToHex(`My challenge #${index}`),
       description: web3.utils.randomHex(32),
       thumbnail: web3.utils.randomHex(32),
-      openTime: Math.floor(Date.now() + (40000 * index)),
-      closeTime: Math.floor(Date.now() + (80000 * index)),
+      openTime: Math.floor(Date.now() + (100000 * index)),
+      closeTime: Math.floor(Date.now() + (200000 * index)),
       bettingPrice: 100000000000000000
     }
   }

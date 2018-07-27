@@ -23,7 +23,6 @@ class ClosedChallenges extends Component {
             key={value.transactionHash}
             item={value}
             history={this.props.history}
-            //img= {`${URL_BASE}token-640x300.jpg`}
           />
         );
       }
@@ -31,7 +30,6 @@ class ClosedChallenges extends Component {
   }
 
   render() {
-    console.log(this.props);
     if(!_.isEmpty(this.props.closed)) {
       return (
         <div className="content container">

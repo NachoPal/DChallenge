@@ -15,7 +15,6 @@ class Code extends Component {
     this.stopIntervals = this.stopIntervals.bind(this);
     this.setIntervals = this.setIntervals.bind(this);
     this.getBlock = this.getBlock.bind(this);
-    //this.acceptButtonClicked = this.acceptButtonClicked.bind(this);
   }
 
   componentDidMount() {
