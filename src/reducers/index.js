@@ -8,6 +8,7 @@ import SubmitChallengeReducer from './reducer_submit_challenge';
 
 import YourOpenChallengesReducer from './reducer_your_open_challenges';
 import YourOngoingChallengesReducer from './reducer_your_ongoing_challenges';
+import YourClosedChallengesReducer from './reducer_your_closed_challenges';
 
 import ChallengeViewReducer from './reducer_challenge_view';
 
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   user: UserReducer,
   yourOpen: YourOpenChallengesReducer,
   yourOngoing: YourOngoingChallengesReducer,
+  yourClosed: YourClosedChallengesReducer,
   submit: SubmitChallengeReducer,
 });
 

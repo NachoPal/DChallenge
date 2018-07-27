@@ -3,16 +3,18 @@
 export const FETCH_OPEN_CHALLENGES = 'fetch_open_challenges';
 export const UPDATE_OPEN_CHALLENGES = 'update_open_challenges';
 export const PARTICIPATE = 'participate';
-
 export const FETCH_YOUR_OPEN_CHALLENGES = 'fetch_your_open_challenges';
-export const FETCH_YOUR_ONGOING_CHALLENGES = 'fetch_your_ongoing_challenges';
+
 
 //Ongoing
 export const FETCH_ONGOING_CHALLENGES = 'fetch_ongoing_challenges';
 export const UPDATE_ONGOING_CHALLENGES = 'update_ongoing_challenges';
+export const FETCH_YOUR_ONGOING_CHALLENGES = 'fetch_your_ongoing_challenges';
+
 //Closed
 export const FETCH_CLOSED_CHALLENGES = 'fetch_closed_challenges';
 export const UPDATE_CLOSED_CHALLENGES = 'update_closed_challenges';
+export const FETCH_YOUR_CLOSED_CHALLENGES = 'fetch_your_closed_challenges';
 
 //OpenItem
 export const FETCH_NUMBER_OF_PARTICIPANTS = 'fetch_number_of_participants'

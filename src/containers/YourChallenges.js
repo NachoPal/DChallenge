@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import YourOpenChallenges from './YourOpenChallenges';
 import YourOngoingChallenges from './YourOngoingChallenges';
+import YourClosedChallenges from './YourCLosedChallenges';
 
 const styles = {
   root: {
@@ -27,13 +28,11 @@ class YourChallenges extends React.Component {
   };
 
   render() {
-    console.log("YOUR CHALLENGES", this.props);
     const { classes } = this.props;
     const { value } = this.state;
 
     return (
       <div className="content">
-        {/* <Paper className={classes.root}> */}
         <Paper>
           <Tabs
             value={this.state.value}
@@ -51,9 +50,7 @@ class YourChallenges extends React.Component {
         <div className="container">
           {value === 'open' && <YourOpenChallenges user={this.props.user} history={this.props.history}/>}
           {value === 'ongoing' && <YourOngoingChallenges user={this.props.user} history={this.props.history}/>}
-          {value === 'closed' && <YourOpenChallenges user={this.props.user} history={this.props.history}/>}
-          {/* {value === 'ongoing' && <YourOngoingChallenges user={this.props.user}/>} */}
-          {/*value === 'closed' && <YourOpenChallenges applyClass="yours"/>*/}
+          {value === 'closed' && <YourClosedChallenges user={this.props.user} history={this.props.history}/>}
         </div>
       </div>
     );

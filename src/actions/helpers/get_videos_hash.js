@@ -16,8 +16,9 @@ export default (logs, dispatch, action) => {
                           duration: decoded.videoDuration
                         }
                     });
+
   return dispatch({
     type: action,
-    payload: decodedLogs
+    payload: _.mapKeys(decodedLogs, "userAddress")
   });
 }

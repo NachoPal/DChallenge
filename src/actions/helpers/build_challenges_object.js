@@ -8,6 +8,7 @@ import {
   FETCH_ONGOING_CHALLENGES,
   FETCH_YOUR_ONGOING_CHALLENGES,
   FETCH_CLOSED_CHALLENGES,
+  FETCH_YOUR_CLOSED_CHALLENGES,
   UPDATE_OPEN_CHALLENGES,
   FETCH_CHALLENGE
 } from '../../initializers/action_types';
@@ -76,6 +77,27 @@ export default (logs, dispatch, action) => {
           ]
         }));
 
+        // decodedLogs[count] = [decodedLogs[count]].filter( (decodedLog) => {
+        //   switch(action) {
+        //     case FETCH_OPEN_CHALLENGES:
+        //       return decodedLog.status == "open";
+        //     case UPDATE_OPEN_CHALLENGES:
+        //       return decodedLog.status == "open";
+        //     case FETCH_YOUR_OPEN_CHALLENGES:
+        //       return decodedLog.status == "open";
+        //     case FETCH_ONGOING_CHALLENGES:
+        //       return decodedLog.status == "ongoing";
+        //     case FETCH_YOUR_ONGOING_CHALLENGES:
+        //       return decodedLog.status == "ongoing";
+        //     case FETCH_CLOSED_CHALLENGES:
+        //       return decodedLog.status == "closed";
+        //     default:
+        //       return decodedLog.participants >= 0;
+        //   }
+        // });
+        //
+        // decodedLogs[count] = decodedLogs[count][0];
+
         if(decodedLogs[count].status = "closed") {
           promises4.push(web3.eth.getPastLogs({
             fromBlock: 1,
@@ -131,12 +153,15 @@ export default (logs, dispatch, action) => {
               return decodedLog.status == "ongoing";
             case FETCH_CLOSED_CHALLENGES:
               return decodedLog.status == "closed";
+            case FETCH_YOUR_CLOSED_CHALLENGES:
+              return decodedLog.status == "closed";
             default:
               return decodedLog.participants >= 0;
           }
         });
 
         Promise.all(promises4).then(logs => {
+          console.log("NO ENTRS");
           var count = 0;
           _.map(logs, log => {
             var decoded = web3.eth.abi.decodeLog(
@@ -144,49 +169,54 @@ export default (logs, dispatch, action) => {
                             log[0].data,
                             _.drop(log[0].topics)
                           );
-            decodedLogs[count]["winner"] = decoded.winner;
+            if(!_.isEmpty(decodedLogs)) {
+              decodedLogs[count]["winner"] = decoded.winner;
 
-            if(decodedLogs[count].winner == true) {
-              decodedLogs[count]["winnerAddress"] = decoded.winnerAddress;
-              decodedLogs[count]["prizeAmount"] = decoded.prizeAmount;
-              decodedLogs[count]["randomNumber"] = decoded.randomNumber;
+              if(decodedLogs[count].winner == true) {
+                decodedLogs[count]["winnerAddress"] = decoded.winnerAddress;
+                decodedLogs[count]["prizeAmount"] = decoded.prizeAmount;
+                decodedLogs[count]["randomNumber"] = decoded.randomNumber;
 
-              const winnerSubmission = decodedLogs[count].submissionsData[decoded.winnerAddress];
-              decodedLogs[count]["winnerVideo"] = {};
-              decodedLogs[count].winnerVideo["code"] = winnerSubmission.code;
-              decodedLogs[count].winnerVideo["videoDuration"] = winnerSubmission.videoDuration;
-              decodedLogs[count].winnerVideo["ipfsHash"] = winnerSubmission.ipfsHash;
+                const winnerSubmission = decodedLogs[count].submissionsData[decoded.winnerAddress];
+                decodedLogs[count]["winnerVideo"] = {};
+                decodedLogs[count].winnerVideo["code"] = winnerSubmission.code;
+                decodedLogs[count].winnerVideo["duration"] = winnerSubmission.videoDuration;
+                decodedLogs[count].winnerVideo["ipfsHash"] = winnerSubmission.ipfsHash;
+                decodedLogs[count].winnerVideo["userAddress"] = decoded.winnerAddress;
+              }
             }
 
             count++;
           });
+
+          switch(action) {
+            case FETCH_OPEN_CHALLENGES:
+              decodedLogs = _.orderBy(decodedLogs, 'openTime', 'asc');
+            case UPDATE_OPEN_CHALLENGES:
+              decodedLogs = _.orderBy(decodedLogs, 'openTime', 'asc');
+            case FETCH_ONGOING_CHALLENGES:
+              decodedLogs = _.orderBy(decodedLogs, 'closeTime', 'asc');
+            case FETCH_CLOSED_CHALLENGES:
+              decodedLogs = _.orderBy(decodedLogs, 'closeTime', 'asc');
+          }
+
+          var payload = null;
+
+          if(action == FETCH_CHALLENGE) {
+            console.log("FECTH", decodedLogs);
+            payload = decodedLogs[0];
+          } else {
+            payload = _.mapKeys(decodedLogs, 'id')
+          }
+
+          //console.log("PAYLOAD", payload);
+
+          return dispatch({
+                   type: action,
+                   payload: payload
+                 });
+
         });
-
-        switch(action) {
-          case FETCH_OPEN_CHALLENGES:
-            decodedLogs = _.orderBy(decodedLogs, 'openTime', 'asc');
-          case UPDATE_OPEN_CHALLENGES:
-            decodedLogs = _.orderBy(decodedLogs, 'openTime', 'asc');
-          case FETCH_ONGOING_CHALLENGES:
-            decodedLogs = _.orderBy(decodedLogs, 'closeTime', 'asc');
-          case FETCH_CLOSED_CHALLENGES:
-            decodedLogs = _.orderBy(decodedLogs, 'closeTime', 'asc');
-        }
-
-        var payload = null;
-
-        if(action == FETCH_CHALLENGE) {
-          payload = decodedLogs[0];
-        } else {
-          payload = _.mapKeys(decodedLogs, 'id')
-        }
-
-        //console.log("PAYLOAD", payload);
-
-        return dispatch({
-                 type: action,
-                 payload: payload
-               });
       });
     });
   });

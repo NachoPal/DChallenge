@@ -7,16 +7,15 @@ import {
 } from "../initializers/routes";
 import CountDownTimer from './CountDownTimer';
 import ModalParticipate from '../components/ModalParticipate';
-//import ModalSubmit from '../components/ModalSubmit';
 import Loading from 'react-loading-components';
 import OpenView from '../components/OpenView';
 import OngoingView from '../components/OngoingView';
+import ClosedView from '../components/ClosedView';
 const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/';
 
 
 class ChallengeView extends Component {
   constructor(props) {
-    console.log("CONSTRUCTOR DE CHALLENGEVIEW")
     super(props);
     this.props.fetchChallenge(this.props.match.params.id);
   }
@@ -44,7 +43,13 @@ class ChallengeView extends Component {
         />
       );
     } else if(challenge.details.status == "closed") {
-
+      return(
+        <ClosedView
+          challenge={challenge.details}
+          videos={challenge.videos}
+          history={this.props.history}
+        />
+      );
     }
   }
 

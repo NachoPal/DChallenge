@@ -1,40 +1,42 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchClosedChallenges } from '../actions';
+import { fetchYourClosedChallenges } from '../actions';
 import _ from 'lodash';
+import web3 from './../initializers/web3';
 import Loading from 'react-loading-components';
 import ClosedItem from '../components/ClosedItem';
 
-class ClosedChallenges extends Component {
+class YourClosedChallenges extends Component {
 
   constructor(props) {
     super(props);
-    this.props.fetchClosedChallenges();
-    //this.props.checkOraclizeLogs();
+    if(this.props.user.logged == true) {
+      this.props.fetchYourClosedChallenges(this.props.user.details.address);
+    }
+    //this.props.updateOpenChallenges();
   }
 
   renderClosedChallenges() {
     const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/';
-    return _.map(this.props.closed, (value, key) => {
-      if(!_.includes(this.props.user.participating, key)){
+    if(this.props.yourClosed) {
+      return _.map(this.props.yourClosed, (value, key) => {
         return(
           <ClosedItem
             key={value.transactionHash}
             item={value}
-            history={this.props.history}
             //img= {`${URL_BASE}token-640x300.jpg`}
+            history={this.props.history}
           />
         );
-      }
-    });
+      });
+    }
   }
 
   render() {
-    console.log(this.props);
-    if(!_.isEmpty(this.props.closed)) {
+    if(!_.isEmpty(this.props.yourClosed)) {
       return (
-        <div className="content container">
+        <div className={"yours-content container"}>
           <div className="row">
             {this.renderClosedChallenges()}
           </div>
@@ -43,7 +45,7 @@ class ClosedChallenges extends Component {
     } else {
       return(
         <div className={"content container"}>
-          <div className="row" style={{marginTop: "200px"}}>
+          <div className="row" style={{marginTop: "150px"}}>
             <Loading type='bars' width={150} height={150} fill='#df6482' />
           </div>
         </div>
@@ -52,14 +54,14 @@ class ClosedChallenges extends Component {
   }
 }
 
-function mapStateToProps({ closed, user }) {
-  return { closed, user }
+function mapStateToProps({ yourClosed, user }) {
+  return { yourClosed, user };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    fetchClosedChallenges,
+    fetchYourClosedChallenges
   }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClosedChallenges);
+export default connect(mapStateToProps, mapDispatchToProps)(YourClosedChallenges);

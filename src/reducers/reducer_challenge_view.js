@@ -5,7 +5,7 @@ import {
   REMOVE_CHALLENGE_DATA
 } from '../initializers/action_types';
 
-const INITIAL_STATE = {details: {}, videos: []};
+const INITIAL_STATE = {details: {}, videos: {}};
 
 export default function(state = INITIAL_STATE, action) {
   switch(action.type) {
