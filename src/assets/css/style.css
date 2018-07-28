@@ -202,6 +202,8 @@ div.wow h1 {
 
 .panel {
   margin-bottom: 0px;
+  border-top: 0px;
+  border-bottom: 0px;
 }
 
 .even {
