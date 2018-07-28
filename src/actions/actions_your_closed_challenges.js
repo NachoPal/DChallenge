@@ -16,7 +16,7 @@ import {
 
 export function fetchYourClosedChallenges(userAddress) {
   userAddress = userAddressTo32Bytes(userAddress);
-  console.log("Esto se ejecuta");
+
   return (dispatch) => {
     web3.eth.getPastLogs({
       fromBlock: 1,

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchVideos } from '../actions';
 import Video from '../components/Video';
-const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/';
+import { URL_IPFS } from '../initializers/ipfs';
 
 
 class ClosedView extends Component {
@@ -45,7 +45,7 @@ class ClosedView extends Component {
           <div className="row">
             <div className="col-md-4">
               <div className="row">
-                <img src={`${URL_BASE}token-640x300.jpg`} className="img-responsive" alt="Challenge thumbnail" />
+                <img src={`${URL_IPFS}${challenge.thumbnail}`} className="img-responsive" alt="Challenge thumbnail" />
               </div>
               <div className="row">
                 <h3 className="border-title">CLOSED</h3>
@@ -56,7 +56,7 @@ class ClosedView extends Component {
               <div className="row">Jackpot - <b>{(challenge.bettingPrice / Math.pow(10,18)) * challenge.participants}</b> ETH</div>
             </div>
             <div className="col-md-8">
-              {challenge.description}
+              <iframe id="description" src={`${URL_IPFS}${challenge.description}`}></iframe>
             </div>
           </div>
 

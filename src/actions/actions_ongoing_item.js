@@ -15,7 +15,7 @@ export function updateNumberOfSubmissions(challengeId) {
         web3.eth.abi.encodeParameter('uint256', challengeId)
       ]
     }, (error, result) => {
-        if(!error) console.log(result);
+        if(!error) {}
     }).on("data", (logs) => {
       return dispatch({
         type: UPDATE_NUMBER_OF_PARTICIPANTS,

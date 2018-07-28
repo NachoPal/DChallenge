@@ -20,18 +20,3 @@ export function fetchOngoingChallenges() {
       });
   }
 }
-
-// export function updateOngoingChallenges() {
-//   return dispatch => {
-//     const subscription = web3.eth.subscribe('logs', {
-//       address: proxyAddress,
-//       topics: [encodedEventSignature("challengeCreation", implementationAbi)]
-//     }, (error, result) => {
-//         if(!error) console.log(result);
-//     }).on("data", (logs) => {
-//       buildChallengesObject([logs], dispatch, UPDATE_ONGOING_CHALLENGES)
-//     }).on("changed", (logs) => {
-//       console.log(logs);
-//     });
-//   }
-// }

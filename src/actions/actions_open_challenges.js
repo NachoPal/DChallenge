@@ -27,7 +27,7 @@ export function updateOpenChallenges() {
       address: proxyAddress,
       topics: [encodedEventSignature("challengeCreation", implementationAbi)]
     }, (error, result) => {
-        if(!error) console.log(result);
+        if(!error) {}
     }).on("data", (logs) => {
       buildChallengesObject([logs], dispatch, UPDATE_OPEN_CHALLENGES)
     }).on("changed", (logs) => {

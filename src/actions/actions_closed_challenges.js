@@ -17,10 +17,9 @@ export function fetchClosedChallenges() {
       address: proxyAddress,
       topics: [encodedEventSignature("challengeClosed", implementationAbi)]
     }).then((logs) => {
-        console.log("CLOSED LOGS", logs);
         var indexes = getChallengesIndex(logs, "challengeClosed");
         indexes = _.map(indexes, (index) => {return numberTo32bytes(index)});
-        console.log("INDEXES", indexes);
+
         web3.eth.getPastLogs({
           fromBlock: 1,
           address: proxyAddress,
@@ -29,7 +28,6 @@ export function fetchClosedChallenges() {
             indexes
           ]
         }).then((logs) => {
-              console.log("CHALLENGE LOGS", logs)
               buildChallengesObject(logs, dispatch, FETCH_CLOSED_CHALLENGES)
           });
       });

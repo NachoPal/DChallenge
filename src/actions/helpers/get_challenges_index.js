@@ -9,7 +9,6 @@ export default (logs, eventName) => {
                                         log.data,
                                         _.drop(log.topics)
                                         );
-                        console.log("Challenge Closed EVENT",decoded);
                         return decoded.id;
                     });
   return decodedLogs;

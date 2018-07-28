@@ -11,7 +11,7 @@ class OpenChallenges extends Component {
   constructor(props) {
     super(props);
     this.props.fetchOpenChallenges();
-    this.props.updateOpenChallenges();
+    //this.props.updateOpenChallenges();
   }
 
   renderOpenChallenges() {

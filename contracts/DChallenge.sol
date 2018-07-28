@@ -7,8 +7,9 @@ contract DChallenge is usingOraclize {
   event challengeCreation(
     uint indexed id,
     bytes32 indexed title,
-    bytes32 description,
-    bytes32 thumbnail
+    string summary,
+    string description,
+    string thumbnail
   );
 
   event challengeParticipation(uint indexed id, address indexed userAddress);
@@ -39,7 +40,6 @@ contract DChallenge is usingOraclize {
     uint participantsCounter;
     address[] submissions;
     mapping(address => bool) participants;
-    //mapping(address => bool) submissions;
   }
 
   mapping(uint => Challenge) public challenges;
@@ -71,8 +71,9 @@ contract DChallenge is usingOraclize {
 
   function createChallenge(
     bytes32 _title,
-    bytes32 _description,
-    bytes32 _thumbnail,
+    string _summary,
+    string _description,
+    string _thumbnail,
     uint _openTime,
     uint _closeTime,
     uint _bettingPrice
@@ -87,7 +88,7 @@ contract DChallenge is usingOraclize {
     orderChallengesToCloseById(_closeTime);
     queryToCloseChallenge(challenges[challengesCounter].closeTime);
 
-    emit challengeCreation(challengesCounter, _title, _description, _thumbnail);
+    emit challengeCreation(challengesCounter, _title, _summary, _description, _thumbnail);
     challengesCounter++;
   }
 

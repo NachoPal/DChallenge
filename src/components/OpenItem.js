@@ -12,6 +12,7 @@ import {
   YOUR_CHALLENGES_PATH,
   CHALLENGE_PATH
 } from "../initializers/routes";
+import { URL_IPFS } from '../initializers/ipfs';
 
 
 class OpenItem extends Component {
@@ -50,7 +51,6 @@ class OpenItem extends Component {
   }
 
   render() {
-    const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/';
     const { item } = this.props;
     return(
       <div className="row panel panel-primary open-challenge">
@@ -69,10 +69,10 @@ class OpenItem extends Component {
             {this.renderParticipateButton(item.id)}
           </div>
           <div className="col-md-4">
-              <img src={`${URL_BASE}token-640x300.jpg`} className="img-responsive" alt="Challenge thumbnail" />
+              <img src={`${URL_IPFS}${item.thumbnail}`} className="img-responsive" alt="Challenge thumbnail" />
           </div>
           <div className="col-md-6">
-            {item.description}
+            <iframe src={`${URL_IPFS}${item.summary}`}></iframe>
           </div>
       </div>
       <ModalParticipate isOpen={this.state.modalParticipateIsOpen} this={this} />

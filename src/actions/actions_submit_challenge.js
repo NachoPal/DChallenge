@@ -1,12 +1,9 @@
 const web3 = require('../initializers/web3');
 import web3meta from '../initializers/web3_metamask';
-import ipfs from '../initializers/ipfs';
+import { ipfs } from '../initializers/ipfs';
 var mnid = require('mnid');
 import _ from 'lodash';
 import { proxyOptions } from '../initializers/proxy_info';
-//import { implementationAbi } from '../initializers/implementation_info';
-// import { proxyAddress } from '../initializers/proxy_info';
-// import { implementationAbi } from '../initializers/implementation_info';
 import {
   GET_CONFIRMED_BLOCK,
   ACCEPT_BUTTON_CLICKED,
@@ -14,9 +11,6 @@ import {
   SUBMIT_CHALLENGE,
   ERROR_SUBMIT_CHALLENGE
 } from '../initializers/action_types';
-//import { encodedEventSignature } from '../helpers/helper_web3';
-//import buildChallengesObject from './helpers/build_challenges_object';
-//import { getAbiByFunctionNames, encodedEventSignature } from '../helpers/helper_web3';
 
 
 export function getConfirmedBlockNumber(userAddress) {

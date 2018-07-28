@@ -5,7 +5,7 @@ import { fetchVideos } from '../actions';
 import ModalSubmit from '../components/ModalSubmit';
 import CountDownTimer from './CountDownTimer';
 import Video from '../components/Video';
-const URL_BASE = 'http://www.rubyonblockchain.com/wp-content/uploads/';
+import { URL_IPFS } from '../initializers/ipfs';
 
 
 class OngoingView extends Component {
@@ -57,7 +57,7 @@ class OngoingView extends Component {
           <div className="row">
             <div className="col-md-4">
               <div className="row">
-                <img src={`${URL_BASE}token-640x300.jpg`} className="img-responsive" alt="Challenge thumbnail" />
+                <img src={`${URL_IPFS}${challenge.thumbnail}`} className="img-responsive" alt="Challenge thumbnail" />
               </div>
               <div className="row">
                 <h3 className="border-title">ONGOING</h3>
@@ -70,7 +70,7 @@ class OngoingView extends Component {
               {this.renderSubmitButton(challenge.id)}
             </div>
             <div className="col-md-8">
-              {challenge.description}
+              <iframe id="description" src={`${URL_IPFS}${challenge.description}`}></iframe>
             </div>
           </div>
 

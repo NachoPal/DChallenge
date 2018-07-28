@@ -39,9 +39,6 @@ export function fetchYourOpenChallenges(userAddress) {
         }).then((logs) => {
             buildChallengesObject(logs, dispatch, FETCH_YOUR_OPEN_CHALLENGES)
           });
-
-        //console.log("Lista de todos los logs", logs);
-        //buildYourChallengesObject(logs, dispatch, FETCH_YOUR_OPEN_CHALLENGES)
       });
   }
 }

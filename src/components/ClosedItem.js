@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import {
   CHALLENGE_PATH
 } from "../initializers/routes";
+import { URL_IPFS } from "../initializers/ipfs";
+
 
 class ClosedItem extends Component {
   constructor(props) {
@@ -26,7 +28,7 @@ class ClosedItem extends Component {
     } else {
       return(
         <div className="col-md-4">
-          <img src={`${URL_BASE}token-640x300.jpg`} className="img-responsive" alt="Challenge thumbnail" />
+          <img src={`${URL_IPFS}${item.thumbnail}`} className="img-responsive" alt="Challenge thumbnail" />
         </div>
       );
     }
@@ -47,7 +49,7 @@ class ClosedItem extends Component {
           </div>
           {this.renderVideoOrThumbnail()}
           <div className="col-md-6">
-            {item.description}
+            <iframe src={`${URL_IPFS}${item.summary}`}></iframe>
           </div>
         </div>
       </div>

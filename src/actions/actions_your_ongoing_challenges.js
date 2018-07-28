@@ -5,7 +5,6 @@ import { implementationAbi } from '../initializers/implementation_info';
 import {
   FETCH_YOUR_ONGOING_CHALLENGES
 } from '../initializers/action_types';
-//import { encodedEventSignature } from '../helpers/helper_web3';
 import buildChallengesObject from './helpers/build_challenges_object';
 import {
   getAbiByFunctionNames,
@@ -17,7 +16,7 @@ import {
 
 export function fetchYourOngoingChallenges(userAddress) {
   userAddress = userAddressTo32Bytes(userAddress);
-  console.log("Esto se ejecuta");
+
   return (dispatch) => {
     web3.eth.getPastLogs({
       fromBlock: 1,
@@ -43,9 +42,6 @@ export function fetchYourOngoingChallenges(userAddress) {
         }).then((logs) => {
             buildChallengesObject(logs, dispatch, FETCH_YOUR_ONGOING_CHALLENGES)
           });
-
-        //console.log("Lista de todos los logs", logs);
-        //buildYourChallengesObject(logs, dispatch, FETCH_YOUR_OPEN_CHALLENGES)
       });
   }
 }

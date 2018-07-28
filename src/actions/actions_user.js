@@ -32,7 +32,6 @@ export function userLogin() {
     });
 
     userCredentials.then( response => {
-      console.log("Loging re", response);
       dispatch({
               type: USER_LOGIN,
               payload: response
@@ -117,7 +116,6 @@ export function withdrawBalance(userAddress, amount) {
         userAddress: mnid.decode(userAddress).address
       }
 
-      console.log("Address",mnid.decode(userAddress).address)
       web3meta.eth.sendTransaction(proxyOptions("userWithdraw", inputs, 0), (error, txHash) => {
         if(!error) {
           return dispatch({

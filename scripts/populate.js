@@ -12,8 +12,9 @@ module.exports = function(callback) {
   const challengeInputs = (index) => {
     return {
       title: web3.utils.asciiToHex(`My challenge #${index}`),
-      description: web3.utils.randomHex(32),
-      thumbnail: web3.utils.randomHex(32),
+      summary: "QmUmZGpo44wnBhauUEa9uMTWLCTswJm4RE9uxkCoYMCgTa",
+      description: "QmY26Pa9cKqyY8FJbq7KSz7NYumkBmf5odYsLxC72ZQxHv",
+      thumbnail: "QmeEuzAxrQB9ueXRb9QX9UUzUZMDB9EKeWoKdDFn1KsTQk",
       openTime: Math.floor(Date.now() + (100000 * index)),
       closeTime: Math.floor(Date.now() + (200000 * index)),
       bettingPrice: 100000000000000000
@@ -26,7 +27,7 @@ module.exports = function(callback) {
   }
 
   web3.eth.getAccounts().then((accounts) => {
-    web3.eth.defaultAccount = accounts[0];
+    web3.eth.defaultAccount = accounts[1];
 
     proxyContract.deployed().then((instance) => {
       instance.implementation().then( result => {
@@ -48,7 +49,6 @@ module.exports = function(callback) {
             .catch((error) => {console.log("ERROR UPGRATE TO AND CALL", error)});
           //}
       })
-      console.log("Popupation success")
     })
   });
 }

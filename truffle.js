@@ -12,6 +12,9 @@
  *   },
  */
 
+const Web3 = require('web3');
+var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545")); 
+
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
   // to customize your Truffle configuration!
@@ -22,6 +25,7 @@ module.exports = {
       network_id: "*", // Match any network id
       gas: 4500000,
       gasPrice: 10000000000,
+      from: web3.eth.accounts[1]
     }
   }
 };

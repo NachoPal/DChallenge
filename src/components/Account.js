@@ -66,6 +66,11 @@ class Account extends Component {
                   <td><b>Balance:  </b></td>
                   <td>
                     {this.props.user.balance / Math.pow(10,18)} ETH
+                  </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>
                     {this.renderWithdrawButton()}
                   </td>
                 </tr>

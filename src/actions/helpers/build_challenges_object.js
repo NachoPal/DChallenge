@@ -18,7 +18,6 @@ export default (logs, dispatch, action) => {
   var promises2 = [];
   var promises3 = [];
   var promises4 = [];
-  //var challengeSubmissions = [];
 
   var decodedLogs = _.map( logs, (log) => {
                         var decoded = web3.eth.abi.decodeLog(
@@ -66,8 +65,6 @@ export default (logs, dispatch, action) => {
           ]
         }));
 
-        //AQUI HAGO LA LLAMADA AL EVENTO DE CHALLENGE SUBMISSIO
-        //decodedLogs[count]["submissions"] = 0;
         promises3.push(web3.eth.getPastLogs({
           fromBlock: 1,
           address: proxyAddress,
@@ -77,31 +74,10 @@ export default (logs, dispatch, action) => {
           ]
         }));
 
-        // decodedLogs[count] = [decodedLogs[count]].filter( (decodedLog) => {
-        //   switch(action) {
-        //     case FETCH_OPEN_CHALLENGES:
-        //       return decodedLog.status == "open";
-        //     case UPDATE_OPEN_CHALLENGES:
-        //       return decodedLog.status == "open";
-        //     case FETCH_YOUR_OPEN_CHALLENGES:
-        //       return decodedLog.status == "open";
-        //     case FETCH_ONGOING_CHALLENGES:
-        //       return decodedLog.status == "ongoing";
-        //     case FETCH_YOUR_ONGOING_CHALLENGES:
-        //       return decodedLog.status == "ongoing";
-        //     case FETCH_CLOSED_CHALLENGES:
-        //       return decodedLog.status == "closed";
-        //     default:
-        //       return decodedLog.participants >= 0;
-        //   }
-        // });
-        //
-        // decodedLogs[count] = decodedLogs[count][0];
         const closedChallenges = (action == FETCH_CLOSED_CHALLENGES || action == FETCH_YOUR_CLOSED_CHALLENGES);
         const fetchChallenge = (action == FETCH_CHALLENGE)
 
         if((decodedLogs[count].status == "closed" && closedChallenges) || (decodedLogs[count].status == "closed" && fetchChallenge)) {
-          console.log("ENTRA EN PROMISES 4");
           promises4.push(web3.eth.getPastLogs({
             fromBlock: 1,
             address: proxyAddress,
@@ -111,7 +87,6 @@ export default (logs, dispatch, action) => {
             ]
           }));
         }
-
         count++;
     });
 
@@ -164,7 +139,6 @@ export default (logs, dispatch, action) => {
         });
 
         Promise.all(promises4).then(logs => {
-          console.log("NO ENTRS");
           var count = 0;
           _.map(logs, log => {
             var decoded = web3.eth.abi.decodeLog(
@@ -192,21 +166,9 @@ export default (logs, dispatch, action) => {
             count++;
           });
 
-          // switch(action) {
-          //   case FETCH_OPEN_CHALLENGES:
-          //     decodedLogs = _.orderBy(decodedLogs, 'openTime', 'asc');
-          //   case UPDATE_OPEN_CHALLENGES:
-          //     decodedLogs = _.orderBy(decodedLogs, 'openTime', 'asc');
-          //   case FETCH_ONGOING_CHALLENGES:
-          //     decodedLogs = _.orderBy(decodedLogs, 'closeTime', 'asc');
-          //   case FETCH_CLOSED_CHALLENGES:
-          //     decodedLogs = _.orderBy(decodedLogs, 'closeTime', 'asc');
-          // }
-
           var payload = null;
 
           if(action == FETCH_CHALLENGE) {
-            console.log("FECTH", decodedLogs);
             payload = decodedLogs[0];
           } else {
             payload = _.mapKeys(decodedLogs, 'id')
@@ -223,13 +185,10 @@ export default (logs, dispatch, action) => {
             }
           }
 
-          //console.log("PAYLOAD", payload);
-
           return dispatch({
                    type: action,
                    payload: payload
                  });
-
         });
       });
     });
