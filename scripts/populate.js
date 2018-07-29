@@ -22,7 +22,8 @@ module.exports = function(callback) {
   }
 
   const initializeInputs = {
-    timeDelay: 300,
+    submitDelay: 300,
+    txDelay: 15,
     secondsPerBlock: 15
   }
 

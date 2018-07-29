@@ -1,8 +1,22 @@
 pragma solidity ^0.4.24;
 
 import "oraclize-api/contracts/usingOraclize.sol";
+import "./Ownable.sol";
+import "../libraries/SafeMath.sol";
 
-contract DChallenge is usingOraclize {
+contract DChallenge is Ownable, usingOraclize {
+
+  using SafeMath for uint256;
+
+  modifier challengeIsOpen(uint _id) {
+    require(challenges[_id].openTime > (now - txDelay));
+    _;
+  }
+
+  modifier challengeIsOngoing(uint _id) {
+    require((challenges[_id].openTime < now) && (challenges[_id].closeTime < (now - txDelay)));
+    _;
+  }
 
   event challengeCreation(
     uint indexed id,
@@ -47,25 +61,31 @@ contract DChallenge is usingOraclize {
   uint[] challengesClosingOrder;
   uint challengesClosingOrderStartIndex;
 
-  uint public timeDelay;
+  uint public submitDelay;
+  uint public txDelay;
   uint public secondsPerBlock;
 
   mapping(bytes32 => bool) validOraclizeIds;
   mapping(address => uint) public balances;
 
 
-  function initialize(uint _timeDelay, uint _secondsPerBlock) public {
+  function initialize(uint _submitDelay, uint _txDelay, uint _secondsPerBlock) public onlyOwner {
     OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
     oraclize_setProof(proofType_TLSNotary | proofStorage_IPFS);
-    timeDelay = _timeDelay;
+    submitDelay = _submitDelay;
+    txDelay = _txDelay;
     secondsPerBlock = _secondsPerBlock;
   }
 
-  function setTimeDelay(uint _timeDelay) public {
-    timeDelay = _timeDelay;
+  function setSubmitDelay(uint _submitDelay) public onlyOwner {
+    submitDelay = _submitDelay;
   }
 
-  function setSecondsPerBlock(uint _secondsPerBlock) public {
+  function setTxDelay(uint _txDelay) public onlyOwner {
+    txDelay = _txDelay;
+  }
+
+  function setSecondsPerBlock(uint _secondsPerBlock) public onlyOwner {
     secondsPerBlock = _secondsPerBlock;
   }
 
@@ -77,7 +97,7 @@ contract DChallenge is usingOraclize {
     uint _openTime,
     uint _closeTime,
     uint _bettingPrice
-  )external returns(bool) {
+  )external onlyOwner returns(bool) {
 
     challenges[challengesCounter] = Challenge({bettingPrice: _bettingPrice,
                                                openTime: _openTime,
@@ -142,7 +162,9 @@ contract DChallenge is usingOraclize {
     }
   }
 
-  function participate(uint _challengeId, address _userAddress) public payable {
+  function participate(uint _challengeId, address _userAddress)
+    public payable challengeIsOpen(_challengeId) {
+    require(msg.value >= challenges[_challengeId].bettingPrice);
     //With uPort
     //challenges[_challengeId].participants[msg.sender] = true;
     //emit challengeParticipation(_challengeId, msg.sender);
@@ -161,7 +183,8 @@ contract DChallenge is usingOraclize {
     uint _videoDuration,
     string _ipfsHash,
     address _userAddress
-  )public returns(bool){
+  )public challengeIsOngoing(_challengeId) returns(bool) {
+    require(challenges[_challengeId].participants[_userAddress]);
     require(verifySubmission(_blockNumber, _code, _userAddress, _videoDuration) == true);
     challenges[_challengeId].submissions.push(_userAddress);
     emit challengeSubmission(_challengeId, _userAddress, _code, _videoDuration, _ipfsHash);
@@ -177,16 +200,13 @@ contract DChallenge is usingOraclize {
     bytes32 blockHash = blockhash(_blockNumber);
     bytes32 code = keccak256(abi.encodePacked(_userAddress, blockHash));
 
-    //uint time = timeDelay;
-    //uint secondss = secondsPerBlock;
-
     if(_code != code) {
       return false;
     }
 
     uint currentBlockNumber = block.number;
-    uint challengeDuration = _videoDuration + timeDelay;
-    uint timeBetweenBlocks = (currentBlockNumber - _blockNumber) * secondsPerBlock;
+    uint challengeDuration = _videoDuration.add(submitDelay);
+    uint timeBetweenBlocks = (currentBlockNumber.sub(_blockNumber)).mul(secondsPerBlock);
 
     if(timeBetweenBlocks > challengeDuration) {
       return false;
@@ -214,8 +234,8 @@ contract DChallenge is usingOraclize {
   }
 
   function givePrizeToWinner(uint _challengeId, address _winnerAddress) internal returns(uint) {
-    uint prizeAmount = challenges[_challengeId].participantsCounter * challenges[_challengeId].bettingPrice;
-    balances[_winnerAddress] = balances[_winnerAddress] + prizeAmount;
+    uint prizeAmount = challenges[_challengeId].participantsCounter.mul(challenges[_challengeId].bettingPrice);
+    balances[_winnerAddress] = balances[_winnerAddress].add(prizeAmount);
     return prizeAmount;
   }
 
