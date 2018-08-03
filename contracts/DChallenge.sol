@@ -2,10 +2,11 @@ pragma solidity ^0.4.24;
 
 import "oraclize-api/contracts/usingOraclize.sol";
 import "./Ownable.sol";
+import "./Pausable.sol";
 import "../libraries/SafeMath.sol";
 
 /** @title DChallenge. */
-contract DChallenge is Ownable, usingOraclize {
+contract DChallenge is Ownable, Pausable, usingOraclize {
 
     using SafeMath for uint256;
 
@@ -102,6 +103,7 @@ contract DChallenge is Ownable, usingOraclize {
     uint public secondsPerBlock;
 
     mapping(bytes32 => bool) validOraclizeIds;
+    mapping(address => address) addressesAssociation;
     mapping(address => uint) public balances;
 
 
@@ -116,7 +118,6 @@ contract DChallenge is Ownable, usingOraclize {
         uint _secondsPerBlock
     )
         external
-        onlyOwner
     {
         OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
         oraclize_setProof(proofType_TLSNotary | proofStorage_IPFS);
@@ -186,8 +187,15 @@ contract DChallenge is Ownable, usingOraclize {
       * @param _challengeId ID of the challenge the user is participating.
       * @param _userAddress uPort address of the user who is participating.
       */
-    function participate(uint _challengeId, address _userAddress)
-        external payable challengeIsOpen(_challengeId) {
+    function participate(
+        uint _challengeId,
+        address _userAddress
+    )
+        external
+        payable
+        whenNotPaused
+        challengeIsOpen(_challengeId)
+    {
         require(msg.value >= challenges[_challengeId].bettingPrice);
         //Signing transactions with uPort
         //challenges[_challengeId].participants[msg.sender] = true;
@@ -217,6 +225,7 @@ contract DChallenge is Ownable, usingOraclize {
         address _userAddress
     )
         external
+        whenNotPaused
         challengeIsOngoing(_challengeId)
         returns(bool)
     {
@@ -231,19 +240,23 @@ contract DChallenge is Ownable, usingOraclize {
       * @param _amount Amount to withdraw.
       * @param _userAddress uPort address of the user
       */
-    function userWithdraw(uint _amount, address _userAddress) external {
-        balances[_userAddress] >= _amount;
-        // Remember to subtract the amount before
-        // sending to prevent re-entrancy attacks
+    function userWithdraw(uint _amount, address _userAddress) external whenNotPaused {
+        require(balances[_userAddress] >= _amount);
         balances[_userAddress] -= _amount;
         msg.sender.transfer(_amount);
+    }
+
+    /** @dev Destruct contract and send balance to the owner.
+      */
+    function kill() external onlyOwner {
+        selfdestruct(proxyOwner());
     }
 
     /** @dev Callback called by Oraclize to close a challenge.
       * @param _myid Oraclize query unique ID.
       * @param _result Result of the query
       */
-    function __callback(bytes32 _myid, string _result) public {
+    function __callback(bytes32 _myid, string _result) public whenNotPaused {
       require(validOraclizeIds[_myid]);
       require(msg.sender == oraclize_cbAddress());
       closeChallenge(parseInt(_result));
@@ -309,6 +322,7 @@ contract DChallenge is Ownable, usingOraclize {
       * @param _blockNumber Current block number when the video started to be recorded.
       * @param _userAddress uPort user address.
       * @param _videoDuration Duration of the submitted video.
+      * @return true if verificaton succeded
       */
     function verifySubmission(
         uint _blockNumber,
@@ -357,6 +371,7 @@ contract DChallenge is Ownable, usingOraclize {
     /** @dev Selects a winner userd based on the random number.
       * @param _challengeId ID of the challenge for a user to be selected as winner.
       * @param _randomNumber Random number retrieved by Oraclize API call.
+      * @return the address of the winner.
       */
     function chooseWinner(uint _challengeId, uint _randomNumber) internal view returns(address) {
         uint winnerIndex = _randomNumber%((challenges[_challengeId].submissions.length - 1) + 1);
@@ -366,6 +381,7 @@ contract DChallenge is Ownable, usingOraclize {
     /** @dev Adds the prize amount in finney to the balance of the winner user.
       * @param _challengeId ID of the challenge for a user to be selected as winner.
       * @param _winnerAddress uPort address of the winner user.
+      * @return the prize amount.
       */
     function givePrizeToWinner(uint _challengeId, address _winnerAddress) internal returns(uint) {
         uint prizeAmount = challenges[_challengeId].participantsCounter.mul(challenges[_challengeId].bettingPrice);
