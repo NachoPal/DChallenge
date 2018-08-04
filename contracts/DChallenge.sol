@@ -94,7 +94,7 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
     }
 
     mapping(uint => Challenge) public challenges;
-    uint challengesCounter;
+    uint public challengesCounter;
     uint[] challengesClosingOrder;
     uint challengesClosingOrderStartIndex;
 
@@ -229,7 +229,7 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
         challengeIsOngoing(_challengeId)
         returns(bool)
     {
-        require(challenges[_challengeId].participants[_userAddress]);
+        require(userIsParticipating(_challengeId, _userAddress));
         require(verifySubmission(_blockNumber, _code, _userAddress, _videoDuration) == true);
         challenges[_challengeId].submissions.push(_userAddress);
         emit challengeSubmission(_challengeId, _userAddress, _code, _videoDuration, _ipfsHash);
@@ -260,6 +260,15 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
       require(validOraclizeIds[_myid]);
       require(msg.sender == oraclize_cbAddress());
       closeChallenge(parseInt(_result));
+    }
+
+    /** @dev Custom getter function to check if a user is participating in a certain challenge.
+      * @param _challengeId ID of the challenge.
+      * @param _userAddress Address of the user.
+      * @return True if user is participating
+      */
+    function userIsParticipating(uint _challengeId, address _userAddress) public returns(bool) {
+      return challenges[_challengeId].participants[_userAddress];
     }
 
     /** @dev Orders in an array the ids of the challenges in function of when they have to be closed.
