@@ -114,18 +114,18 @@ contract('OwnerActions', function(accounts) {
       gas: 3000000
     });
 
-    const challengeId = await web3.eth.call({
+    const challengeCounter = await web3.eth.call({
       data: encodedFunctionCall("challengesCounter", {}, this.implementationAbi),
       from: this.ownerAccount,
       to: this.proxyAddress
     });
 
-    console.log("Challenges Counter", challengeId);
+    const challengeId = web3.utils.hexToNumber(challengeCounter) - 1;
 
     var challengeData = await web3.eth.call({
       data: encodedFunctionCall(
         "challenges",
-        challengeId,
+        [challengeId],
         this.implementationAbi
       ),
       from: this.ownerAccount,

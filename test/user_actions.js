@@ -60,14 +60,18 @@ contract('UserActions', function(accounts) {
       gas: 3000000
     });
 
-    this.challengeId = await web3.eth.call({
+    this.challengeCounter = await web3.eth.call({
       data: encodedFunctionCall("challengesCounter", {}, this.implementationAbi),
       from: this.ownerAccount,
       to: this.proxyAddress
     });
 
+    this.challengeId = web3.utils.hexToNumber(this.challengeCounter) - 1;
+
     this.bettingPrice = 100000000000000000;
   });
+
+
 
   it("User participate in the challenge", async () => {
     const participateInputs = {
@@ -87,36 +91,40 @@ contract('UserActions', function(accounts) {
       gas: 3000000
     });
 
-    const challenge = await web3.eth.call({
+    var challengeData = await web3.eth.call({
       data: encodedFunctionCall(
         "challenges",
-        parseInt(this.challengeId),
+        [this.challengeId],
         this.implementationAbi
-      )
+      ),
+      from: this.ownerAccount,
+      to: this.proxyAddress,
     });
 
-    console.log(challenge);
+    challengeData = decodeParameters("challenges", this.implementationAbi, challengeData);
 
-    const isParticipating = await web3.eth.call({
+    var isParticipating = await web3.eth.call({
       data: encodedFunctionCall(
-        "isParticipating",
-        parseInt(this.challengeId),
+        "userIsParticipating",
+        Object.values(participateInputs),
         this.implementationAbi
-      )
+      ),
+      from: this.ownerAccount,
+      to: this.proxyAddress,
     });
 
-    // const expectedValues = {
-    //   isParticipating: true,
-    //   participants: 1
-    // }
-    //
-    // const values = {
-    //   isParticipating: isParticipating,
-    //   participants: challenge
-    // }
+    isParticipating = decodeParameters("userIsParticipating", this.implementationAbi, isParticipating);
 
+    const expectedValues = {
+      isParticipating: true,
+      participants: 1
+    }
 
+    const values = {
+      isParticipating: isParticipating[0],
+      participants: parseInt(challengeData.participantsCounter)
+    }
 
-
+    assert.deepEqual(values, expectedValues, "User couldn't participate in the challenge");
   });
 });
