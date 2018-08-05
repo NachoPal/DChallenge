@@ -22,7 +22,25 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
       * @param _id ID of the challenge to be checked.
       */
     modifier challengeIsOngoing(uint _id) {
-        require((challenges[_id].openTime < now) && (challenges[_id].closeTime < (now - txDelay)));
+        require((challenges[_id].openTime < now) && (challenges[_id].closeTime > (now - txDelay)));
+        _;
+    }
+
+    /** @dev Check the user not participate twice for the same challenge
+      * @param _id ID of the challenge to be checked.
+      * @param _userAddress Address of the user.
+      */
+    modifier userHasNotParticipated(uint _id, address _userAddress) {
+        require(!userIsParticipating(_id, _userAddress));
+        _;
+    }
+
+    /** @dev Check the user not submit twice for the same challenge
+      * @param _id ID of the challenge to be checked.
+      * @param _userAddress Address of the user.
+      */
+    modifier userHasNotSubmitted(uint _id, address _userAddress) {
+        require(!userHasSubmitted(_id, _userAddress));
         _;
     }
 
@@ -89,8 +107,9 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
         uint openTime;
         uint closeTime;
         uint participantsCounter;
-        address[] submissions;
+        address[] submissionsIndex;
         mapping(address => bool) participants;
+        mapping(address => bool) submissions;
     }
 
     mapping(uint => Challenge) public challenges;
@@ -103,7 +122,6 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
     uint public secondsPerBlock;
 
     mapping(bytes32 => bool) validOraclizeIds;
-    mapping(address => address) addressesAssociation;
     mapping(address => uint) public balances;
 
 
@@ -169,18 +187,18 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
         onlyOwner
         returns(bool)
     {
-      challenges[challengesCounter] = Challenge({
-        bettingPrice: _bettingPrice,
-        openTime: _openTime,
-        closeTime: _closeTime,
-        participantsCounter: 0,
-        submissions: new address[](0)
-      });
+        challenges[challengesCounter] = Challenge({
+          bettingPrice: _bettingPrice,
+          openTime: _openTime,
+          closeTime: _closeTime,
+          participantsCounter: 0,
+          submissionsIndex: new address[](0)
+        });
 
-      orderChallengesToCloseById(_closeTime);
-      queryToCloseChallenge(challenges[challengesCounter].closeTime);
-      emit challengeCreation(challengesCounter, _title, _summary, _description, _thumbnail);
-      challengesCounter++;
+        orderChallengesToCloseById(_closeTime);
+        queryToCloseChallenge(challenges[challengesCounter].closeTime);
+        emit challengeCreation(challengesCounter, _title, _summary, _description, _thumbnail);
+        challengesCounter++;
     }
 
     /** @dev User participates in a Challenge.
@@ -193,6 +211,7 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
     )
         external
         payable
+        userHasNotParticipated(_challengeId, _userAddress)
         whenNotPaused
         challengeIsOpen(_challengeId)
     {
@@ -225,13 +244,15 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
         address _userAddress
     )
         external
+        userHasNotSubmitted(_challengeId, _userAddress)
         whenNotPaused
         challengeIsOngoing(_challengeId)
         returns(bool)
     {
         require(userIsParticipating(_challengeId, _userAddress));
         require(verifySubmission(_blockNumber, _code, _userAddress, _videoDuration) == true);
-        challenges[_challengeId].submissions.push(_userAddress);
+        challenges[_challengeId].submissionsIndex.push(_userAddress);
+        challenges[_challengeId].submissions[_userAddress] = true;
         emit challengeSubmission(_challengeId, _userAddress, _code, _videoDuration, _ipfsHash);
         return true;
     }
@@ -256,10 +277,10 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
       * @param _myid Oraclize query unique ID.
       * @param _result Result of the query
       */
-    function __callback(bytes32 _myid, string _result) public whenNotPaused {
-      require(validOraclizeIds[_myid]);
-      require(msg.sender == oraclize_cbAddress());
-      closeChallenge(parseInt(_result));
+    function __callback(bytes32 _myid, string _result, bytes _proof) public whenNotPaused {
+        require(validOraclizeIds[_myid]);
+        require(msg.sender == oraclize_cbAddress());
+        closeChallenge(parseInt(_result));
     }
 
     /** @dev Custom getter function to check if a user is participating in a certain challenge.
@@ -267,8 +288,17 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
       * @param _userAddress Address of the user.
       * @return True if user is participating
       */
-    function userIsParticipating(uint _challengeId, address _userAddress) public returns(bool) {
-      return challenges[_challengeId].participants[_userAddress];
+    function userIsParticipating(uint _challengeId, address _userAddress) public view returns(bool) {
+        return challenges[_challengeId].participants[_userAddress];
+    }
+
+    /** @dev Custom getter function to check if a user has submitted a video in a certain challenge.
+      * @param _challengeId ID of the challenge.
+      * @param _userAddress Address of the user.
+      * @return True if user is participating
+      */
+    function userHasSubmitted(uint _challengeId, address _userAddress) public view returns(bool) {
+        return challenges[_challengeId].submissions[_userAddress];
     }
 
     /** @dev Orders in an array the ids of the challenges in function of when they have to be closed.
@@ -314,17 +344,17 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
       * @param _closeTime Time the Ongoing time will finish as milliseconds since UNIX epochTime.
       */
     function queryToCloseChallenge(uint _closeTime) internal {
-      if (oraclize_getPrice("URL") > address(this).balance) {
-          emit LogNewOraclizeQuery(challengesCounter, "Oraclize query was NOT sent, please add some ETH to cover for the query fee");
-      } else {
-          emit LogNewOraclizeQuery(challengesCounter, "Oraclize query was sent, standing by for the answer..");
-          uint delay = (_closeTime/1000) - now;
-          bytes32 queryId = oraclize_query(
-                              delay,
-                              "URL", "https://www.random.org/integers/?num=1&min=1&max=10000&col=1&base=10&format=plain&rnd=new"
-                            );
-          validOraclizeIds[queryId] = true;
-      }
+        if (oraclize_getPrice("URL") > address(this).balance) {
+            emit LogNewOraclizeQuery(challengesCounter, "Oraclize query was NOT sent, please add some ETH to cover for the query fee");
+        } else {
+            emit LogNewOraclizeQuery(challengesCounter, "Oraclize query was sent, standing by for the answer..");
+            uint delay = _closeTime - now;
+            bytes32 queryId = oraclize_query(
+                                delay,
+                                "URL", "https://www.random.org/integers/?num=1&min=1&max=10000&col=1&base=10&format=plain&rnd=new"
+                              );
+            validOraclizeIds[queryId] = true;
+        }
     }
 
     /** @dev Verifies if the data attached in the submission match with the blockchain derived data.
@@ -368,7 +398,7 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
         delete challengesClosingOrder[challengesClosingOrderStartIndex];
         challengesClosingOrderStartIndex++;
 
-        if (challenges[id].submissions.length >= 1) {
+        if (challenges[id].submissionsIndex.length >= 1) {
             address winnerAddress = chooseWinner(id, _randomNumber);
             uint prizeAmount = givePrizeToWinner(id, winnerAddress);
             emit challengeClosed(id, true, winnerAddress, prizeAmount, _randomNumber);
@@ -383,8 +413,8 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
       * @return the address of the winner.
       */
     function chooseWinner(uint _challengeId, uint _randomNumber) internal view returns(address) {
-        uint winnerIndex = _randomNumber%((challenges[_challengeId].submissions.length - 1) + 1);
-        return challenges[_challengeId].submissions[winnerIndex];
+        uint winnerIndex = _randomNumber%((challenges[_challengeId].submissionsIndex.length - 1) + 1);
+        return challenges[_challengeId].submissionsIndex[winnerIndex];
     }
 
     /** @dev Adds the prize amount in finney to the balance of the winner user.

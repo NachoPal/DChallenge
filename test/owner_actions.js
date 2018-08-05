@@ -90,8 +90,11 @@ contract('OwnerActions', function(accounts) {
   });
 
   it("Owner creates a challenge", async () => {
-    const openTime = Math.floor((Date.now() + (60 * 1000)));
-    const closeTime = Math.floor((Date.now() + (120 * 1000)));
+    // const openTime = Math.floor(Date.now() + (60 * 1000));
+    // const closeTime = Math.floor(Date.now() + (1200 * 1000));
+
+    const openTime = Math.floor((Date.now()/1000) + 300);
+    const closeTime = Math.floor((Date.now()/1000) + 1200);
 
     const expectedChallengeInputs = {
         title: web3.utils.padRight(web3.utils.asciiToHex("Test challenge"), 64),
@@ -187,7 +190,7 @@ contract('OwnerActions', function(accounts) {
   //   assert.equal(newOwner, expectedNewOwner, "Ownership wasn't transfered properly");
   // });
 
-  it("Owner kill the Proxy contract is refunded with its balance", async () => {
+  it("Owner kill the Proxy contract and is refunded with its balance", async () => {
     const currentOwnerBalance = await web3.eth.getBalance(this.ownerAccount);
 
     const recepit = await web3.eth.sendTransaction({
