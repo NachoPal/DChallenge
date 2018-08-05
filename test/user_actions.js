@@ -305,4 +305,32 @@ contract('UserActions', function(accounts) {
     assert(finalUserBalance, this.initialUserBalance + this.bettingPrice, "Prize wasn't assigned properly")
   });
 
+  it("User withdraw his balance", async () => {
+    const withdrawalInputs = {
+      amount: this.bettingPrice,
+      userAdress: accounts[0]
+    }
+
+    const initialAccountBalance = await web3.eth.getBalance(accounts[0]);
+
+    const receipt = await web3.eth.sendTransaction({
+      data: encodedFunctionCall(
+        "userWithdraw",
+        Object.values(withdrawalInputs),
+        this.implementationAbi
+      ),
+      from: accounts[0],
+      to: this.proxyAddress,
+      gas: 3000000,
+      gasPrice: 10000000000
+    });
+
+    const transactionCost = receipt.gasUsed * 10000000000;
+    const expectedFinalAccountBalance = parseInt(initialAccountBalance) - transactionCost + this.bettingPrice;
+
+    const finalAccountBalance = await web3.eth.getBalance(accounts[0]);
+
+    assert.equal(finalAccountBalance, expectedFinalAccountBalance, "The user didn't withdraw the prize properly")
+  });
+
 });
