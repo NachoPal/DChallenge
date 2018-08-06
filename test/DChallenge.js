@@ -8,7 +8,7 @@ const numberTo32bytes = require('../src/helpers/helper_web3').numberTo32bytes;
 var OwnedUpgradeabilityProxy = artifacts.require("./OwnedUpgradeabilityProxy");
 var DChallenge = artifacts.require("./DChallenge");
 
-contract('UserActions', function(accounts) {
+contract('DChallenge', function(accounts) {
 
   before("Initialize Implementation (DChallenge contract) and make Proxy to point to it", async () => {
     this.initializeInputs = {
@@ -28,25 +28,44 @@ contract('UserActions', function(accounts) {
     this.implementationAddress = implementation.address;
     this.implementationAbi = implementation.abi;
 
-
     await this.proxy.upgradeToAndCall(
       this.implementationAddress,
       encodedFunctionCall("initialize", Object.values(this.initializeInputs), this.implementationAbi),
       {from: this.ownerAccount, gas: 3000000}
     );
-  });
-
-  before("Owner creates a challenge", async () =>{
-    this.openPeriod = 15;
-    this.closePeriod = 30;
-    this.delay = 30;
-    this.bettingPrice = 100000000000000000;
 
     this.initialUserBalance = await web3.eth.call({
       data: encodedFunctionCall("balances", [accounts[0]], this.implementationAbi),
       from: accounts[0],
       to: this.proxyAddress
     });
+
+    this.timeTravel = function(time) {
+      return new Promise((resolve, reject) => {
+          web3.currentProvider.send({
+          jsonrpc: "2.0",
+          method: "evm_increaseTime",
+          params: [time], // 86400 is num seconds in day
+          id: new Date().getSeconds()
+        }, (err, result) => {
+          if(err){ return reject(err) }
+          return resolve(result)
+        });
+      });
+    };
+
+    this.waitForOraclizeTx = function() {
+      return new Promise( resolve => {
+        setTimeout(() => { return resolve() }, (this.closePeriod + this.delay) * 1000);
+      });
+    };
+  });
+
+  it("Owner creates a challenge", async () =>{
+    this.openPeriod = 15;
+    this.closePeriod = 30;
+    this.delay = 30;
+    this.bettingPrice = 100000000000000000;
 
     const openTime = Math.floor((Date.now()/1000) + this.openPeriod);
     const closeTime = Math.floor((Date.now()/1000) + this.closePeriod);
@@ -82,39 +101,44 @@ contract('UserActions', function(accounts) {
 
     this.bettingPrice = 100000000000000000;
 
-    this.timeTravel = function(time) {
-      return new Promise((resolve, reject) => {
-          web3.currentProvider.send({
-          jsonrpc: "2.0",
-          method: "evm_increaseTime",
-          params: [time], // 86400 is num seconds in day
-          id: new Date().getSeconds()
-        }, (err, result) => {
-          if(err){ return reject(err) }
-          return resolve(result)
-        });
-      });
-    };
-    //
-    this.mineBlock = function() {
-      return new Promise((resolve, reject) => {
-          web3.currentProvider.send({
-          jsonrpc: "2.0",
-          method: "evm_mine",
-          params: [],
-          id: new Date().getSeconds()
-        }, (err, result) => {
-          if(err){ return reject(err) }
-          return resolve(result)
-        });
-      })
-    };
+    var challengeData = await web3.eth.call({
+      data: encodedFunctionCall(
+        "challenges",
+        [this.challengeId],
+        this.implementationAbi
+      ),
+      from: this.ownerAccount,
+      to: this.proxyAddress,
+    });
 
-    this.waitForOraclizeTx = function() {
-      return new Promise( resolve => {
-        setTimeout(() => { return resolve() }, (this.closePeriod + this.delay) * 1000);
-      });
-    };
+    challengeData = decodeParameters("challenges", this.implementationAbi, challengeData)
+
+    const logs = await web3.eth.getPastLogs({
+      fromBlock: 1,
+      address: this.proxyAddress,
+      topics: [encodedEventSignature("challengeCreation", this.implementationAbi)]
+    });
+
+    const decodedLogs = web3.eth.abi.decodeLog(
+      getAbiByFunctionNames(this.implementationAbi)["challengeCreation"].inputs,
+      logs[0].data,
+      _.drop(logs[0].topics)
+    );
+
+    var challengeInputs = {};
+    challengeInputs["title"] = decodedLogs.title;
+    challengeInputs["summary"] = decodedLogs.summary;
+    challengeInputs["description"] = decodedLogs.description;
+    challengeInputs["thumbnail"] = decodedLogs.thumbnail;
+    challengeInputs["openTime"] = parseInt(challengeData.openTime);
+    challengeInputs["closeTime"] = parseInt(challengeData.closeTime);
+    challengeInputs["bettingPrice"] = parseInt(challengeData.bettingPrice);
+
+    assert.deepEqual(
+      challengeInputs,
+      expectedChallengeInputs,
+      "Challenge wasn't created properly"
+    )
   });
 
   it("User participate in the challenge", async () => {
@@ -195,7 +219,6 @@ contract('UserActions', function(accounts) {
 
   it("User submit a video in a challenge", async () => {
     await this.timeTravel(this.openPeriod);
-    //await this.mineBlock();
 
     const confirmedBlock = await web3.eth.getBlockNumber();
     const block = await web3.eth.getBlock(confirmedBlock);
@@ -332,5 +355,4 @@ contract('UserActions', function(accounts) {
 
     assert.equal(finalAccountBalance, expectedFinalAccountBalance, "The user didn't withdraw the prize properly")
   });
-
 });

@@ -23,7 +23,8 @@ module.exports = {
       host: "localhost",
       port: 8545,
       network_id: "*", // Match any network id
-      gas: 4500000,
+      //gas: 4500000,
+      gas: 6721975,
       gasPrice: 10000000000,
       from: web3.eth.accounts[1]
     }
