@@ -6,13 +6,16 @@ import "../contracts/OwnedUpgradeabilityProxy.sol";
 import "../contracts/DChallenge.sol";
 
 contract TestOwnedUpgradeabilityProxy {
+    uint public initialBalance = 1 ether;
+
     address implementationAddress = DeployedAddresses.DChallenge();
-    OwnedUpgradeabilityProxy proxy = (new OwnedUpgradeabilityProxy).value(100000000)();
+    OwnedUpgradeabilityProxy proxy = new OwnedUpgradeabilityProxy();
     DChallenge newImplementation = new DChallenge();
 
     uint submitDelay = 300;
     uint txDelay = 15;
     uint secondsPerBlock = 15;
+
 
     function beforeAll() public {
         bytes memory data = abi.encodeWithSignature(
@@ -57,10 +60,25 @@ contract TestOwnedUpgradeabilityProxy {
     }
 
     function testProxyUpgradesImplementation() public {
-      proxy.upgradeTo(newImplementation);
-      address fetchedAddress = proxy.implementation();
+        proxy.upgradeTo(newImplementation);
+        address fetchedAddress = proxy.implementation();
 
-      Assert.equal(newImplementation, fetchedAddress, "Proxy does not upgrade properly the Implementation");
+        Assert.equal(newImplementation, fetchedAddress, "Proxy does not upgrade properly the Implementation");
+    }
+
+    function testProxyTransferOwnership() public {
+        proxy.transferProxyOwnership(msg.sender);
+
+        address fetchedProxyOwner = proxy.proxyOwner();
+
+        Assert.equal(msg.sender, fetchedProxyOwner, "Proxy does not transfer ownership properly");
+    }
+
+    function testRevertWhenUpgragingToSameImplementation() public {
+        bytes memory data = abi.encodeWithSignature('upgradeTo(address)', newImplementation);
+        bool result = address(proxy).call(data);
+
+        Assert.equal(false, result, "Proxy does not revert when trying to upgrade to same implementation");
     }
 
     function customCall(bytes4 _data) internal returns(uint answer) {

@@ -45,7 +45,7 @@ contract('DChallenge', function(accounts) {
           web3.currentProvider.send({
           jsonrpc: "2.0",
           method: "evm_increaseTime",
-          params: [time], // 86400 is num seconds in day
+          params: [time],
           id: new Date().getSeconds()
         }, (err, result) => {
           if(err){ return reject(err) }
@@ -354,5 +354,20 @@ contract('DChallenge', function(accounts) {
     const finalAccountBalance = await web3.eth.getBalance(accounts[0]);
 
     assert.equal(finalAccountBalance, expectedFinalAccountBalance, "The user didn't withdraw the prize properly")
+  });
+
+  it("Owner kills the Proxy and is refunded with its balance", async () => {
+    await web3.eth.sendTransaction({
+      data: encodedFunctionCall("kill", {}, this.implementationAbi),
+      from: this.ownerAccount,
+      to: this.proxyAddress,
+      gas: 3000000,
+      gasPrice: 10000000000
+    });
+
+    const code = await web3.eth.getCode(this.proxyAddress);
+    const expectedCode = "0x0";
+
+    assert.equal(code, expectedCode, "Contract wasn't killed properly");
   });
 });
