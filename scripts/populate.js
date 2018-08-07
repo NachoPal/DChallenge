@@ -15,8 +15,8 @@ module.exports = function(callback) {
       summary: "QmUmZGpo44wnBhauUEa9uMTWLCTswJm4RE9uxkCoYMCgTa",
       description: "QmY26Pa9cKqyY8FJbq7KSz7NYumkBmf5odYsLxC72ZQxHv",
       thumbnail: "QmeEuzAxrQB9ueXRb9QX9UUzUZMDB9EKeWoKdDFn1KsTQk",
-      openTime: Math.floor(Date.now() + (100000 * index)),
-      closeTime: Math.floor(Date.now() + (200000 * index)),
+      openTime: Math.floor((Date.now()/1000) + (index * 180)),
+      closeTime: Math.floor((Date.now()/1000) + (index * 300)),
       bettingPrice: 100000000000000000
     }
   }

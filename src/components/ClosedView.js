@@ -60,7 +60,7 @@ class ClosedView extends Component {
             </div>
           </div>
 
-          <div className="row">
+          <div className="row video-challenge">
             <h3 className="border-title">VIDEOS</h3>
             {this.renderWinnerVideo()}
             {this.renderVideos()}

@@ -20,7 +20,7 @@ class ClosedItem extends Component {
     if(item.winner == true) {
       return(
         <div className="col-md-4">
-          <video controls src={`https://gateway.ipfs.io/ipfs/${item.winnerVideo.ipfsHash}`}>
+          <video className="video-closed" controls src={`https://gateway.ipfs.io/ipfs/${item.winnerVideo.ipfsHash}`}>
             <p>Your browser does not support playing video. Update your browser to watch this video.</p>
           </video>
       </div>

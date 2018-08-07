@@ -16,7 +16,7 @@ const Video = ({ video, winner }) => {
         <div className="row"><b>Video durantion:</b> {video.duration} seg</div>
       </div>
       <div className="col-md-8">
-        <video id="video-submit" controls src={`https://gateway.ipfs.io/ipfs/${video.ipfsHash}`}>
+        <video className="video-list" controls src={`https://gateway.ipfs.io/ipfs/${video.ipfsHash}`}>
           <p>Your browser does not support playing video. Update your browser to watch this video.</p>
         </video>
       </div>

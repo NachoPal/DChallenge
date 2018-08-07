@@ -16,8 +16,9 @@ const renderer = ({ days, hours, minutes, seconds, completed }) => {
 const CountDownTimer = (props) => {
   return (
     <div className="row count-down">
-        <Countdown date={props.date}
+        <Countdown date={props.date * 1000}
           renderer={renderer}
+          onComplete={props.onComplete}
         />
     </div>
   );

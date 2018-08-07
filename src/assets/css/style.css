@@ -253,7 +253,6 @@ button.play {
 
 video {
   height: 160px;
-  float: left;
 }
 
 .modal-content {
@@ -344,6 +343,15 @@ button.counting-submit {
 
 video#video-submit {
   margin-top: 20px;
+}
+
+video.video-list {
+  margin-top: 20px;
+  float: left;
+}
+
+video.video-closed {
+  float: left;
 }
 
 #video-submit-loader svg {

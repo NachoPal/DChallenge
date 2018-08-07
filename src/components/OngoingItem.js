@@ -15,11 +15,17 @@ class OngoingItem extends Component {
   constructor(props) {
     super(props);
     this.state = { modalSubmitIsOpen: false };
+    this.state = { submitButtonVisible: true };
     this.submit = this.submit.bind(this);
+    this.onCompleteTimer = this.onCompleteTimer.bind(this);
   }
 
   submit() {
     this.openModal();
+  }
+
+  onCompleteTimer() {
+    this.setState({submitButtonVisible: false});
   }
 
   openModal() {
@@ -30,12 +36,14 @@ class OngoingItem extends Component {
     const userHasParticipated = _.includes(this.props.user.participating, challengeId);
     const userHasSubmitted = _.includes(this.props.user.submissions, challengeId);
 
-    if(userHasParticipated && !userHasSubmitted) {
-        return(
-          <div className="row">
-            <button type="button" className="btn btn-success play" onClick={this.submit}>SUBMIT</button>
-          </div>
-        );
+    if(this.state.submitButtonVisible == true) {
+      if(userHasParticipated && !userHasSubmitted) {
+          return(
+            <div className="row">
+              <button type="button" className="btn btn-success play" onClick={this.submit}>SUBMIT</button>
+            </div>
+          );
+      }
     }
   }
 
@@ -51,7 +59,12 @@ class OngoingItem extends Component {
             <div className="row enrrolled"><b>{`${item.submissions}/${item.participants}`}</b> submissions</div>
             <div>Jackpot - <b>{(item.bettingPrice / Math.pow(10,18)) * item.participants}</b> ETH</div>
             <div className="row count-down">
-              <CountDownTimer date={item.closeTime} message={"CLOSED"} size={80} color="#000" />
+              <CountDownTimer
+                date={item.closeTime}
+                onComplete={() => this.onCompleteTimer()}
+                size={80}
+                color="#000"
+              />
             </div>
             {this.renderSubmitButton(item.id)}
           </div>

@@ -20,7 +20,9 @@ class OpenItem extends Component {
     super(props);
     this.props.updateNumberOfParticipants(this.props.item.id);
     this.state = { modalParticipateIsOpen: false };
+    this.state = { participateButtonVisible: true };
     this.participate = this.participate.bind(this);
+    this.onCompleteTimer = this.onCompleteTimer.bind(this);
   }
 
   participate() {
@@ -40,13 +42,20 @@ class OpenItem extends Component {
     this.setState({modalParticipateIsOpen: true});
   }
 
+  onCompleteTimer() {
+    this.setState({participateButtonVisible: false});
+  }
+
   renderParticipateButton(challengeId) {
-    if(!_.includes(this.props.user.participating, challengeId)) {
-      return(
-        <div className="row">
-          <button type="button" onClick={this.participate} className="btn btn-success play">PARTICIPATE</button>
-        </div>
-      );
+    
+    if(this.state.participateButtonVisible == true) {
+      if(!_.includes(this.props.user.participating, challengeId)) {
+        return(
+          <div className="row">
+            <button type="button" onClick={this.participate} className="btn btn-success play">PARTICIPATE</button>
+          </div>
+        );
+      }
     }
   }
 
@@ -65,7 +74,12 @@ class OpenItem extends Component {
             </div>
             <div>Entry fee - <b>{item.bettingPrice / Math.pow(10,18)}</b> ETH</div>
             <div>Jackpot - <b>{(item.bettingPrice / Math.pow(10,18)) * item.participants}</b> ETH</div>
-            <CountDownTimer date={item.openTime} message={"ONGOING"} size={80} color="#000" />
+            <CountDownTimer
+              date={item.openTime}
+              onComplete={() => this.onCompleteTimer()}
+              size={80}
+              color="#000"
+            />
             {this.renderParticipateButton(item.id)}
           </div>
           <div className="col-md-4">

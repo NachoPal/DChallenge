@@ -12,12 +12,18 @@ class OngoingView extends Component {
   constructor(props) {
     super(props);
     this.state = { modalSubmitIsOpen: false };
+    this.state = { submitButtonVisible: true };
     this.submit = this.submit.bind(this);
     this.props.fetchVideos(this.props.challenge.id);
+    this.onCompleteTimer = this.onCompleteTimer.bind(this);
   }
 
   submit() {
     this.openModalSubmit();
+  }
+
+  onCompleteTimer() {
+    this.setState({submitButtonVisible: false});
   }
 
   openModalSubmit() {
@@ -66,7 +72,12 @@ class OngoingView extends Component {
                 <b>{`${challenge.submissions}/${challenge.participants}`}</b> submissions
               </div>
               <div className="row">Jackpot - <b>{(challenge.bettingPrice / Math.pow(10,18)) * challenge.participants}</b> ETH</div>
-              <CountDownTimer date={challenge.closeTime} message={"ONGOING"} size={80} color="#000" />
+              <CountDownTimer
+                date={challenge.closeTime}
+                onComplete={() => this.onCompleteTimer()}
+                size={80}
+                color="#000" 
+              />
               {this.renderSubmitButton(challenge.id)}
             </div>
             <div className="col-md-8">

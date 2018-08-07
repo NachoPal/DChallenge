@@ -348,7 +348,7 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
             emit LogNewOraclizeQuery(challengesCounter, "Oraclize query was NOT sent, please add some ETH to cover for the query fee");
         } else {
             emit LogNewOraclizeQuery(challengesCounter, "Oraclize query was sent, standing by for the answer..");
-            uint delay = _closeTime - now;
+            uint delay = _closeTime - now - txDelay;
             bytes32 queryId = oraclize_query(
                                 delay,
                                 "URL", "https://www.random.org/integers/?num=1&min=1&max=10000&col=1&base=10&format=plain&rnd=new"

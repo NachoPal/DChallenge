@@ -14,7 +14,9 @@ class OpenView extends Component {
   constructor(props) {
     super(props);
     this.state = { modalParticipateIsOpen: false };
+    this.state = { participateButtonVisible: true };
     this.participate = this.participate.bind(this);
+    this.onCompleteTimer = this.onCompleteTimer.bind(this);
   }
 
   participate() {
@@ -34,13 +36,19 @@ class OpenView extends Component {
     this.setState({modalParticipateIsOpen: true});
   }
 
+  onCompleteTimer() {
+    this.setState({participateButtonVisible: false});
+  }
+
   renderParticipateButton(challengeId) {
-    if(!_.includes(this.props.user.participating, challengeId)) {
-      return(
-        <div className="row">
-          <button type="button" onClick={this.participate} className="btn btn-success play">PARTICIPATE</button>
-        </div>
-      );
+    if(this.state.participateButtonVisible == true) {
+      if(!_.includes(this.props.user.participating, challengeId)) {
+        return(
+          <div className="row">
+            <button type="button" onClick={this.participate} className="btn btn-success play">PARTICIPATE</button>
+          </div>
+        );
+      }
     }
   }
 
@@ -65,7 +73,12 @@ class OpenView extends Component {
               </div>
               <div>Entry fee - <b>{challenge.bettingPrice / Math.pow(10,18)}</b> ETH</div>
               <div>Jackpot - <b>{(challenge.bettingPrice / Math.pow(10,18)) * challenge.participants}</b> ETH</div>
-              <CountDownTimer date={challenge.openTime} message={"ONGOING"} size={80} color="#000" />
+              <CountDownTimer
+                date={challenge.openTime}
+                onComplete={() => this.onCompleteTimer()}
+                size={80}
+                color="#000"
+              />
               {this.renderParticipateButton(challenge.id)}
             </div>
             <div className="col-md-8">

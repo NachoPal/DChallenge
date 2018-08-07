@@ -48,11 +48,11 @@ export default (logs, dispatch, action) => {
         decodedLogs[count]["participants"] = null;
         decodedLogs[count]["submissions"] = null;
 
-        if(decodedLogs[count].openTime > Date.now()) {
+        if(decodedLogs[count].openTime > (Date.now()/1000)) {
           decodedLogs[count]["status"] = "open";
-        }else if(decodedLogs[count].openTime <= Date.now() && decodedLogs[count].closeTime > Date.now()) {
+        }else if(decodedLogs[count].openTime <= (Date.now()/1000) && decodedLogs[count].closeTime > (Date.now()/1000)) {
           decodedLogs[count]["status"] = "ongoing";
-        }else if(decodedLogs[count].closeTime < Date.now()) {
+        }else if(decodedLogs[count].closeTime < (Date.now()/1000)) {
           decodedLogs[count]["status"] = "closed";
         }
 
@@ -171,7 +171,7 @@ export default (logs, dispatch, action) => {
           if(action == FETCH_CHALLENGE) {
             payload = decodedLogs[0];
           } else {
-            payload = _.mapKeys(decodedLogs, 'id')
+            //payload = _.mapKeys(decodedLogs, 'id')
 
             switch(action) {
               case FETCH_OPEN_CHALLENGES:
@@ -183,6 +183,7 @@ export default (logs, dispatch, action) => {
               case FETCH_CLOSED_CHALLENGES:
                 payload = _.orderBy(payload, 'closeTime', 'asc');
             }
+            payload = _.mapKeys(decodedLogs, 'id')
           }
 
           return dispatch({
