@@ -17,7 +17,7 @@ import getVideosHash from './helpers/get_videos_hash';
 export function fetchChallenge(id) {
   return (dispatch) => {
     web3.eth.getPastLogs({
-      fromBlock: 1,
+      fromBlock: "0x1",
       address: proxyAddress,
       topics: [
         encodedEventSignature("challengeCreation", implementationAbi),
@@ -32,7 +32,7 @@ export function fetchChallenge(id) {
 export function fetchVideos(id) {
   return (dispatch) => {
     web3.eth.getPastLogs({
-      fromBlock: 1,
+      fromBlock: "0x1",
       address: proxyAddress,
       topics: [
         encodedEventSignature("challengeSubmission", implementationAbi),

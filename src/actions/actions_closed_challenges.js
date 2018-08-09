@@ -13,7 +13,7 @@ import getChallengesIndex from './helpers/get_challenges_index';
 export function fetchClosedChallenges() {
   return (dispatch) => {
     web3.eth.getPastLogs({
-      fromBlock: 1,
+      fromBlock: "0x1",
       address: proxyAddress,
       topics: [encodedEventSignature("challengeClosed", implementationAbi)]
     }).then((logs) => {
@@ -21,7 +21,7 @@ export function fetchClosedChallenges() {
         indexes = _.map(indexes, (index) => {return numberTo32bytes(index)});
 
         web3.eth.getPastLogs({
-          fromBlock: 1,
+          fromBlock: "0x1",
           address: proxyAddress,
           topics: [
             encodedEventSignature("challengeCreation", implementationAbi),
@@ -37,7 +37,7 @@ export function fetchClosedChallenges() {
 // export function checkOraclizeLogs() {
 //   return (dispatch) => {
 //     web3.eth.getPastLogs({
-//       fromBlock: 1,
+//       fromBlock: "0x1",
 //       address: proxyAddress,
 //       topics: [encodedEventSignature("challengeCreation", implementationAbi)]
 //     }).then((logs) => {

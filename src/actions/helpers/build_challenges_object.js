@@ -57,7 +57,7 @@ export default (logs, dispatch, action) => {
         }
 
         promises2.push(web3.eth.getPastLogs({
-          fromBlock: 1,
+          fromBlock: "0x1",
           address: proxyAddress,
           topics: [
             encodedEventSignature("challengeParticipation", implementationAbi),
@@ -66,7 +66,7 @@ export default (logs, dispatch, action) => {
         }));
 
         promises3.push(web3.eth.getPastLogs({
-          fromBlock: 1,
+          fromBlock: "0x1",
           address: proxyAddress,
           topics: [
             encodedEventSignature("challengeSubmission", implementationAbi),
@@ -79,7 +79,7 @@ export default (logs, dispatch, action) => {
 
         if((decodedLogs[count].status == "closed" && closedChallenges) || (decodedLogs[count].status == "closed" && fetchChallenge)) {
           promises4.push(web3.eth.getPastLogs({
-            fromBlock: 1,
+            fromBlock: "0x1",
             address: proxyAddress,
             topics: [
               encodedEventSignature("challengeClosed", implementationAbi),

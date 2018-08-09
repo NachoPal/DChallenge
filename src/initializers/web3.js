@@ -4,7 +4,7 @@ const Web3 = require('web3-v1');
 // var mnemonic = "above decline twin original artefact debate fade duck fossil enact sorry there";
 
 //Development
-var web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'));
+//var web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'));
 
 //Rinkeby
 // const provider = new HDWalletProvider(
@@ -12,7 +12,7 @@ var web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'))
 //     walletAPIUrl
 // );
 
-////var web3 = new Web3(new Web3.providers.WebsocketProvider('wss://rinkeby.infura.io/ws'));
+var web3 = new Web3(new Web3.providers.WebsocketProvider('wss://rinkeby.infura.io/ws'));
 
 
 //var web3 = new Web3(new Web3.providers.HttpProvider(`https://rinkeby.infura.io/${INFURA_API_KEY}`));

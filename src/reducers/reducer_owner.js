@@ -5,8 +5,8 @@ import {
 } from '../initializers/action_types';
 
 const INITIAL_STATE = {
-  ownerAddress: null,
-  implementationAddress: null
+  ownerAddress: "0x0000000000000000000000000000000000000000",
+  implementationAddress: "0x0000000000000000000000000000000000000000"
 };
 
 export default function(state = INITIAL_STATE, action) {

@@ -42,6 +42,7 @@ export function setImplementation(implementationAddress) {
   return (dispatch) => {
     web3meta.eth.getAccounts((error, accounts) => {
       const ProxyContract = web3meta.eth.contract(proxyAbi);
+      console.log(proxyAddress);
       const proxyInstance = ProxyContract.at(proxyAddress);
 
       proxyInstance.upgradeToAndCall(
@@ -61,8 +62,6 @@ export function setImplementation(implementationAddress) {
 }
 
 export function createChallenge(values, callback) {
-  console.log(values);
-
   return (dispatch) => {
     ipfs.add(values.thumbnail, (err, thumbnailHash) => {
       ipfs.add(values.summary, (err, summaryHash) => {
@@ -81,7 +80,7 @@ export function createChallenge(values, callback) {
             web3meta.eth.sendTransaction(proxyOptions("createChallenge", challengeInputs, 0),
             function (error, result){
               if(!error) {
-                callback();            
+                callback();
                 return dispatch({
                   type: OWNER_CREATES_CHALLENGE,
                   payload: null

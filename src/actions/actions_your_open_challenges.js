@@ -17,7 +17,7 @@ export function fetchYourOpenChallenges(userAddress) {
   userAddress = userAddressTo32Bytes(userAddress)
   return (dispatch) => {
     web3.eth.getPastLogs({
-      fromBlock: 1,
+      fromBlock: "0x1",
       address: proxyAddress,
       topics: [encodedEventSignature("challengeParticipation", implementationAbi), null, userAddress]
     }).then((logs) => {
@@ -33,7 +33,7 @@ export function fetchYourOpenChallenges(userAddress) {
           return numberTo32bytes(decodedLog.id);
         });
         web3.eth.getPastLogs({
-          fromBlock: 1,
+          fromBlock: "0x1",
           address: proxyAddress,
           topics: [encodedEventSignature("challengeCreation", implementationAbi), challengesId]
         }).then((logs) => {
