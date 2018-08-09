@@ -47,7 +47,7 @@ class OpenItem extends Component {
   }
 
   renderParticipateButton(challengeId) {
-    
+
     if(this.state.participateButtonVisible == true) {
       if(!_.includes(this.props.user.participating, challengeId)) {
         return(

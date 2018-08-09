@@ -12,7 +12,7 @@ import buildChallengesObject from './helpers/build_challenges_object';
 export function fetchOpenChallenges() {
   return (dispatch) => {
     web3.eth.getPastLogs({
-      fromBlock: 1,
+      fromBlock: "0x1",
       address: proxyAddress,
       topics: [encodedEventSignature("challengeCreation", implementationAbi)]
     }).then((logs) => {
@@ -32,7 +32,7 @@ export function updateOpenChallenges() {
 
       buildChallengesObject([logs], dispatch, UPDATE_OPEN_CHALLENGES)
     }).on("changed", (logs) => {
-      
+
     });
   }
 }

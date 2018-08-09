@@ -1,0 +1,30 @@
+import {
+  FETCH_ADMIN_INFO,
+  OWNER_SETS_IMPLEMENTATION,
+  OWNER_CREATES_CHALLENGE,
+} from '../initializers/action_types';
+
+const INITIAL_STATE = {
+  ownerAddress: null,
+  implementationAddress: null
+};
+
+export default function(state = INITIAL_STATE, action) {
+  switch(action.type) {
+    case FETCH_ADMIN_INFO:
+      return {
+        ...state,
+        implementationAddress: action.payload.implementationAddress,
+        ownerAddress: action.payload.ownerAddress
+      };
+    case OWNER_SETS_IMPLEMENTATION:
+      return {
+        ...state,
+        implementationAddress: action.payload,
+      };
+    case OWNER_CREATES_CHALLENGE:
+      return {...state};
+    default:
+      return {...state}
+  }
+}

@@ -28,6 +28,11 @@ export const FETCH_USER_CHALLENGES_INDEX = "fetch_user_challenges_index";
 export const FETCH_USER_BALANCE = 'fetch_user_balance';
 export const WITHDRAW_USER_BALANCE = 'withdraw_user_balance';
 
+//OWNER
+export const FETCH_ADMIN_INFO = 'fetch_admin_info';
+export const OWNER_SETS_IMPLEMENTATION = 'owner_sets_implementation';
+export const OWNER_CREATES_CHALLENGE = 'owner_creates_challenge';
+
 //SUMBIT CHALLENGE
 export const GET_CONFIRMED_BLOCK = "get_confirmed_block";
 export const ACCEPT_BUTTON_CLICKED = "accept_button_clicked";

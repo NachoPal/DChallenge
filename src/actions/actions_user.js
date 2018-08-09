@@ -60,7 +60,7 @@ export function userLogout(location, callback) {
 export function fetchUserChallengesIndex(user, callback) {
   return(dispatch) => {
     web3.eth.getPastLogs({
-      fromBlock: 1,
+      fromBlock: "0x1",
       address: proxyAddress,
       topics: [
         encodedEventSignature("challengeParticipation", implementationAbi),
@@ -70,7 +70,7 @@ export function fetchUserChallengesIndex(user, callback) {
     }).then((logs) => {
       const participatingIndex = getChallengesIndex(logs, "challengeParticipation");
       web3.eth.getPastLogs({
-        fromBlock: 1,
+        fromBlock: "0x1",
         address: proxyAddress,
         topics: [
           encodedEventSignature("challengeSubmission", implementationAbi),

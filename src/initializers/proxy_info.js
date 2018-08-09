@@ -19,6 +19,7 @@ Contract.currentProvider.sendAsync = function () {
   return Contract.currentProvider.send.apply(Contract.currentProvider, arguments);
 };
 
+
 module.exports = {
   proxyAddress: address,
   proxyAbi: abi,
