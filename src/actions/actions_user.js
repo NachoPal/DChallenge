@@ -95,7 +95,7 @@ export function fetchUserBalance(userAddress) {
     const inputs = {
       userAddress: userAddress
     }
-    web3.eth.call(proxyOptions("balances", inputs, 0))
+    web3.eth.call(proxyOptions("balances", inputs, 0, false))
     .then((balance) => {
       balance = parseInt(decodeParameters("balances", implementationAbi, balance)["0"]);
       return dispatch({
@@ -109,18 +109,18 @@ export function fetchUserBalance(userAddress) {
 export function withdrawBalance(userAddress, amount) {
   return (dispatch) => {
     web3meta.eth.getAccounts((error, accounts) => {
-      web3meta.eth.defaultAccount = accounts[0];
+      web3.eth.defaultAccount = accounts[0];
 
       const inputs = {
         amount: amount,
         userAddress: mnid.decode(userAddress).address
       }
 
-      web3meta.eth.sendTransaction(proxyOptions("userWithdraw", inputs, 0), (error, txHash) => {
+      web3meta.eth.sendTransaction(proxyOptions("userWithdraw", inputs, 0, true), (error, txHash) => {
         if(!error) {
           return dispatch({
             type: WITHDRAW_USER_BALANCE,
-            patyload: 0
+            payload: 0
           });
         } else {
           console.log("Withdraw error");

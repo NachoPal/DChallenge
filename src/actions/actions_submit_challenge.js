@@ -65,7 +65,7 @@ export function submitChallenge(state, callback) {
   return (dispatch) => {
 
     web3meta.eth.getAccounts((error, accounts) => {
-      web3meta.eth.defaultAccount = accounts[0];
+      web3.eth.defaultAccount = accounts[0];
 
       const inputs = {
         id: state.id,
@@ -76,7 +76,7 @@ export function submitChallenge(state, callback) {
         userAddress: state.userAddress
       }
 
-      web3meta.eth.sendTransaction(proxyOptions("submit", inputs, 0), (error, txHash) => {
+      web3meta.eth.sendTransaction(proxyOptions("submit", inputs, 0, true), (error, txHash) => {
         if(!error) {
           callback();
           return dispatch({

@@ -30,7 +30,7 @@ export default (logs, dispatch, action) => {
                     });
 
   _.map(decodedLogs, (decodedLog) => {
-      promises.push(web3.eth.call(proxyOptions('challenges', {id: parseInt(decodedLog.id)}, 0)));
+      promises.push(web3.eth.call(proxyOptions('challenges', {id: parseInt(decodedLog.id)}, 0, false)));
   });
 
 
@@ -140,31 +140,35 @@ export default (logs, dispatch, action) => {
 
         Promise.all(promises4).then(logs => {
           var count = 0;
-          _.map(logs, log => {
-            var decoded = web3.eth.abi.decodeLog(
-                            getAbiByFunctionNames(implementationAbi)["challengeClosed"].inputs,
-                            log[0].data,
-                            _.drop(log[0].topics)
-                          );
-            if(!_.isEmpty(decodedLogs)) {
-              decodedLogs[count]["winner"] = decoded.winner;
 
-              if(decodedLogs[count].winner == true) {
-                decodedLogs[count]["winnerAddress"] = decoded.winnerAddress;
-                decodedLogs[count]["prizeAmount"] = decoded.prizeAmount;
-                decodedLogs[count]["randomNumber"] = decoded.randomNumber;
+          if(!_.isEmpty(logs)){
+            _.map(logs, log => {
+              var decoded = web3.eth.abi.decodeLog(
+                              getAbiByFunctionNames(implementationAbi)["challengeClosed"].inputs,
+                              log[0].data,
+                              _.drop(log[0].topics)
+                            );
+              if(!_.isEmpty(decodedLogs)) {
+                decodedLogs[count]["winner"] = decoded.winner;
 
-                const winnerSubmission = decodedLogs[count].submissionsData[decoded.winnerAddress];
-                decodedLogs[count]["winnerVideo"] = {};
-                decodedLogs[count].winnerVideo["code"] = winnerSubmission.code;
-                decodedLogs[count].winnerVideo["duration"] = winnerSubmission.videoDuration;
-                decodedLogs[count].winnerVideo["ipfsHash"] = winnerSubmission.ipfsHash;
-                decodedLogs[count].winnerVideo["userAddress"] = decoded.winnerAddress;
+                if(decodedLogs[count].winner == true) {
+                  decodedLogs[count]["winnerAddress"] = decoded.winnerAddress;
+                  decodedLogs[count]["prizeAmount"] = decoded.prizeAmount;
+                  decodedLogs[count]["randomNumber"] = decoded.randomNumber;
+
+                  const winnerSubmission = decodedLogs[count].submissionsData[decoded.winnerAddress];
+                  decodedLogs[count]["winnerVideo"] = {};
+                  decodedLogs[count].winnerVideo["code"] = winnerSubmission.code;
+                  decodedLogs[count].winnerVideo["duration"] = winnerSubmission.videoDuration;
+                  decodedLogs[count].winnerVideo["ipfsHash"] = winnerSubmission.ipfsHash;
+                  decodedLogs[count].winnerVideo["userAddress"] = decoded.winnerAddress;
+                }
               }
-            }
 
-            count++;
-          });
+              count++;
+            });
+          }
+
 
           var payload = null;
 

@@ -12,14 +12,14 @@ import { encodedEventSignature } from '../helpers/helper_web3';
 export function participate(challengeId, userAddress, value, callback) {
   return dispatch => {
     web3meta.eth.getAccounts((error, accounts) => {
-      web3meta.eth.defaultAccount = accounts[0];
+      web3.eth.defaultAccount = accounts[0];
 
       const inputs = {
         challengeId: challengeId,
         userAddress: mnid.decode(userAddress).address
       }
 
-      web3meta.eth.sendTransaction(proxyOptions("participate", inputs, value), (error, txHash) => {
+      web3meta.eth.sendTransaction(proxyOptions("participate", inputs, value, true), (error, txHash) => {
         if(!error) {
           callback();
           return dispatch({

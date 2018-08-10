@@ -12,6 +12,7 @@ import {
 import { implementationAbi } from '../initializers/implementation_info';
 import { proxyAddress, proxyOptions, proxyContract, proxyAbi } from '../initializers/proxy_info';
 import web3 from '../initializers/web3';
+import uport from '../initializers/uport';
 import web3meta from '../initializers/web3_metamask';
 import { ipfs } from '../initializers/ipfs';
 
@@ -77,10 +78,11 @@ export function createChallenge(values, callback) {
             }
           web3meta.eth.getAccounts((error, accounts) => {
             web3.eth.defaultAccount = accounts[0];
-            web3meta.eth.sendTransaction(proxyOptions("createChallenge", challengeInputs, 0),
+            web3meta.eth.sendTransaction(proxyOptions("createChallenge", challengeInputs, 0, true),
             function (error, result){
               if(!error) {
                 callback();
+
                 return dispatch({
                   type: OWNER_CREATES_CHALLENGE,
                   payload: null

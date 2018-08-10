@@ -16,6 +16,7 @@ const implementationAbi = implementation.implementationAbi;
 //#RINKEBY
 const id = 4;
 const address = artifact.networks[id].address;
+console.log(address);
 const abi = artifact.abi;
 
 var Contract = contract(artifact);
@@ -33,13 +34,18 @@ module.exports = {
   proxyAbi: abi,
   proxyArtifact: artifact,
   proxyContract: Contract,
-  proxyOptions: (functionName, inputs, value) => {
-    return {
-      //from: web3.eth.defaultAccount,
+  proxyOptions: (functionName, inputs, value, from) => {
+    const dataObject = {
       to: address,
       value: value,
       gas: 6654755,
       data: encodedFunctionCall(functionName, Object.values(inputs), implementationAbi)
-    };
+    }
+
+    if(from == true) {
+      dataObject["from"] = web3.eth.defaultAccount;
+    }
+
+    return dataObject;
   }
 }

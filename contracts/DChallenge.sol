@@ -312,7 +312,7 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
       //challengesClosingOrder.push(id);
       //------------------------------
 
-        if (length == 0) {
+        if (length == startIndex) {
             challengesClosingOrder.push(id);
         } else {
             for (uint i=length-1; i >= startIndex; i--) {
@@ -320,21 +320,21 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
                     challengesClosingOrder.push(id);
                     break;
                 }
-              if (_closeTime >= challenges[challengesClosingOrder[i]].closeTime) {
-                  challengesClosingOrder.length = length + 1;
-                  for (uint j=length; j > i; j--) {
-                      challengesClosingOrder[j] = challengesClosingOrder[j-1];
-                  }
-                  challengesClosingOrder[i+1] = id;
-                  break;
-              }
-              if (i == startIndex) {
-                  challengesClosingOrder.length = length + 1;
-                  for (uint k=length; k > i; k--) {
-                      challengesClosingOrder[k] = challengesClosingOrder[k-1];
-                  }
-                  challengesClosingOrder[i] = id;
-                  break;
+                if (_closeTime >= challenges[challengesClosingOrder[i]].closeTime) {
+                    challengesClosingOrder.length = length + 1;
+                    for (uint j=length; j > i; j--) {
+                        challengesClosingOrder[j] = challengesClosingOrder[j-1];
+                    }
+                    challengesClosingOrder[i+1] = id;
+                    break;
+                }
+                if (i == startIndex) {
+                    challengesClosingOrder.length = length + 1;
+                    for (uint k=length; k > i; k--) {
+                        challengesClosingOrder[k] = challengesClosingOrder[k-1];
+                    }
+                    challengesClosingOrder[i] = id;
+                    break;
               }
             }
         }
