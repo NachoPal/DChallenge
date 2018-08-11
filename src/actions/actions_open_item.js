@@ -1,5 +1,6 @@
 import web3 from '../initializers/web3';
 import web3meta from "../initializers/web3_metamask";
+import uport from "../initializers/uport";
 var mnid = require('mnid');
 import { proxyAddress, proxyOptions } from '../initializers/proxy_info';
 import { implementationAbi } from '../initializers/implementation_info';
@@ -18,8 +19,9 @@ export function participate(challengeId, userAddress, value, callback) {
         challengeId: challengeId,
         userAddress: mnid.decode(userAddress).address
       }
-
-      web3meta.eth.sendTransaction(proxyOptions("participate", inputs, value, true), (error, txHash) => {
+      const web3uport = uport.getWeb3()
+      //web3meta.eth.sendTransaction(proxyOptions("participate", inputs, value, true), (error, txHash) => {
+      web3uport.eth.sendTransaction(proxyOptions("participate", inputs, value, true), (error, txHash) => {
         if(!error) {
           callback();
           return dispatch({

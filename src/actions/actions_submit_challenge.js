@@ -1,5 +1,6 @@
 const web3 = require('../initializers/web3');
 import web3meta from '../initializers/web3_metamask';
+import uport from '../initializers/uport';
 import { ipfs } from '../initializers/ipfs';
 var mnid = require('mnid');
 import _ from 'lodash';
@@ -65,7 +66,7 @@ export function submitChallenge(state, callback) {
   return (dispatch) => {
 
     web3meta.eth.getAccounts((error, accounts) => {
-      web3.eth.defaultAccount = accounts[0];
+      web3meta.eth.defaultAccount = accounts[0];
 
       const inputs = {
         id: state.id,
@@ -75,8 +76,9 @@ export function submitChallenge(state, callback) {
         ipfsHash: state.ipfsHash,
         userAddress: state.userAddress
       }
-
-      web3meta.eth.sendTransaction(proxyOptions("submit", inputs, 0, true), (error, txHash) => {
+      const web3uport = uport.getWeb3()
+      //web3meta.eth.sendTransaction(proxyOptions("submit", inputs, 0), (error, txHash) => {
+      web3uport.eth.sendTransaction(proxyOptions("submit", inputs, 0), (error, txHash) => {
         if(!error) {
           callback();
           return dispatch({

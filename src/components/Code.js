@@ -6,6 +6,7 @@ import {
   getConfirmedBlockNumber,
   acceptButtonClicked
 } from '../actions';
+import { networkID } from '../initializers/proxy_info';
 import ReactCountdownClock from 'react-countdown-clock';
 
 class Code extends Component {
@@ -31,9 +32,11 @@ class Code extends Component {
     this.setState({counting: true});
 
     //Only for development
-    this.intervalMine = setInterval(() => {
-      this.mine(15);
-    }, 15000);
+    if(networkID != 4) {
+      this.intervalMine = setInterval(() => {
+        this.mine(15);
+      }, 15000);
+    }
   }
 
   getBlock() {

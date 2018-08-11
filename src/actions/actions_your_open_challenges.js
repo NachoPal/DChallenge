@@ -2,7 +2,8 @@ const web3 = require('../initializers/web3');
 import { proxyAddress } from '../initializers/proxy_info';
 import { implementationAbi } from '../initializers/implementation_info';
 import {
-  FETCH_YOUR_OPEN_CHALLENGES
+  FETCH_YOUR_OPEN_CHALLENGES,
+  UPDATE_YOUR_OPEN_CHALLENGES
 } from '../initializers/action_types';
 import buildChallengesObject from './helpers/build_challenges_object';
 import {
@@ -40,5 +41,36 @@ export function fetchYourOpenChallenges(userAddress) {
             buildChallengesObject(logs, dispatch, FETCH_YOUR_OPEN_CHALLENGES)
           });
       });
+  }
+}
+
+export function updateYourOpenChallenges(userAddress) {
+  userAddress = userAddressTo32Bytes(userAddress)
+  return dispatch => {
+    const subscription = web3.eth.subscribe('logs', {
+      address: proxyAddress,
+      topics: [encodedEventSignature("challengeParticipation", implementationAbi), null, userAddress]
+    }, (error, result) => {
+        if(!error) {}
+    }).on("data", (log) => {
+      var decodedLog = web3.eth.abi.decodeLog(
+        getAbiByFunctionNames(implementationAbi)["challengeParticipation"].inputs,
+        log.data,
+        _.drop(log.topics)
+      );
+
+      web3.eth.getPastLogs({
+        fromBlock: "0x1",
+        address: proxyAddress,
+        topics: [
+          encodedEventSignature("challengeCreation", implementationAbi),
+          [numberTo32bytes(decodedLog.id)],
+        ]
+      }).then((logs) => {
+            buildChallengesObject(logs, dispatch, UPDATE_YOUR_OPEN_CHALLENGES)
+        });
+    }).on("changed", (logs) => {
+
+    });
   }
 }

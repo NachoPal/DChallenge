@@ -208,7 +208,7 @@ function validate(values) {
     errors.openTime = "Open Time can't be empty";
   }
 
-  if(values.openTime && values.openTime < 120) {
+  if(values.openTime && parseInt(values.openTime) < 120) {
     errors.openTime = "Open Time should be at least 120 seconds";
   }
 
@@ -216,12 +216,12 @@ function validate(values) {
     errors.closeTime = "Close Time can't be empty";
   }
 
-  if(values.closeTime && values.closeTime < 240) {
+  if(values.closeTime && parseInt(values.closeTime) < 120) {
     errors.closeTime = "Close Time should be at least 240 seconds";
   }
 
-  if((values.openTime + 120) > values.closeTime) {
-    errors.closeTime = "Close Time should be at least 120 seconds bigger than Open Time";
+  if((parseInt(values.openTime) + 120) > parseInt(values.closeTime)) {
+    errors.closeTime = "Close Time should be at least 240 seconds bigger than Open Time";
   }
 
   return errors;

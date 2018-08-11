@@ -30,6 +30,7 @@ Contract.currentProvider.sendAsync = function () {
 
 
 module.exports = {
+  networkID: id,
   proxyAddress: address,
   proxyAbi: abi,
   proxyArtifact: artifact,

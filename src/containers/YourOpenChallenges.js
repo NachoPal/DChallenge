@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchYourOpenChallenges } from '../actions';
+import { fetchYourOpenChallenges, updateYourOpenChallenges } from '../actions';
 import _ from 'lodash';
 import web3 from './../initializers/web3';
 import Loading from 'react-loading-components';
@@ -13,6 +13,7 @@ class YourOpenChallenges extends Component {
     super(props);
     if(this.props.user.logged == true) {
       this.props.fetchYourOpenChallenges(this.props.user.details.address);
+      this.props.updateYourOpenChallenges(this.props.user.details.address);
     }
   }
 
@@ -59,7 +60,8 @@ function mapStateToProps({ yourOpen, user }) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    fetchYourOpenChallenges
+    fetchYourOpenChallenges,
+    updateYourOpenChallenges
   }, dispatch);
 }
 

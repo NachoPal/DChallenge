@@ -137,7 +137,7 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
     )
         external
     {
-        //OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
+        OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
         oraclize_setProof(proofType_TLSNotary | proofStorage_IPFS);
         submitDelay = _submitDelay;
         txDelay = _txDelay;

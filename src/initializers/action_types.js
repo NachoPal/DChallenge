@@ -4,6 +4,7 @@ export const FETCH_OPEN_CHALLENGES = 'fetch_open_challenges';
 export const UPDATE_OPEN_CHALLENGES = 'update_open_challenges';
 export const PARTICIPATE = 'participate';
 export const FETCH_YOUR_OPEN_CHALLENGES = 'fetch_your_open_challenges';
+export const UPDATE_YOUR_OPEN_CHALLENGES = 'update_yout_open_challenges';
 
 
 //Ongoing

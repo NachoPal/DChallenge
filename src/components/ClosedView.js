@@ -13,7 +13,7 @@ class ClosedView extends Component {
   }
 
   renderWinnerVideo() {
-    if(this.props.challenge.submissions > 0) {
+    if(this.props.challenge.submissions > 0 && this.props.challenge.winnerVideo) {
       const video = this.props.challenge.winnerVideo;
       return(
         <Video video={video} key={video.code} winner={true}/>

@@ -10,7 +10,7 @@ import {
   encodedFunctionCall
 } from '../helpers/helper_web3';
 import { implementationAbi } from '../initializers/implementation_info';
-import { proxyAddress, proxyOptions, proxyContract, proxyAbi } from '../initializers/proxy_info';
+import { proxyAddress, proxyOptions, proxyAbi } from '../initializers/proxy_info';
 import web3 from '../initializers/web3';
 import uport from '../initializers/uport';
 import web3meta from '../initializers/web3_metamask';
@@ -20,23 +20,27 @@ import { ipfs } from '../initializers/ipfs';
 
 export function fetchAdminInfo() {
   return (dispatch) => {
-    proxyContract.deployed().then((instance) => {
-      instance.proxyOwner().then( owner => {
-        instance.implementation().then( implementation => {
+    //proxyContract.deployed().then((instance) => {
+      const ProxyContract = web3meta.eth.contract(proxyAbi);
+      console.log(proxyAddress);
+      const instance = ProxyContract.at(proxyAddress);
+
+      instance.proxyOwner((error, owner) => {
+        instance.implementation((error,implementation) => {
           return dispatch({
             type: FETCH_ADMIN_INFO,
             payload: {ownerAddress: owner, implementationAddress: implementation}
           });
         });
       });
-    });
+    //});
   }
 }
 
 export function setImplementation(implementationAddress) {
   const initializeInputs = {
     submitDelay: 300,
-    txDelay: 15,
+    txDelay: 30,
     secondsPerBlock: 15
   }
 
