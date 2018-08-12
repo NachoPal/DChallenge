@@ -6,6 +6,7 @@ import {
 
 const INITIAL_STATE = {
   ownerAddress: "0x0000000000000000000000000000000000000000",
+  proxyAddress: "0x0000000000000000000000000000000000000000",
   implementationAddress: "0x0000000000000000000000000000000000000000"
 };
 
@@ -15,7 +16,8 @@ export default function(state = INITIAL_STATE, action) {
       return {
         ...state,
         implementationAddress: action.payload.implementationAddress,
-        ownerAddress: action.payload.ownerAddress
+        ownerAddress: action.payload.ownerAddress,
+        proxyAddress: action.payload.proxyAddress
       };
     case OWNER_SETS_IMPLEMENTATION:
       return {

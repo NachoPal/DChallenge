@@ -6,9 +6,9 @@ const isWinner = (winner) => {
   }
 }
 
-const Video = ({ video, winner }) => {
+const Video = ({ video, winner}) => {
   return(
-    <div className="row">
+    <div className="row" style={{border: "1px solid", paddingBottom: "20px"}}>
       <div className="col-md-4 even">
         {isWinner(winner)}
         <div className="row"><b>User address:</b> {video.userAddress}</div>

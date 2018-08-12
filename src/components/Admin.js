@@ -18,6 +18,8 @@ class Admin extends Component {
         <div className="row">
             <h3><b>Owner</b></h3>
             <h3>{this.props.owner.ownerAddress}</h3>
+            <h3><b>Proxy</b></h3>
+            <h3>{this.props.owner.proxyAddress}</h3>
             <h3><b>Implementation</b></h3>
             <h3>{this.props.owner.implementationAddress}</h3>
             <ImplementationForm />

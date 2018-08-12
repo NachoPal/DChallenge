@@ -62,7 +62,7 @@ export function submitVideo(buffer) {
   }
 }
 
-export function submitChallenge(state, callback) {
+export function submitChallenge(state, callback, managePendingTxModal) {
   return (dispatch) => {
 
     web3meta.eth.getAccounts((error, accounts) => {
@@ -74,17 +74,27 @@ export function submitChallenge(state, callback) {
         code: state.code,
         videoDuration: state.videoDuration,
         ipfsHash: state.ipfsHash,
-        userAddress: state.userAddress
+        //userAddress: state.userAddress
       }
       const web3uport = uport.getWeb3()
       //web3meta.eth.sendTransaction(proxyOptions("submit", inputs, 0), (error, txHash) => {
       web3uport.eth.sendTransaction(proxyOptions("submit", inputs, 0), (error, txHash) => {
         if(!error) {
-          callback();
-          return dispatch({
-            type: SUBMIT_CHALLENGE,
-            payload: state
-          });
+          const pendingTxInterval = setInterval(() => {
+            web3.eth.getTransactionReceipt(txHash).then((receipt) => {
+              if(receipt) {
+                managePendingTxModal(false, txHash);
+                clearInterval(pendingTxInterval);
+                callback();
+                return dispatch({
+                  type: SUBMIT_CHALLENGE,
+                  payload: state
+                });
+              } else {
+                managePendingTxModal(true, txHash);
+              }
+            });
+          }, 1000);
         } else {
           return dispatch({
             type: ERROR_SUBMIT_CHALLENGE,

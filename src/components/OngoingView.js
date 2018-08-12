@@ -1,7 +1,7 @@
 import React,{ Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchVideos } from '../actions';
+import { fetchVideos, updateVideos } from '../actions';
 import ModalSubmit from '../components/ModalSubmit';
 import CountDownTimer from './CountDownTimer';
 import Video from '../components/Video';
@@ -15,6 +15,7 @@ class OngoingView extends Component {
     this.state = { submitButtonVisible: true };
     this.submit = this.submit.bind(this);
     this.props.fetchVideos(this.props.challenge.id);
+    this.props.updateVideos(this.props.challenge.id);
     this.onCompleteTimer = this.onCompleteTimer.bind(this);
   }
 
@@ -24,6 +25,9 @@ class OngoingView extends Component {
 
   onCompleteTimer() {
     this.setState({submitButtonVisible: false});
+    setTimeout(() => {
+      location.reload();
+    }, 2000)
   }
 
   openModalSubmit() {
@@ -76,7 +80,7 @@ class OngoingView extends Component {
                 date={challenge.closeTime}
                 onComplete={() => this.onCompleteTimer()}
                 size={80}
-                color="#000" 
+                color="#000"
               />
               {this.renderSubmitButton(challenge.id)}
             </div>
@@ -106,7 +110,8 @@ function mapStateToProps({ user }) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    fetchVideos
+    fetchVideos,
+    updateVideos
   }, dispatch);
 }
 

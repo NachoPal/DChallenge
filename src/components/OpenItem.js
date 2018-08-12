@@ -8,6 +8,7 @@ import {
 import CountDownTimer from './CountDownTimer';
 import { Link } from 'react-router-dom';
 import ModalParticipate from '../components/ModalParticipate';
+import ModalPendingTx from '../components/ModalPendingTx';
 import {
   YOUR_CHALLENGES_PATH,
   CHALLENGE_PATH
@@ -20,7 +21,8 @@ class OpenItem extends Component {
     super(props);
     this.props.updateNumberOfParticipants(this.props.item.id);
     this.state = { modalParticipateIsOpen: false };
-    this.state = { participateButtonVisible: true };
+    this.state = {...this.state, participateButtonVisible: true };
+    this.state = {...this.state, modalPendingTx: false };
     this.participate = this.participate.bind(this);
     this.onCompleteTimer = this.onCompleteTimer.bind(this);
   }
@@ -33,7 +35,11 @@ class OpenItem extends Component {
         this.props.item.id,
         this.props.user.details.address,
         this.props.item.bettingPrice,
-        () => this.props.history.push(YOUR_CHALLENGES_PATH)
+        () => this.props.history.push(YOUR_CHALLENGES_PATH),
+        (open, txHash) => {
+          this.setState({pendingTxHash: txHash, modalPendingTx: open});
+          //this.setState({modalPendingTx: open});
+        }
       );
     }
   }
@@ -46,8 +52,19 @@ class OpenItem extends Component {
     this.setState({participateButtonVisible: false});
   }
 
-  renderParticipateButton(challengeId) {
+  renderPendingTxModal() {
+    if(this.state.modalPendingTx == true) {
+      return(
+        <ModalPendingTx
+          open={this.state.modalPendingTx}
+          txHash={this.state.pendingTxHash}
+        />
+      );
+    }
+  }
 
+  renderParticipateButton(challengeId) {
+    console.log(this.state.participateButtonVisible);
     if(this.state.participateButtonVisible == true) {
       if(!_.includes(this.props.user.participating, challengeId)) {
         return(
@@ -90,6 +107,7 @@ class OpenItem extends Component {
           </div>
       </div>
       <ModalParticipate isOpen={this.state.modalParticipateIsOpen} this={this} />
+      {this.renderPendingTxModal()}
     </div>
     );
   }

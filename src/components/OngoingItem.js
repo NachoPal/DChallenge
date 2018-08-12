@@ -18,6 +18,7 @@ class OngoingItem extends Component {
     this.state = { submitButtonVisible: true };
     this.submit = this.submit.bind(this);
     this.onCompleteTimer = this.onCompleteTimer.bind(this);
+    this.props.updateNumberOfSubmissions(this.props.item.id);
   }
 
   submit() {

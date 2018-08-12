@@ -11,6 +11,13 @@ import { OPEN_CHALLENGES_PATH } from '../initializers/routes';
 class CreateChallengeForm extends Component {
   constructor(props) {
     super(props);
+    //const txHash = '0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b';
+    // const txHash = '0x4176d323e95f467a15a501f395f3902e39b7082d03acd3ac7622d6f1700cbe6f';
+    // this.props.history.push({
+    //   pathname: OPEN_CHALLENGES_PATH,
+    //   state: {txHash: txHash}
+    // });
+
     this.state = {submitting: false};
     this.state = {bettingPrice: "100000000000000000"};
     this.state = {thumbnail: null};
@@ -136,7 +143,12 @@ class CreateChallengeForm extends Component {
       values["description"] = description;
       values["bettingPrice"] = "100000000000000000";
       this.setState({submitting: true});
-      this.props.createChallenge(values, () => this.props.history.push(OPEN_CHALLENGES_PATH));
+      this.props.createChallenge(values, (txHash) => {
+        this.props.history.push({
+          pathname: OPEN_CHALLENGES_PATH,
+          state: {txHash: txHash}
+        });
+      });
     }
   }
 
@@ -216,11 +228,11 @@ function validate(values) {
     errors.closeTime = "Close Time can't be empty";
   }
 
-  if(values.closeTime && parseInt(values.closeTime) < 120) {
+  if(values.closeTime && parseInt(values.closeTime) < 240) {
     errors.closeTime = "Close Time should be at least 240 seconds";
   }
 
-  if((parseInt(values.openTime) + 120) > parseInt(values.closeTime)) {
+  if((parseInt(values.openTime) + 240) > parseInt(values.closeTime)) {
     errors.closeTime = "Close Time should be at least 240 seconds bigger than Open Time";
   }
 

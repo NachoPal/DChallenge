@@ -10,24 +10,34 @@ import {
 } from '../initializers/action_types';
 import { encodedEventSignature } from '../helpers/helper_web3';
 
-export function participate(challengeId, userAddress, value, callback) {
+export function participate(challengeId, userAddress, value, callback, managePendingTxModal) {
   return dispatch => {
     web3meta.eth.getAccounts((error, accounts) => {
       web3.eth.defaultAccount = accounts[0];
 
       const inputs = {
         challengeId: challengeId,
-        userAddress: mnid.decode(userAddress).address
+        //userAddress: mnid.decode(userAddress).address
       }
       const web3uport = uport.getWeb3()
       //web3meta.eth.sendTransaction(proxyOptions("participate", inputs, value, true), (error, txHash) => {
-      web3uport.eth.sendTransaction(proxyOptions("participate", inputs, value, true), (error, txHash) => {
+      web3uport.eth.sendTransaction(proxyOptions("participate", inputs, value), (error, txHash) => {
         if(!error) {
-          callback();
-          return dispatch({
-            type: PARTICIPATE,
-            payload: challengeId
-          });
+          const pendingTxInterval = setInterval(() => {
+            web3.eth.getTransactionReceipt(txHash).then((receipt) => {
+              if(receipt) {
+                managePendingTxModal(false, txHash);
+                clearInterval(pendingTxInterval);
+                callback();
+                return dispatch({
+                  type: PARTICIPATE,
+                  payload: challengeId
+                });
+              } else {
+                managePendingTxModal(true, txHash);
+              }
+            });
+          }, 1000);
         } else {
           console.log("ERROR", error);
         }

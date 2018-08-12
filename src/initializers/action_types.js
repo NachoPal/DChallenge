@@ -9,7 +9,8 @@ export const UPDATE_YOUR_OPEN_CHALLENGES = 'update_yout_open_challenges';
 
 //Ongoing
 export const FETCH_ONGOING_CHALLENGES = 'fetch_ongoing_challenges';
-export const UPDATE_ONGOING_CHALLENGES = 'update_ongoing_challenges';
+//export const UPDATE_ONGOING_CHALLENGES = 'update_ongoing_challenges';
+export const UPDATE_NUMBER_OF_SUBMISSIONS = 'update_number_of_submissions';
 export const FETCH_YOUR_ONGOING_CHALLENGES = 'fetch_your_ongoing_challenges';
 
 //Closed
@@ -44,4 +45,5 @@ export const ERROR_SUBMIT_CHALLENGE = "error_submit_challenge";
 //SINGLE CHALLENGE
 export const FETCH_CHALLENGE = "fetch_challenge";
 export const FETCH_VIDEOS =  "fetch_videos";
+export const UPDATE_VIDEOS = "update_videos";
 export const REMOVE_CHALLENGE_DATA = "remove_challenge_data";

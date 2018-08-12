@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { participate } from '../actions';
 import ModalParticipate from '../components/ModalParticipate';
+import ModalPendingTx from '../components/ModalPendingTx';
 import CountDownTimer from './CountDownTimer';
 import {
   YOUR_CHALLENGES_PATH
@@ -14,7 +15,8 @@ class OpenView extends Component {
   constructor(props) {
     super(props);
     this.state = { modalParticipateIsOpen: false };
-    this.state = { participateButtonVisible: true };
+    this.state = {...this.state, participateButtonVisible: true };
+    this.state = {...this.state, modalPendingTx: false};
     this.participate = this.participate.bind(this);
     this.onCompleteTimer = this.onCompleteTimer.bind(this);
   }
@@ -27,7 +29,12 @@ class OpenView extends Component {
         this.props.challenge.id,
         this.props.user.details.address,
         this.props.challenge.bettingPrice,
-        () => this.props.history.push(YOUR_CHALLENGES_PATH)
+        () => this.props.history.push(YOUR_CHALLENGES_PATH),
+        (open, txHash) => {
+          this.setState({pendingTxHash: txHash, modalPendingTx: open});
+          //this.setState({pendingTxHash: txHash});
+          //this.setState({modalPendingTx: open});
+        }
       );
     }
   }
@@ -38,6 +45,9 @@ class OpenView extends Component {
 
   onCompleteTimer() {
     this.setState({participateButtonVisible: false});
+    setTimeout(() => {
+      location.reload();
+    }, 2000)
   }
 
   renderParticipateButton(challengeId) {
@@ -49,6 +59,17 @@ class OpenView extends Component {
           </div>
         );
       }
+    }
+  }
+
+  renderPendingTxModal() {
+    if(this.state.modalPendingTx == true) {
+      return(
+        <ModalPendingTx
+          open={this.state.modalPendingTx}
+          txHash={this.state.pendingTxHash}
+        />
+      );
     }
   }
 
@@ -86,6 +107,7 @@ class OpenView extends Component {
             </div>
           </div>
           <ModalParticipate isOpen={this.state.modalParticipateIsOpen} this={this} />
+          {this.renderPendingTxModal()}
         </div>
     );
   }

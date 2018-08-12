@@ -22,14 +22,17 @@ export function fetchAdminInfo() {
   return (dispatch) => {
     //proxyContract.deployed().then((instance) => {
       const ProxyContract = web3meta.eth.contract(proxyAbi);
-      console.log(proxyAddress);
       const instance = ProxyContract.at(proxyAddress);
 
       instance.proxyOwner((error, owner) => {
         instance.implementation((error,implementation) => {
           return dispatch({
             type: FETCH_ADMIN_INFO,
-            payload: {ownerAddress: owner, implementationAddress: implementation}
+            payload: {
+              ownerAddress: owner,
+              proxyAddress: proxyAddress,
+              implementationAddress: implementation
+            }
           });
         });
       });
@@ -83,10 +86,9 @@ export function createChallenge(values, callback) {
           web3meta.eth.getAccounts((error, accounts) => {
             web3.eth.defaultAccount = accounts[0];
             web3meta.eth.sendTransaction(proxyOptions("createChallenge", challengeInputs, 0, true),
-            function (error, result){
+            function (error, txHash){
               if(!error) {
-                callback();
-
+                callback(txHash);
                 return dispatch({
                   type: OWNER_CREATES_CHALLENGE,
                   payload: null

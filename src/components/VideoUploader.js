@@ -7,6 +7,8 @@ import {
   submitChallenge
 } from '../actions';
 import Loading from 'react-loading-components';
+import ModalPendingTx from '../components/ModalPendingTx';
+
 
 class VideoUplaoder extends Component {
   constructor(props){
@@ -15,6 +17,7 @@ class VideoUplaoder extends Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.onSubmitChallenge = this.onSubmitChallenge.bind(this);
     this.state = {submitting: false};
+    this.state = {...this.state, modalPendingTx: false };
   }
 
   captureFile(event) {
@@ -48,6 +51,9 @@ class VideoUplaoder extends Component {
     }, () => {
         this.props.modal.setState({modalSubmitIsOpen: false});
         this.props.history.push(`/challenge/${this.props.challengeId}`);
+        
+      }, (open, txHash) => {
+        this.setState({pendingTxHash: txHash, modalPendingTx: open});
       }
     );
   }
@@ -94,6 +100,17 @@ class VideoUplaoder extends Component {
     }
   }
 
+  renderPendingTxModal() {
+    if(this.state.modalPendingTx == true) {
+      return(
+        <ModalPendingTx
+          open={this.state.modalPendingTx}
+          txHash={this.state.pendingTxHash}
+        />
+      );
+    }
+  }
+
   render() {
     if(this.props.submit.codeAccepted == true){
       return(
@@ -107,6 +124,7 @@ class VideoUplaoder extends Component {
           </form>
           {this.renderVideo()}
           {this.renderLoader()}
+          {this.renderPendingTxModal()}
         </div>
       );
     } else {

@@ -4,21 +4,21 @@ import { implementationAbi } from '../initializers/implementation_info';
 import {
   UPDATE_NUMBER_OF_SUBMISSIONS
 } from '../initializers/action_types';
-import { encodedEventSignature } from '../helpers/helper_web3';
+import { encodedEventSignature, numberTo32bytes } from '../helpers/helper_web3';
 
 export function updateNumberOfSubmissions(challengeId) {
   return dispatch => {
     const subscription = web3.eth.subscribe('logs', {
       address: proxyAddress,
       topics: [
-        encodedEventSignature("challengeParticipation", implementationAbi),
-        web3.eth.abi.encodeParameter('uint256', challengeId)
+        encodedEventSignature("challengeSubmission", implementationAbi),
+        numberTo32bytes(challengeId)
       ]
     }, (error, result) => {
         if(!error) {}
     }).on("data", (logs) => {
       return dispatch({
-        type: UPDATE_NUMBER_OF_PARTICIPANTS,
+        type: UPDATE_NUMBER_OF_SUBMISSIONS,
         payload: challengeId
       });
     }).on("changed", (logs) => {
