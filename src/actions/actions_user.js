@@ -27,8 +27,7 @@ var mnid = require('mnid');
 export function userLogin() {
   return(dispatch) => {
     const userCredentials = uport.requestCredentials({
-      requested: ['name', 'country', 'avatar', 'email', 'phone'],
-      notifications: true // We want this if we want to recieve credentials
+      requested: ['name', 'country', 'avatar', 'email', 'phone']
     });
 
     userCredentials.then( response => {
@@ -108,15 +107,16 @@ export function fetchUserBalance(userAddress) {
 
 export function withdrawBalance(userAddress, amount) {
   return (dispatch) => {
-    web3meta.eth.getAccounts((error, accounts) => {
-      web3.eth.defaultAccount = accounts[0];
+    //web3meta.eth.getAccounts((error, accounts) => {
+      //web3.eth.defaultAccount = accounts[0];
 
       const inputs = {
         amount: amount,
         userAddress: mnid.decode(userAddress).address
       }
-
-      web3meta.eth.sendTransaction(proxyOptions("userWithdraw", inputs, 0, true), (error, txHash) => {
+      const web3uport = uport.getWeb3()
+      //web3meta.eth.sendTransaction(proxyOptions("userWithdraw", inputs, 0, true), (error, txHash) => {
+      web3uport.eth.sendTransaction(proxyOptions("userWithdraw", inputs, 0), (error, txHash) => {
         if(!error) {
           return dispatch({
             type: WITHDRAW_USER_BALANCE,
@@ -126,6 +126,6 @@ export function withdrawBalance(userAddress, amount) {
           console.log("Withdraw error");
         }
       });
-    });
+    //});
   }
 }

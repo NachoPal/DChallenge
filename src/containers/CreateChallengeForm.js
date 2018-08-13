@@ -220,20 +220,20 @@ function validate(values) {
     errors.openTime = "Open Time can't be empty";
   }
 
-  if(values.openTime && parseInt(values.openTime) < 120) {
-    errors.openTime = "Open Time should be at least 120 seconds";
+  if(values.openTime && parseInt(values.openTime) < 360) {
+    errors.openTime = "Open Time should be at least 360 seconds";
   }
 
   if(!values.closeTime) {
     errors.closeTime = "Close Time can't be empty";
   }
 
-  if(values.closeTime && parseInt(values.closeTime) < 240) {
-    errors.closeTime = "Close Time should be at least 240 seconds";
-  }
+  // if(values.closeTime && parseInt(values.closeTime) < 360) {
+  //   errors.closeTime = "Close Time should be at least 360 seconds";
+  // }
 
-  if((parseInt(values.openTime) + 240) > parseInt(values.closeTime)) {
-    errors.closeTime = "Close Time should be at least 240 seconds bigger than Open Time";
+  if((parseInt(values.openTime) + 360) > parseInt(values.closeTime)) {
+    errors.closeTime = "Close Time should be at least 360 seconds bigger than Open Time";
   }
 
   return errors;

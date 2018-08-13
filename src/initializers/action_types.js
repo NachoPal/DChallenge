@@ -6,12 +6,12 @@ export const PARTICIPATE = 'participate';
 export const FETCH_YOUR_OPEN_CHALLENGES = 'fetch_your_open_challenges';
 export const UPDATE_YOUR_OPEN_CHALLENGES = 'update_yout_open_challenges';
 
-
 //Ongoing
 export const FETCH_ONGOING_CHALLENGES = 'fetch_ongoing_challenges';
 //export const UPDATE_ONGOING_CHALLENGES = 'update_ongoing_challenges';
 export const UPDATE_NUMBER_OF_SUBMISSIONS = 'update_number_of_submissions';
 export const FETCH_YOUR_ONGOING_CHALLENGES = 'fetch_your_ongoing_challenges';
+export const UPDATE_YOUR_NUMBER_OF_SUBMISSIONS = "update_your_number_of_submissions"
 
 //Closed
 export const FETCH_CLOSED_CHALLENGES = 'fetch_closed_challenges';
@@ -19,8 +19,9 @@ export const UPDATE_CLOSED_CHALLENGES = 'update_closed_challenges';
 export const FETCH_YOUR_CLOSED_CHALLENGES = 'fetch_your_closed_challenges';
 
 //OpenItem
-export const FETCH_NUMBER_OF_PARTICIPANTS = 'fetch_number_of_participants'
-export const UPDATE_NUMBER_OF_PARTICIPANTS = 'update_number_of_participants'
+export const FETCH_NUMBER_OF_PARTICIPANTS = 'fetch_number_of_participants';
+export const UPDATE_NUMBER_OF_PARTICIPANTS = 'update_number_of_participants';
+export const UPDATE_YOUR_NUMBER_OF_PARTICIPANTS = "update_your_number_of_participants";
 
 //USER
 export const USER_LOGIN = 'user_login';

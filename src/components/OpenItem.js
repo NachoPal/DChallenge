@@ -19,7 +19,8 @@ import { URL_IPFS } from '../initializers/ipfs';
 class OpenItem extends Component {
   constructor(props) {
     super(props);
-    this.props.updateNumberOfParticipants(this.props.item.id);
+    const yourChallenge = _.includes(this.props.user.participating, this.props.item.id);
+    this.props.updateNumberOfParticipants(this.props.item.id, yourChallenge);
     this.state = { modalParticipateIsOpen: false };
     this.state = {...this.state, participateButtonVisible: true };
     this.state = {...this.state, modalPendingTx: false };
@@ -64,7 +65,6 @@ class OpenItem extends Component {
   }
 
   renderParticipateButton(challengeId) {
-    console.log(this.state.participateButtonVisible);
     if(this.state.participateButtonVisible == true) {
       if(!_.includes(this.props.user.participating, challengeId)) {
         return(

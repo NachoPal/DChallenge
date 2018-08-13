@@ -16,7 +16,6 @@ const implementationAbi = implementation.implementationAbi;
 //#RINKEBY
 const id = 4;
 const address = artifact.networks[id].address;
-console.log(address);
 const abi = artifact.abi;
 
 var Contract = contract(artifact);

@@ -11,7 +11,6 @@ const Web3 = require('web3-v1');
 //     mnemonic,
 //     walletAPIUrl
 // );
-console.log("CONECTA");
 var web3 = new Web3(new Web3.providers.WebsocketProvider('wss://rinkeby.infura.io/ws'));
 
 

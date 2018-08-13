@@ -67,11 +67,14 @@ export function updateWinnerVideo(id) {
   return (dispatch) => {
     const subscription = web3.eth.subscribe('logs', {
       address: proxyAddress,
-      topics: [encodedEventSignature("challengeClosed", implementationAbi)]
+      topics: [
+        encodedEventSignature("challengeClosed", implementationAbi),
+        numberTo32bytes(id)
+      ]
     }, (error, result) => {
         if(!error) {}
     }).on("data", (logs) => {
-      fetchVideos(id)
+      location.reload();
     }).on("changed", (logs) => {
 
     });

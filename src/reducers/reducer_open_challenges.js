@@ -32,12 +32,14 @@ export default function(state = INITIAL_STATE, action) {
         ...state,
         [action.payload]: {
           ...state[action.payload],
-            participants: currentParticipants
+          //participants: currentParticipants
+          participants: currentParticipants + 1
         }
       };
-      var itemToUpdate = newState[action.payload];
-      itemToUpdate.participants = itemToUpdate.participants + 1;
-      return { ...state, [action.payload]: itemToUpdate }
+      //var itemToUpdate = newState[action.payload];
+      //itemToUpdate.participants = itemToUpdate.participants + 1;
+      //return { ...state, [action.payload]: itemToUpdate }
+      return newState;
     default:
       return {...state };
   }

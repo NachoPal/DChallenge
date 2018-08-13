@@ -6,6 +6,7 @@ import { proxyAddress, proxyOptions } from '../initializers/proxy_info';
 import { implementationAbi } from '../initializers/implementation_info';
 import {
   UPDATE_NUMBER_OF_PARTICIPANTS,
+  UPDATE_YOUR_NUMBER_OF_PARTICIPANTS,
   PARTICIPATE
 } from '../initializers/action_types';
 import { encodedEventSignature } from '../helpers/helper_web3';
@@ -19,7 +20,7 @@ export function participate(challengeId, userAddress, value, callback, managePen
         challengeId: challengeId,
         //userAddress: mnid.decode(userAddress).address
       }
-      const web3uport = uport.getWeb3()
+      const web3uport = uport.getWeb3();
       //web3meta.eth.sendTransaction(proxyOptions("participate", inputs, value, true), (error, txHash) => {
       web3uport.eth.sendTransaction(proxyOptions("participate", inputs, value), (error, txHash) => {
         if(!error) {
@@ -46,7 +47,7 @@ export function participate(challengeId, userAddress, value, callback, managePen
   }
 }
 
-export function updateNumberOfParticipants(challengeId) {
+export function updateNumberOfParticipants(challengeId, yourChallenges) {
   return dispatch => {
     const subscription = web3.eth.subscribe('logs', {
       address: proxyAddress,
@@ -55,10 +56,16 @@ export function updateNumberOfParticipants(challengeId) {
         web3.eth.abi.encodeParameter('uint256', challengeId)
       ]
     }, (error, result) => {
-        if(!error) console.log(result);
+        if(!error) {}
     }).on("data", (logs) => {
+      var type = null;
+      if(yourChallenges == true) {
+        type = UPDATE_YOUR_NUMBER_OF_PARTICIPANTS;
+      } else {
+        type = UPDATE_NUMBER_OF_PARTICIPANTS;
+      }
       return dispatch({
-        type: UPDATE_NUMBER_OF_PARTICIPANTS,
+        type: type,
         payload: challengeId
       });
     }).on("changed", (logs) => {

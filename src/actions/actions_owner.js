@@ -50,7 +50,6 @@ export function setImplementation(implementationAddress) {
   return (dispatch) => {
     web3meta.eth.getAccounts((error, accounts) => {
       const ProxyContract = web3meta.eth.contract(proxyAbi);
-      console.log(proxyAddress);
       const proxyInstance = ProxyContract.at(proxyAddress);
 
       proxyInstance.upgradeToAndCall(

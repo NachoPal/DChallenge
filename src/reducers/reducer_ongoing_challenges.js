@@ -18,9 +18,10 @@ export default function(state = INITIAL_STATE, action) {
         ...state,
         [action.payload]: {
           ...state[action.payload],
-            submissions: currentSubmissions
+            submissions: currentSubmissions + 1
         }
       };
+      return newState;
     default:
       return {...state};
   }

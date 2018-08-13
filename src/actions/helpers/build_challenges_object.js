@@ -143,7 +143,6 @@ export default (logs, dispatch, action) => {
 
         Promise.all(promises4).then(logs => {
           var count = 0;
-
             _.map(logs, log => {
               if(!_.isEmpty(log)){
                 var decoded = web3.eth.abi.decodeLog(
@@ -193,7 +192,7 @@ export default (logs, dispatch, action) => {
             }
             payload = _.mapKeys(decodedLogs, 'id')
           }
-          console.log(payload);
+          
           return dispatch({
                    type: action,
                    payload: payload

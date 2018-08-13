@@ -17,8 +17,6 @@ export function fetchClosedChallenges() {
       address: proxyAddress,
       topics: [encodedEventSignature("challengeClosed", implementationAbi)]
     }).then((logs) => {
-        console.log(logs);
-        console.log(proxyAddress);
         var indexes = getChallengesIndex(logs, "challengeClosed");
         indexes = _.map(indexes, (index) => {return numberTo32bytes(index)});
 
