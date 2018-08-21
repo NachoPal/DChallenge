@@ -1,3 +1,23 @@
+##SET UP
+#Requirements
+Ubuntu 16.04
+Nodejs v10.9.0
+#Steps
+- Install the last version of Nodejs
+sudo apt-get install -y nodejs
+- Install git
+sudo apt install git
+- Clone the repository
+git clone -b rinkeby https://github.com/NachoPal/DChallenge
+- Change to DChallenge cloned folder project
+cd DChallenge
+- Then the rest of the project dependencies will be installed running
+npm install , as all of the needed packages are installed locally within the project.
+npm install
+
+
+
+
 #SECURITY
 - using Library SafeMath to avoid overflow and underflow.
 
