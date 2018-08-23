@@ -1,7 +1,7 @@
 # What my project does?
 
 # How to set it up
-I created **two different branches** since there are some code differences depending on what **Web3 provider** is used. In the `development` branch the provider is `ganache-cli`, whereas in `rinkeby` it is the testnet Rinkeby via `infura Websocket`. Branch `master` is up to date with `rinkeby`, however it will be used in the future as **production branch** for the `mainnet`.
+I created **two different branches** since there are some code differences depending on what **Web3 provider** is used. In `development` branch the provider is `ganache-cli`, whereas in `rinkeby` it is the testnet Rinkeby via `infura`. Branch `master` is up to date with `rinkeby`, however it will be used in the future as **production branch** for the `mainnet`.
 
 In addition, **signing transactions with uPort is not possible using a local RPC testnet** since there is no way for uPort servers to interact with the deployed contracts in the local network. There are only two possible options to be able to sign transactions with uPort, either to deploy the smart contracts to a testnet such as Rinkeby, or to set up a local private network with a JSON RPC public endpoint making use of [lambda-olorum](https://github.com/uport-project/lambda-olorun). For the sake of simplicity for evaluators, I decided not to set up a local private network run by a Geth node.
 
@@ -33,7 +33,7 @@ To summarize, `development` branch will be use to **run the tests** against `gan
     `$ cd ..`
 
     `$ mkdir Rinkeby`
-    
+
     `$ cd Rinkeby`
   * Clone `rinkeby` branch from the repository:
 
