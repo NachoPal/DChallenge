@@ -25,13 +25,15 @@ To summarize, `development` branch will be use to **run the tests** against `gan
     `$ mkdir Development`
 
     `$ cd Development`
-
   * Clone `development` branch from the repository:
 
     `$ git clone -b development https://github.com/NachoPal/DChallenge`
   * Create a new folder for **rinkeby git branch** and change to it:
+
     `$ cd ..`
+
     `$ mkdir Rinkeby`
+    
     `$ cd Rinkeby`
   * Clone `rinkeby` branch from the repository:
 
