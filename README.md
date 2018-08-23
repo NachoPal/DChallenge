@@ -15,21 +15,26 @@ To summarize, `development` branch will be use to **run the tests** against `gan
 
 ## Steps
   * Install the last version of **Nodejs**:
+
     `$ sudo apt-get install -y nodejs`
   * Install **git**:
+
     `$ sudo apt install git`
   * Create a new folder for **development git branch** and change to it:
+
     `$ mkdir Development`
+
     `$ cd Development`
-  * Clone `development` branch from the repository
+
+  * Clone `development` branch from the repository:
 
     `$ git clone -b development https://github.com/NachoPal/DChallenge`
-  * Create a new folder for **rinkeby git branch** and change to it
+  * Create a new folder for **rinkeby git branch** and change to it:
     `$ cd ..`
     `$ mkdir Rinkeby`
     `$ cd Rinkeby`
-  * Clone `rinkeby` branch from the repository
-  
+  * Clone `rinkeby` branch from the repository:
+
     `$ git clone -b rinkeby https://github.com/NachoPal/DChallenge`
 
 # Test
