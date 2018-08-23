@@ -150,7 +150,7 @@ contract('DChallenge', function(accounts) {
     await web3.eth.sendTransaction({
       data: encodedFunctionCall(
         "participate",
-        Object.values(expectedParticipateInputs),
+        [Object.values(expectedParticipateInputs)[0]],
         this.implementationAbi
       ),
       from: accounts[0],
@@ -235,7 +235,10 @@ contract('DChallenge', function(accounts) {
     await web3.eth.sendTransaction({
       data: encodedFunctionCall(
         "submit",
-        Object.values(expectedSubmitInputs),
+        Object.values(expectedSubmitInputs).slice(
+          0,
+          Object.values(expectedSubmitInputs).length - 1
+        ),
         this.implementationAbi
       ),
       from: accounts[0],
@@ -331,7 +334,7 @@ contract('DChallenge', function(accounts) {
   it("User withdraw his balance", async () => {
     const withdrawalInputs = {
       amount: this.bettingPrice,
-      userAdress: accounts[0]
+      //userAdress: accounts[0]
     }
 
     const initialAccountBalance = await web3.eth.getBalance(accounts[0]);

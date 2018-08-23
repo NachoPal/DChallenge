@@ -8,15 +8,15 @@ const implementation = require('./implementation_info.js');
 const implementationAbi = implementation.implementationAbi;
 
 //#DEVELOPMENT
-// const networks_id = _.keys(artifact.networks);
-// const id = networks_id[networks_id.length-1];
-// const address = artifact.networks[id].address;
-// const abi = artifact.abi;
-
-//#RINKEBY
-const id = 4;
+const networks_id = _.keys(artifact.networks);
+const id = networks_id[networks_id.length-1];
 const address = artifact.networks[id].address;
 const abi = artifact.abi;
+
+//#RINKEBY
+// const id = 4;
+// const address = artifact.networks[id].address;
+// const abi = artifact.abi;
 
 var Contract = contract(artifact);
 Contract.setProvider(web3.currentProvider);

@@ -13,7 +13,7 @@ module.exports = {
       //gas: 4500000,
       gas: 6721975,
       gasPrice: 10000000000,
-      //from: web3.eth.accounts[1]
+      from: web3.eth.accounts[1]
     },
     rinkeby: {
       provider: function() {
