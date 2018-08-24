@@ -18,7 +18,9 @@ Because of **uPort** having a dependency on **web3 v0.19** I needed to install *
   * Ganache-cli 6.1.6
 
 ## Steps (in order)
-  * Install the last version of **Nodejs**:
+Before going through the next sections, follow these steps. If after this set up you encounter any error running the Dapp or its tests, make sure you have installed the same versions, specially in **Truffle** and **Ganache-cli** cases.
+
+  * Install the last version of **Nodejs** and **npm**:
 
     `$ sudo apt-get install -y nodejs`
   * Install **git**:
@@ -48,17 +50,51 @@ Because of **uPort** having a dependency on **web3 v0.19** I needed to install *
   * Install **Ganache-cli** globally:
 
     `$ sudo npm install -g ganache-cli@6.1.6`
-  * Go to `$ ~/Development/DChallenge` and run `npm install`.
+  * Go to `$ ~/Development/DChallenge` and run `$ npm install`.
   * Install **niv** globally to be able to install **web3js 1.0** under a different name:
 
-    `npm install -g npm-install-version`
+    `$ npm install -g npm-install-version`
   * Install **web3js 1.0** under the web3-v1 node modules directory name:
 
-    `niv web3@1.0.0-beta.33 --destination web3-v1`
-  * Go to `$ ~/Rinkeby/DChallenge` and run `npm install`.
+    `$ niv web3@1.0.0-beta.33 --destination web3-v1`
+  * Go to `$ ~/Rinkeby/DChallenge` and run `$ npm install`.
   * Install **web3js 1.0** under the web3-v1 node modules directory name:
 
-    `niv web3@1.0.0-beta.33 --destination web3-v1`
+    `$ niv web3@1.0.0-beta.33 --destination web3-v1`
+
+# Interacting with the Dapp
+In this section we are gonna test the app through the front-end/UI. When you clone the `rinkeby` branch repository you will notice that the `/build` projects with the contracts artifacts is available, this is because they are already pointing to the deployed contracts in Rinkeby testnet. So do not remove it and do not run the migrations again.
+
+## Set up (in order)
+  * Go to `$ ~/Rinkeby/DChallenge`.
+  * Run `npm start`.
+  * Make sure you have installed the Metamask plugin in your browser.
+  * In Metamask, switch to **Rinkeby Test Net**
+  * Click **Importing Existing DEN**
+  * Copy and paste the following **mnemonic** `above decline twin original artefact debate fade duck fossil enact sorry there`, enter a password of your choice and click OK. You will have access then to the Owner's account which holds already some ETH with address `0xf022797e23c6683b17bd2fe5e1b75250fdc851e4`.   
+  * In a tab of the browser go to `localhost:8080`. You should see the **landing page** of the Dapp (It will throw an error if Metamask is not installed).
+
+
+## User stories
+There are two kind of users, Owner(Admin) and regular User(Participant).
+
+| Story ID | Scope       | I expect that I can...  | So that.. |
+|:--------:|:-----------:| ----------------------- | --------- |
+| US-01    | Admin       | change implementation address | contract logic can be upgraded |
+| US-02    | Admin       | create a new challenge | users can participate in it |
+| US-03    | Participant | participate in the new challenge | I can submit a video |
+| US-04    | Participant | submit a video | I can aim for winning the prize |
+| US-05    | Participant | withdraw the prize | I receive the ETH in my account |
+
+### US-01
+Go to `localhost:8080/admin`. You will see that in the **PROXY - UPGRADEABILITY** section are shown the Owner, Proxy and Implementation addresses. As Admin you have the option to upgrade the Contract logic, and make the Proxy contract to point another Contract Implementation. However, I don't recommend it because it could cause failures in the Dapp behavior to other evaluators meanwhile it is pointing to the wrong contract (potentially an address without any/wrong code). In any case, If you try it, make sure you change it back to the address `0xc75c984d12f9060123a7a1b781833d805dddfa7c`  
+
+### US-02
+
+
+
+
+
 
 
 # Tests
