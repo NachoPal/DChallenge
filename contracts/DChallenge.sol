@@ -206,25 +206,17 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
       */
     function participate(
         uint _challengeId
-        //address _userAddress
     )
         external
         payable
-        //userHasNotParticipated(_challengeId, _userAddress)
         userHasNotParticipated(_challengeId, msg.sender)
         whenNotPaused
         challengeIsOpen(_challengeId)
     {
         require(msg.value >= challenges[_challengeId].bettingPrice);
-        //Signing transactions with uPort
         challenges[_challengeId].participants[msg.sender] = true;
         challenges[_challengeId].participantsCounter++;
         emit challengeParticipation(_challengeId, msg.sender);
-
-        //Whitout signing transactions with uPort
-        /* challenges[_challengeId].participants[_userAddress] = true;
-        challenges[_challengeId].participantsCounter++;
-        emit challengeParticipation(_challengeId, _userAddress); */
     }
 
     /** @dev User submits a video for a challenge.
@@ -240,24 +232,17 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
         bytes32 _code,
         uint _videoDuration,
         string _ipfsHash
-        //address _userAddress
     )
         external
-        //userHasNotSubmitted(_challengeId, _userAddress)
         userHasNotSubmitted(_challengeId, msg.sender)
         whenNotPaused
         challengeIsOngoing(_challengeId)
         returns(bool)
     {
-        //require(userIsParticipating(_challengeId, _userAddress));
         require(userIsParticipating(_challengeId, msg.sender));
-        //require(verifySubmission(_blockNumber, _code, _userAddress, _videoDuration) == true);
         require(verifySubmission(_blockNumber, _code, msg.sender, _videoDuration) == true);
-        //challenges[_challengeId].submissionsIndex.push(_userAddress);
         challenges[_challengeId].submissionsIndex.push(msg.sender);
-        //challenges[_challengeId].submissions[_userAddress] = true;
         challenges[_challengeId].submissions[msg.sender] = true;
-        //emit challengeSubmission(_challengeId, _userAddress, _code, _videoDuration, _ipfsHash);
         emit challengeSubmission(_challengeId, msg.sender, _code, _videoDuration, _ipfsHash);
         return true;
     }
@@ -312,9 +297,6 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
         uint id = challengesCounter;
         uint length = challengesClosingOrder.length;
         uint startIndex = challengesClosingOrderStartIndex;
-      //------------------------------
-      //challengesClosingOrder.push(id);
-      //------------------------------
 
         if (length == startIndex) {
             challengesClosingOrder.push(id);

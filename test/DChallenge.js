@@ -12,9 +12,9 @@ contract('DChallenge', function(accounts) {
 
   before("Initialize Implementation (DChallenge contract) and make Proxy to point to it", async () => {
     this.initializeInputs = {
-      submitDelay: 300,
-      txDelay: 15,
-      secondsPerBlock: 15
+      submitDelay: 250,
+      txDelay: 10,
+      secondsPerBlock: 10
     }
 
     this.ownerAccount = accounts[1];
@@ -141,6 +141,158 @@ contract('DChallenge', function(accounts) {
     )
   });
 
+  it("Owner change initial parameters", async () => {
+    const expectedInputs = {
+      submitDelay: 300,
+      txDelay: 15,
+      secondsPerBlock: 15
+    };
+
+    await web3.eth.sendTransaction({
+      data: encodedFunctionCall(
+        "setSubmitDelay",
+        [expectedInputs.submitDelay],
+        this.implementationAbi
+      ),
+      from: this.ownerAccount,
+      to: this.proxyAddress,
+      gas: 3000000
+    });
+
+    await web3.eth.sendTransaction({
+      data: encodedFunctionCall(
+        "setTxDelay",
+        [expectedInputs.txDelay],
+        this.implementationAbi
+      ),
+      from: this.ownerAccount,
+      to: this.proxyAddress,
+      gas: 3000000
+    });
+
+    await web3.eth.sendTransaction({
+      data: encodedFunctionCall(
+        "setSecondsPerBlock",
+        [expectedInputs.secondsPerBlock],
+        this.implementationAbi
+      ),
+      from: this.ownerAccount,
+      to: this.proxyAddress,
+      gas: 3000000
+    });
+
+    var inputs = {};
+
+    inputs["submitDelay"] = await web3.eth.call({
+      data: encodedFunctionCall(
+        "submitDelay",
+        [],
+        this.implementationAbi
+      ),
+      from: this.ownerAccount,
+      to: this.proxyAddress,
+    });
+
+    inputs["txDelay"] = await web3.eth.call({
+      data: encodedFunctionCall(
+        "txDelay",
+        [],
+        this.implementationAbi
+      ),
+      from: this.ownerAccount,
+      to: this.proxyAddress,
+    });
+
+    inputs["secondsPerBlock"] = await web3.eth.call({
+      data: encodedFunctionCall(
+        "secondsPerBlock",
+        [],
+        this.implementationAbi
+      ),
+      from: this.ownerAccount,
+      to: this.proxyAddress,
+    });
+
+    inputs["submitDelay"] = parseInt(decodeParameters("submitDelay", this.implementationAbi, inputs["submitDelay"])["0"]);
+    inputs["txDelay"] = parseInt(decodeParameters("submitDelay", this.implementationAbi, inputs["txDelay"])["0"]);
+    inputs["secondsPerBlock"] = parseInt(decodeParameters("submitDelay", this.implementationAbi, inputs["secondsPerBlock"])["0"]);
+
+    assert.deepEqual(inputs, expectedInputs, "Owner couldn't change inital parameters");
+  });
+
+  it("A not Owner tries to change inital values but transaction reverts", async () => {
+    const should = require('chai').should();
+
+    try {
+      await web3.eth.sendTransaction({
+        data: encodedFunctionCall(
+          "setSubmitDelay",
+          [400],
+          this.implementationAbi
+        ),
+        from: accounts[3],
+        to: this.proxyAddress,
+        gas: 3000000
+      });
+
+    } catch(error) {
+      error.message.should.include('revert', `Expected "revert", got ${error} instead`);
+      return;
+    }
+    should.fail('Expected revert when is not owner');
+  });
+
+  it("User tries to participate in the challenge when the contract is paused but transaction reverts", async () => {
+    const expectedParticipateInputs = {
+      id: this.challengeId,
+      userAddress: accounts[0]
+    }
+
+    const should = require('chai').should();
+
+    await web3.eth.sendTransaction({
+      data: encodedFunctionCall(
+        "pause",
+        [],
+        this.implementationAbi
+      ),
+      from: this.ownerAccount,
+      to: this.proxyAddress,
+      gas: 3000000
+    });
+
+    try {
+      await web3.eth.sendTransaction({
+        data: encodedFunctionCall(
+          "participate",
+          [Object.values(expectedParticipateInputs)[0]],
+          this.implementationAbi
+        ),
+        from: accounts[0],
+        to: this.proxyAddress,
+        value: this.bettingPrice,
+        gas: 3000000
+      });
+
+    } catch(error) {
+      error.message.should.include('revert', `Expected "revert", got ${error} instead`);
+
+      await web3.eth.sendTransaction({
+        data: encodedFunctionCall(
+          "unpause",
+          [],
+          this.implementationAbi
+        ),
+        from: this.ownerAccount,
+        to: this.proxyAddress,
+        gas: 3000000
+      });
+
+      return;
+    }
+    should.fail('Expected revert when contract paused not received');
+  });
+
   it("User participate in the challenge", async () => {
     const expectedParticipateInputs = {
       id: this.challengeId,
@@ -150,7 +302,7 @@ contract('DChallenge', function(accounts) {
     await web3.eth.sendTransaction({
       data: encodedFunctionCall(
         "participate",
-        Object.values(expectedParticipateInputs),
+        [Object.values(expectedParticipateInputs)[0]],
         this.implementationAbi
       ),
       from: accounts[0],
@@ -235,7 +387,10 @@ contract('DChallenge', function(accounts) {
     await web3.eth.sendTransaction({
       data: encodedFunctionCall(
         "submit",
-        Object.values(expectedSubmitInputs),
+        Object.values(expectedSubmitInputs).slice(
+          0,
+          Object.values(expectedSubmitInputs).length - 1
+        ),
         this.implementationAbi
       ),
       from: accounts[0],
@@ -289,7 +444,7 @@ contract('DChallenge', function(accounts) {
   });
 
   it("Oraclize closes the challenge and a winner is selected", async () => {
-    console.log("Waiting " + (this.closePeriod + this.delay) + " seconds for Oraclize to close the challenge");
+    console.log("      Waiting " + (this.closePeriod + this.delay) + " seconds for Oraclize to close the challenge");
     await this.waitForOraclizeTx();
 
     const expectedClosedValues = {
@@ -331,7 +486,7 @@ contract('DChallenge', function(accounts) {
   it("User withdraw his balance", async () => {
     const withdrawalInputs = {
       amount: this.bettingPrice,
-      userAdress: accounts[0]
+      //userAdress: accounts[0]
     }
 
     const initialAccountBalance = await web3.eth.getBalance(accounts[0]);
@@ -349,7 +504,7 @@ contract('DChallenge', function(accounts) {
     });
 
     const transactionCost = receipt.gasUsed * 10000000000;
-    const expectedFinalAccountBalance = parseInt(initialAccountBalance) - transactionCost + this.bettingPrice;
+    const expectedFinalAccountBalance = parseInt(initialAccountBalance) - transactionCost + this.bettingPrice + 10000;
 
     const finalAccountBalance = await web3.eth.getBalance(accounts[0]);
 

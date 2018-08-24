@@ -1,0 +1,827 @@
+{
+  "contractName": "Ownable",
+  "abi": [],
+  "bytecode": "0x6080604052348015600f57600080fd5b50603580601d6000396000f3006080604052600080fd00a165627a7a72305820b21c84cc19a2241466d1577cc4b31e54cec9684da4ed0b39c46cdb3cb4a2226f0029",
+  "deployedBytecode": "0x6080604052600080fd00a165627a7a72305820b21c84cc19a2241466d1577cc4b31e54cec9684da4ed0b39c46cdb3cb4a2226f0029",
+  "sourceMap": "216:552:2:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;216:552:2;;;;;;;",
+  "deployedSourceMap": "216:552:2:-;;;;;",
+  "source": "pragma solidity ^0.4.24;\n\n/**\n * @title Ownable\n * @dev The Ownable contract has an owner address, and provides basic authorization control\n * functions, this simplifies the implementation of \"user permissions\".\n */\ncontract Ownable {\n    bytes32 private constant proxyOwnerPosition = keccak256(\"org.dchallenge.proxy.owner\");\n\n    /**\n    * @dev Throws if called by any account other than the owner.\n    */\n    modifier onlyOwner() {\n      require(msg.sender == proxyOwner());\n      _;\n    }\n\n    /**\n     * @dev Tells the address of the owner\n     * @return the address of the owner\n     */\n    function proxyOwner() internal view returns (address owner) {\n      bytes32 position = proxyOwnerPosition;\n      assembly {\n        owner := sload(position)\n      }\n    }\n}\n",
+  "sourcePath": "/Users/Nacho/ETHEREUM/DChallenge/contracts/Ownable.sol",
+  "ast": {
+    "absolutePath": "/Users/Nacho/ETHEREUM/DChallenge/contracts/Ownable.sol",
+    "exportedSymbols": {
+      "Ownable": [
+        1038
+      ]
+    },
+    "id": 1039,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1009,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".24"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:2"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": "@title Ownable\n@dev The Ownable contract has an owner address, and provides basic authorization control\nfunctions, this simplifies the implementation of \"user permissions\".",
+        "fullyImplemented": true,
+        "id": 1038,
+        "linearizedBaseContracts": [
+          1038
+        ],
+        "name": "Ownable",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": true,
+            "id": 1014,
+            "name": "proxyOwnerPosition",
+            "nodeType": "VariableDeclaration",
+            "scope": 1038,
+            "src": "239:85:2",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_bytes32",
+              "typeString": "bytes32"
+            },
+            "typeName": {
+              "id": 1010,
+              "name": "bytes32",
+              "nodeType": "ElementaryTypeName",
+              "src": "239:7:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_bytes32",
+                "typeString": "bytes32"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "arguments": [
+                {
+                  "argumentTypes": null,
+                  "hexValue": "6f72672e646368616c6c656e67652e70726f78792e6f776e6572",
+                  "id": 1012,
+                  "isConstant": false,
+                  "isLValue": false,
+                  "isPure": true,
+                  "kind": "string",
+                  "lValueRequested": false,
+                  "nodeType": "Literal",
+                  "src": "295:28:2",
+                  "subdenomination": null,
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_stringliteral_8c91e1d64c549549e9a187f982f1f956d0883d3f0c6288e2ac441b3f9f0a19a9",
+                    "typeString": "literal_string \"org.dchallenge.proxy.owner\""
+                  },
+                  "value": "org.dchallenge.proxy.owner"
+                }
+              ],
+              "expression": {
+                "argumentTypes": [
+                  {
+                    "typeIdentifier": "t_stringliteral_8c91e1d64c549549e9a187f982f1f956d0883d3f0c6288e2ac441b3f9f0a19a9",
+                    "typeString": "literal_string \"org.dchallenge.proxy.owner\""
+                  }
+                ],
+                "id": 1011,
+                "name": "keccak256",
+                "nodeType": "Identifier",
+                "overloadedDeclarations": [],
+                "referencedDeclaration": 7240,
+                "src": "285:9:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_function_sha3_pure$__$returns$_t_bytes32_$",
+                  "typeString": "function () pure returns (bytes32)"
+                }
+              },
+              "id": 1013,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "functionCall",
+              "lValueRequested": false,
+              "names": [],
+              "nodeType": "FunctionCall",
+              "src": "285:39:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_bytes32",
+                "typeString": "bytes32"
+              }
+            },
+            "visibility": "private"
+          },
+          {
+            "body": {
+              "id": 1025,
+              "nodeType": "Block",
+              "src": "432:59:2",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 1021,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 1017,
+                            "name": "msg",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 7246,
+                            "src": "448:3:2",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_magic_message",
+                              "typeString": "msg"
+                            }
+                          },
+                          "id": 1018,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "sender",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "448:10:2",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "==",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "arguments": [],
+                          "expression": {
+                            "argumentTypes": [],
+                            "id": 1019,
+                            "name": "proxyOwner",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 1037,
+                            "src": "462:10:2",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_function_internal_view$__$returns$_t_address_$",
+                              "typeString": "function () view returns (address)"
+                            }
+                          },
+                          "id": 1020,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "functionCall",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "462:12:2",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "src": "448:26:2",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 1016,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        7249,
+                        7250
+                      ],
+                      "referencedDeclaration": 7249,
+                      "src": "440:7:2",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 1022,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "440:35:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1023,
+                  "nodeType": "ExpressionStatement",
+                  "src": "440:35:2"
+                },
+                {
+                  "id": 1024,
+                  "nodeType": "PlaceholderStatement",
+                  "src": "483:1:2"
+                }
+              ]
+            },
+            "documentation": "@dev Throws if called by any account other than the owner.",
+            "id": 1026,
+            "name": "onlyOwner",
+            "nodeType": "ModifierDefinition",
+            "parameters": {
+              "id": 1015,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "429:2:2"
+            },
+            "src": "411:80:2",
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 1036,
+              "nodeType": "Block",
+              "src": "656:110:2",
+              "statements": [
+                {
+                  "assignments": [
+                    1032
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 1032,
+                      "name": "position",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 1037,
+                      "src": "664:16:2",
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
+                      },
+                      "typeName": {
+                        "id": 1031,
+                        "name": "bytes32",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "664:7:2",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes32",
+                          "typeString": "bytes32"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 1034,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "id": 1033,
+                    "name": "proxyOwnerPosition",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 1014,
+                    "src": "683:18:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "664:37:2"
+                },
+                {
+                  "externalReferences": [
+                    {
+                      "position": {
+                        "declaration": 1032,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "743:8:2",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "owner": {
+                        "declaration": 1029,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "728:5:2",
+                        "valueSize": 1
+                      }
+                    }
+                  ],
+                  "id": 1035,
+                  "nodeType": "InlineAssembly",
+                  "operations": "{\n    owner := sload(position)\n}",
+                  "src": "709:57:2"
+                }
+              ]
+            },
+            "documentation": "@dev Tells the address of the owner\n@return the address of the owner",
+            "id": 1037,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "proxyOwner",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1027,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "615:2:2"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1030,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1029,
+                  "name": "owner",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1037,
+                  "src": "641:13:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1028,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "641:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "640:15:2"
+            },
+            "scope": 1038,
+            "src": "596:170:2",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 1039,
+        "src": "216:552:2"
+      }
+    ],
+    "src": "0:769:2"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/Nacho/ETHEREUM/DChallenge/contracts/Ownable.sol",
+    "exportedSymbols": {
+      "Ownable": [
+        1038
+      ]
+    },
+    "id": 1039,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1009,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".24"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:2"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": "@title Ownable\n@dev The Ownable contract has an owner address, and provides basic authorization control\nfunctions, this simplifies the implementation of \"user permissions\".",
+        "fullyImplemented": true,
+        "id": 1038,
+        "linearizedBaseContracts": [
+          1038
+        ],
+        "name": "Ownable",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": true,
+            "id": 1014,
+            "name": "proxyOwnerPosition",
+            "nodeType": "VariableDeclaration",
+            "scope": 1038,
+            "src": "239:85:2",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_bytes32",
+              "typeString": "bytes32"
+            },
+            "typeName": {
+              "id": 1010,
+              "name": "bytes32",
+              "nodeType": "ElementaryTypeName",
+              "src": "239:7:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_bytes32",
+                "typeString": "bytes32"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "arguments": [
+                {
+                  "argumentTypes": null,
+                  "hexValue": "6f72672e646368616c6c656e67652e70726f78792e6f776e6572",
+                  "id": 1012,
+                  "isConstant": false,
+                  "isLValue": false,
+                  "isPure": true,
+                  "kind": "string",
+                  "lValueRequested": false,
+                  "nodeType": "Literal",
+                  "src": "295:28:2",
+                  "subdenomination": null,
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_stringliteral_8c91e1d64c549549e9a187f982f1f956d0883d3f0c6288e2ac441b3f9f0a19a9",
+                    "typeString": "literal_string \"org.dchallenge.proxy.owner\""
+                  },
+                  "value": "org.dchallenge.proxy.owner"
+                }
+              ],
+              "expression": {
+                "argumentTypes": [
+                  {
+                    "typeIdentifier": "t_stringliteral_8c91e1d64c549549e9a187f982f1f956d0883d3f0c6288e2ac441b3f9f0a19a9",
+                    "typeString": "literal_string \"org.dchallenge.proxy.owner\""
+                  }
+                ],
+                "id": 1011,
+                "name": "keccak256",
+                "nodeType": "Identifier",
+                "overloadedDeclarations": [],
+                "referencedDeclaration": 7240,
+                "src": "285:9:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_function_sha3_pure$__$returns$_t_bytes32_$",
+                  "typeString": "function () pure returns (bytes32)"
+                }
+              },
+              "id": 1013,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "functionCall",
+              "lValueRequested": false,
+              "names": [],
+              "nodeType": "FunctionCall",
+              "src": "285:39:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_bytes32",
+                "typeString": "bytes32"
+              }
+            },
+            "visibility": "private"
+          },
+          {
+            "body": {
+              "id": 1025,
+              "nodeType": "Block",
+              "src": "432:59:2",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 1021,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 1017,
+                            "name": "msg",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 7246,
+                            "src": "448:3:2",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_magic_message",
+                              "typeString": "msg"
+                            }
+                          },
+                          "id": 1018,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "sender",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "448:10:2",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "==",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "arguments": [],
+                          "expression": {
+                            "argumentTypes": [],
+                            "id": 1019,
+                            "name": "proxyOwner",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 1037,
+                            "src": "462:10:2",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_function_internal_view$__$returns$_t_address_$",
+                              "typeString": "function () view returns (address)"
+                            }
+                          },
+                          "id": 1020,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "functionCall",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "462:12:2",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "src": "448:26:2",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 1016,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        7249,
+                        7250
+                      ],
+                      "referencedDeclaration": 7249,
+                      "src": "440:7:2",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 1022,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "440:35:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1023,
+                  "nodeType": "ExpressionStatement",
+                  "src": "440:35:2"
+                },
+                {
+                  "id": 1024,
+                  "nodeType": "PlaceholderStatement",
+                  "src": "483:1:2"
+                }
+              ]
+            },
+            "documentation": "@dev Throws if called by any account other than the owner.",
+            "id": 1026,
+            "name": "onlyOwner",
+            "nodeType": "ModifierDefinition",
+            "parameters": {
+              "id": 1015,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "429:2:2"
+            },
+            "src": "411:80:2",
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 1036,
+              "nodeType": "Block",
+              "src": "656:110:2",
+              "statements": [
+                {
+                  "assignments": [
+                    1032
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 1032,
+                      "name": "position",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 1037,
+                      "src": "664:16:2",
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
+                      },
+                      "typeName": {
+                        "id": 1031,
+                        "name": "bytes32",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "664:7:2",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes32",
+                          "typeString": "bytes32"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 1034,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "id": 1033,
+                    "name": "proxyOwnerPosition",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 1014,
+                    "src": "683:18:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "664:37:2"
+                },
+                {
+                  "externalReferences": [
+                    {
+                      "position": {
+                        "declaration": 1032,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "743:8:2",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "owner": {
+                        "declaration": 1029,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "728:5:2",
+                        "valueSize": 1
+                      }
+                    }
+                  ],
+                  "id": 1035,
+                  "nodeType": "InlineAssembly",
+                  "operations": "{\n    owner := sload(position)\n}",
+                  "src": "709:57:2"
+                }
+              ]
+            },
+            "documentation": "@dev Tells the address of the owner\n@return the address of the owner",
+            "id": 1037,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "proxyOwner",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1027,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "615:2:2"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1030,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1029,
+                  "name": "owner",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1037,
+                  "src": "641:13:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1028,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "641:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "640:15:2"
+            },
+            "scope": 1038,
+            "src": "596:170:2",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 1039,
+        "src": "216:552:2"
+      }
+    ],
+    "src": "0:769:2"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "2.0.1",
+  "updatedAt": "2018-08-24T18:24:03.086Z"
+}
