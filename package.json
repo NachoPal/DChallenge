@@ -25,6 +25,7 @@
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-stage-1": "^6.1.18",
+    "chai": "^4.1.2",
     "css-loader": "^1.0.0",
     "ethereum-bridge": "^0.6.1",
     "ganache-cli": "^6.1.6",
