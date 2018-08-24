@@ -63,7 +63,8 @@ Because of **uPort** having a dependency on **web3 v0.19** I needed to install *
 
 # Tests
 ## Set up (in order)
-  * When all the modules are installed run **Ganache-cli**:
+  * Go to `$ ~/Development/DChallenge`
+  * If all the modules are installed run **Ganache-cli**:
 
     `$ ganache-cli`
 
