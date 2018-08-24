@@ -5,9 +5,11 @@ I created **two different branches** since there are some front-end code differe
 
 In addition, **signing transactions with uPort is not possible using a local RPC testnet** since there is no way for uPort servers to interact with the deployed contracts in the local network. There are only two possible options to be able to sign transactions with uPort, either to deploy the smart contracts to a testnet such as Rinkeby, or to set up a local private network with a JSON RPC public endpoint making use of [lambda-olorum](https://github.com/uport-project/lambda-olorun). For the sake of simplicity for evaluators, I decided not to set up a local private network run by a Geth node.
 
-In regard Contracts code, there is an inevitable difference depending on the provider. For using Oraclize in a local RPC testnet it is necessary to hardcode in the contract constructor the OAR (Oraclize Address Resolver) address provided by [ethereum-bridge](https://github.com/oraclize/ethereum-bridge). Contracts from both branches are exactly the same with the exception of the following line in the constructor for the `development` branch: `OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);`. Therefore, passing tests in `development` ensures successful testing in `rinkeby` branch as well.gN
+In regard Contracts code, there is an inevitable difference depending on the provider. For using Oraclize in a local RPC testnet it is necessary to hardcode in the contract constructor the OAR (Oraclize Address Resolver) address provided by [ethereum-bridge](https://github.com/oraclize/ethereum-bridge). Contracts from both branches are exactly the same with the exception of the following line in the constructor for the `development` branch: `OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);`. Therefore, passing tests in `development` ensures successful testing in `rinkeby` branch as well.
 
 To summarize, `development` branch will be use to **run the tests** against `ganache-cli`, whereas `rinkeby` will be used to **interact with the front-end** being able in this way to sign transactions with **uPort**.
+
+Because of **uPort** having a dependency on **web3 v0.19** I needed to install **web3 v1.0.0** under other name to avoid conflicts and be able to use **Web Sockets**. To make it possible I made use of the package `npm-install-version`.
 
 ## Requirements
   * Ubuntu 16.04
@@ -40,21 +42,21 @@ To summarize, `development` branch will be use to **run the tests** against `gan
   * Clone `rinkeby` branch from the repository:
 
     `$ git clone -b rinkeby https://github.com/NachoPal/DChallenge`    
-  * Install Truffle globally:
+  * Install **Truffle** globally:
 
     `$ sudo npm install -g truffle@4.1.13`
-  * Install Ganache-cli globally:
+  * Install **Ganache-cli** globally:
 
     `$ sudo npm install -g ganache-cli@6.1.6`
   * Go to `$ ~/Development/DChallenge` and run `npm install`.
   * Install **niv** globally to be able to install **web3js 1.0** under a different name:
 
     `npm install -g npm-install-version`
-  * Install web3js 1.0 under the web3-v1 node modules directory name:
+  * Install **web3js 1.0** under the web3-v1 node modules directory name:
 
     `niv web3@1.0.0-beta.33 --destination web3-v1`
   * Go to `$ ~/Rinkeby/DChallenge` and run `npm install`.
-  * Install web3js 1.0 under the web3-v1 node modules directory name:
+  * Install **web3js 1.0** under the web3-v1 node modules directory name:
 
     `niv web3@1.0.0-beta.33 --destination web3-v1`
 
@@ -92,35 +94,19 @@ To make it possible there is a `before` hook where an **implementation** is set 
 
   * **Modify initialized(constructor) values**. Send transactions to `setSubmitDelay(uint)`, `setTxDelay(uint)` and `setSecondsPerBlock(uint)`. Fetch their values calling to the public getters `submitDelay`, `txDelay` and `secondsPerBlock`. If expected and fetched values match, tests pass.
 
-  * **Kills the contract**. Send transaction to `kill()`. If there is still code in the proxy address, the tests fail, if there is not (0x0), it means the contract code has been removed successfully and the tests pass.
+  * **Kills the contract**. Send transaction to `kill()`. If there is still code in the proxy address, the tests fail, if there is not (0x00), it means the contract code has been removed successfully and the tests pass.
 
 #### User actions
-  * **Participate in a challenge**. Send transaction to `participate(...)`.
+  * **Participate in a challenge**. Send transaction to `participate(...)`. Call to the public getter `challenges(uint )` with the challenge id as argument. If the `challengesCounter` has been increased to 1, tests pass. Call to `userIsParticipating(uint _challengeId, address _userAddress)`, if it returns true, tests pass. Fetch data from past logs with `challengeParticipation` event signature, if challenge is and user address match with the expected values, tests pass.
 
-  Call to the public getter `challenges(uint )` with the challenge id as argument. If the `challengesCounter` has been increased to 1, tests pass.
+  * **Submit video in a challenge**. Send transaction to `submit(...)`. Call to `userHasSubmitted(uint _challengeId, address _userAddress)`, if it returns true, tests pass. Fetch data from past logs with `challengeSubmission` event signature, if values match with the expected ones, tests pass.
 
-  Call to `userIsParticipating(uint _challengeId, address _userAddress)`, if it returns true, tests pass.
+  * **Oraclize closes the challenge and a winner is selected**. Automatically, when `closeTime` is reached, Oraclize contract send a transaction to `__callback(bytes32 _myid, string _result, bytes _proof)`, which call to `closeChallenge(uint _randomNumber)` with the random number generated by an external API. If the transaction success should an event should have been triggered. Fetch data from past logs with `challengeClosed` event signature, if values match with the expected ones, tests pass.
 
-  Fetch data from past logs with `challengeParticipation` event signature, if challenge is and user address match with the expected values, tests pass.
-
-  * **Submit video in a challenge**. Send transaction to `submit(...)`.
-
-  Call to `userHasSubmitted(uint _challengeId, address _userAddress)`, if it returns true, tests pass.
-
-  Fetch data from past logs with `challengeSubmission` event signature, if values match with the expected ones, tests pass.
-
-  * **Oraclize closes the challenge and a winner is selected**. Automatically, when `closeTime` is reached, Oraclize contract send a transaction to `__callback(bytes32 _myid, string _result, bytes _proof)`, which call to `closeChallenge(uint _randomNumber)` with the random number generated by an external API.
-
-  If the transaction success should an event should have been triggered. Fetch data from past logs with `challengeClosed` event signature, if values match with the expected ones, tests pass.
-
-  * **Whitdraw his balance**. Because of being only one participant, the winner should the test user and the prize should have been assigned to his address.
-
-  Send transaction to `userWithdraw(uint _amount)` with amount equal to challenge prize. If transactions success, the address balance should be equal to the balance before sending the transaction minus the withdrawal transaction cost plus the prize amount. If user address has the expected balance, tests pass.
+  * **Whitdraw his balance**. Because of being only one participant, the winner should the test user and the prize should have been assigned to his address. Send transaction to `userWithdraw(uint _amount)` with amount equal to challenge prize. If transactions success, the address balance should be equal to the balance before sending the transaction minus the withdrawal transaction cost plus the prize amount. If user address has the expected balance, tests pass.
 
 #### Pausable test
-  * To test `Pausable.sol` performance I chose one of functions where transaction should revert if modifier `whenNotPaused` returns false.
-
-  Owner send transaction to `pause()` and afterwards User send transaction to `participate(...)`. If it reverts the tests pass.
+  * To test `Pausable.sol` performance I chose one of functions where transaction should revert if modifier `whenNotPaused` returns false. Owner send transaction to `pause()` and afterwards User send transaction to `participate(...)`. If it reverts the tests pass.
 
 #### Ownable test
   * To test `Ownable.sol` performance I chose one of the functions where transaction should revert if modifier `onlyOwner` returns false. A not owner send transaction to `setSubmitDelay(uint)`, if transaction reverts, tests pass.
