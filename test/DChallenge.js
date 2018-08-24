@@ -444,7 +444,7 @@ contract('DChallenge', function(accounts) {
   });
 
   it("Oraclize closes the challenge and a winner is selected", async () => {
-    console.log("    Waiting " + (this.closePeriod + this.delay) + " seconds for Oraclize to close the challenge");
+    console.log("      Waiting " + (this.closePeriod + this.delay) + " seconds for Oraclize to close the challenge");
     await this.waitForOraclizeTx();
 
     const expectedClosedValues = {
