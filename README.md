@@ -73,9 +73,9 @@ If you run into some error, please, try to follow the steps again from the begin
   * Make sure you have installed the Metamask plugin in your browser.
   * In Metamask, switch to **Rinkeby Test Net**.
   * Click **Importing Existing DEN**.
-  * Copy and paste the following **mnemonic** `above decline twin original artefact debate fade duck fossil enact sorry there`, enter a password of your choice and click OK. You will have access then to the Owner's account with address `0xf022797e23c6683b17bd2fe5e1b75250fdc851e4` which already holds some ETH.
-  * Download the **uPort mobile app**, follow the steps and create an **Identity**.
-  * **Fund** with some ETH (at least 1 ETH) your Identify Contract. To do so you just need to send some ETH from a Rinkeby account to your Identity Contract address.  
+  * Copy and paste the following **mnemonic** `above decline twin original artefact debate fade duck fossil enact sorry there`, enter a password of your choice and click OK. You will have access then to the Owner's account with address `0xf022797e23c6683b17bd2fe5e1b75250fdc851e4` that already holds some ETH.
+  * Download the **uPort mobile app**, follow the steps you are asked and create an **Identity**.
+  * **Fund** with some ETH (at least 1 ETH) your Identity Contract. To do so you just need to send some ETH from a Rinkeby account to your **Identity Contract address**.  
   * In a browser's tab go to `localhost:8080`. You should see the **landing page** of the Dapp (It will throw an error if Metamask is not installed).
 
 
@@ -107,23 +107,23 @@ In `localhost:8080/admin`. In the section **CREATE A CHALLENGE** I recommend you
 
 **Submit the challenge**, and after the files are uploaded to IPFS, you will be asked to sign the transaction with Metamask and redirected to **OPEN CHALLENGES** section. When the transaction is mined, the new challenge will show up (if it doesn't show up, refresh the page).
 
-## US-03
+### US-03
 In `localhost:8080/open-challenges`. To be able to participate in a challenge you have to login via **uPort**. Click **LOGIN** button and **scan the QR code** with the uPort mobile app. It will ask you for login confirmation. Once you are logged, an **account icon** and **YOURS** section will be displayed.
 
-## US-04
+### US-04
 In `localhost:8080/open-challenges`. Once you are logged, click your challenge's **PARTICIPATE** button. **Scan the QR code** and again, uPort mobile app will ask for confirmation. Once the transaction is confirmed, you will be redirected to **YOURS** section (the challenge will disappear from **OPEN CHALLENGES**). Number of participants and jackpot will be updated.
 
-## US-05
+### US-05
 In `localhost:8080/your-open-challenges`. Click your **challenge Title**, you will be redirected to the challenge view `localhost:8080/challenge/:id`, being `:id` the **id** of your challenge. Wait until the challenge change to ONGOING status. Click the **SUBMIT** button. A modal will pop up, **ACCEPT** the CODE, select the video named `video.mp4` you can find in the repository's root folder and **SEND** it to IPFS. Once the video is uploaded, click **SUBMIT**. Scan the QR code and approve the transaction in uPort. Once the transaction is confirmed, your video will be included in the view and the number of submissions updated.  
 
-## US-06
+### US-06
 In `localhost:8080/challenge/:id`. After submission, wait until the submission period ends and challenge status change to CLOSED, then the page will be refreshed automatically, and if the Oraclize transaction has not been yet mined, you will see **CHOOSING WINNER...** in he **VIDEOS** section. Once Oraclize transaction is mined, and the challenge closed, you will see who is the winner.
 
-## US-07
+### US-07
 In `localhost:8080/account`. Click the **account icon** in the navigation bar and you will be redirected to your account. If you won the prize, you should have the amount available in your balance. Click the **WITHDRAW** button, scan QR code and approve transaction. Once transaction is mined, check your uPort mobile app, the credit will have been added to your Identity Contract.
 
-## US-08
-Click on **LOGOUT** button, account icon and YOURS sections will hide, and all your challenges will show up again in their respective sections (OPEN, ONGOING and CLOSED). 
+### US-08
+Click on **LOGOUT** button, account icon and YOURS sections will hide, and all your challenges will show up again in their respective sections (OPEN, ONGOING and CLOSED).
 
 
 
