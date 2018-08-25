@@ -63,16 +63,20 @@ Before going through the next sections, follow these steps. If after this set up
     `$ niv web3@1.0.0-beta.33 --destination web3-v1`
 
 # Interacting with the Dapp
-In this section we are gonna test the app through the front-end/UI. When you clone the `rinkeby` branch repository you will notice that the `/build` projects with the contracts artifacts is available, this is because they are already pointing to the deployed contracts in Rinkeby testnet. So do not remove it and do not run the migrations again.
+In this section we are gonna test the app through the UI/front-end. When you clone the `rinkeby` branch repository you will notice that the `/build` projects with the contracts artifacts is available, this is because they are already pointing to the deployed contracts in Rinkeby testnet. So do not remove it and do not run the migrations again.
+
+If you run into some error, please, try to follow the steps again from the beginning before evaluation. Sometimes **INFURA** or **IPFS** connections fails and I don't catch the exceptions everywhere yet.
 
 ## Set up (in order)
   * Go to `$ ~/Rinkeby/DChallenge`.
-  * Run `npm start`.
+  * Run `$ npm start`.
   * Make sure you have installed the Metamask plugin in your browser.
-  * In Metamask, switch to **Rinkeby Test Net**
-  * Click **Importing Existing DEN**
-  * Copy and paste the following **mnemonic** `above decline twin original artefact debate fade duck fossil enact sorry there`, enter a password of your choice and click OK. You will have access then to the Owner's account which holds already some ETH with address `0xf022797e23c6683b17bd2fe5e1b75250fdc851e4`.   
-  * In a tab of the browser go to `localhost:8080`. You should see the **landing page** of the Dapp (It will throw an error if Metamask is not installed).
+  * In Metamask, switch to **Rinkeby Test Net**.
+  * Click **Importing Existing DEN**.
+  * Copy and paste the following **mnemonic** `above decline twin original artefact debate fade duck fossil enact sorry there`, enter a password of your choice and click OK. You will have access then to the Owner's account with address `0xf022797e23c6683b17bd2fe5e1b75250fdc851e4` which already holds some ETH.
+  * Download the **uPort mobile app**, follow the steps and create an **Identity**.
+  * **Fund** with some ETH (at least 1 ETH) your Identify Contract. To do so you just need to send some ETH from a Rinkeby account to your Identity Contract address.  
+  * In a browser's tab go to `localhost:8080`. You should see the **landing page** of the Dapp (It will throw an error if Metamask is not installed).
 
 
 ## User stories
@@ -82,15 +86,44 @@ There are two kind of users, Owner(Admin) and regular User(Participant).
 |:--------:|:-----------:| ----------------------- | --------- |
 | US-01    | Admin       | change implementation address | contract logic can be upgraded |
 | US-02    | Admin       | create a new challenge | users can participate in it |
-| US-03    | Participant | participate in the new challenge | I can submit a video |
-| US-04    | Participant | submit a video | I can aim for winning the prize |
-| US-05    | Participant | withdraw the prize | I receive the ETH in my account |
+| US-03    | Participant | log in | I can participate in a challenge |
+| US-04    | Participant | participate in the new challenge | I can submit a video |
+| US-05    | Participant | submit a video | I can aim for winning the prize |
+| US-06    | Oraclize    | see who is the winner | I can withdraw the prize |
+| US-07    | Participant | withdraw the prize | I receive the ETH in my account |
+| US-08    | Participant | log out | my challenges are shown again in the main sections |
 
 ### US-01
-Go to `localhost:8080/admin`. You will see that in the **PROXY - UPGRADEABILITY** section are shown the Owner, Proxy and Implementation addresses. As Admin you have the option to upgrade the Contract logic, and make the Proxy contract to point another Contract Implementation. However, I don't recommend it because it could cause failures in the Dapp behavior to other evaluators meanwhile it is pointing to the wrong contract (potentially an address without any/wrong code). In any case, If you try it, make sure you change it back to the address `0xc75c984d12f9060123a7a1b781833d805dddfa7c`  
+In `localhost:8080/admin`. You will see that in the **PROXY - UPGRADEABILITY** section are shown the Owner, Proxy and Implementation addresses. As Admin you have the option to upgrade the Contract logic, and make the Proxy contract to point another Contract Implementation. However, I don't recommend it because it could cause failures in the Dapp behavior to other evaluators while it is pointing to the wrong contract (potentially an address without any/wrong code). In any case, If you try it, make sure you change it back to the address `0xc75c984d12f9060123a7a1b781833d805dddfa7c`  
 
 ### US-02
+In `localhost:8080/admin`. In the section **CREATE A CHALLENGE** I recommend you to fill the form in this way:
+  * **Name**: Write your name, so it will be easier to identify your created challenge.
+  * **Thumbnail**: Add the image named `thumbnail.jpeg` you can find in the repository's root folder.
+  * **Summary**: Add the document named `summary.html` you can find in the repository's root folder.
+  * **Description**: Add the document named `description.html` you can find in the repository's root folder.
+  * **OpenTime**: Set it to a minimum of 360 seconds. It will provide you enough time to participate in the challenge.
+  * **CloseTime**: Set it to a minimum of 720 seconds. It will provide you enough time to submit a video in the challenge.
 
+**Submit the challenge**, and after the files are uploaded to IPFS, you will be asked to sign the transaction with Metamask and redirected to **OPEN CHALLENGES** section. When the transaction is mined, the new challenge will show up (if it doesn't show up, refresh the page).
+
+## US-03
+In `localhost:8080/open-challenges`. To be able to participate in a challenge you have to login via **uPort**. Click **LOGIN** button and **scan the QR code** with the uPort mobile app. It will ask you for login confirmation. Once you are logged, an **account icon** and **YOURS** section will be displayed.
+
+## US-04
+In `localhost:8080/open-challenges`. Once you are logged, click your challenge's **PARTICIPATE** button. **Scan the QR code** and again, uPort mobile app will ask for confirmation. Once the transaction is confirmed, you will be redirected to **YOURS** section (the challenge will disappear from **OPEN CHALLENGES**). Number of participants and jackpot will be updated.
+
+## US-05
+In `localhost:8080/your-open-challenges`. Click your **challenge Title**, you will be redirected to the challenge view `localhost:8080/challenge/:id`, being `:id` the **id** of your challenge. Wait until the challenge change to ONGOING status. Click the **SUBMIT** button. A modal will pop up, **ACCEPT** the CODE, select the video named `video.mp4` you can find in the repository's root folder and **SEND** it to IPFS. Once the video is uploaded, click **SUBMIT**. Scan the QR code and approve the transaction in uPort. Once the transaction is confirmed, your video will be included in the view and the number of submissions updated.  
+
+## US-06
+In `localhost:8080/challenge/:id`. After submission, wait until the submission period ends and challenge status change to CLOSED, then the page will be refreshed automatically, and if the Oraclize transaction has not been yet mined, you will see **CHOOSING WINNER...** in he **VIDEOS** section. Once Oraclize transaction is mined, and the challenge closed, you will see who is the winner.
+
+## US-07
+In `localhost:8080/account`. Click the **account icon** in the navigation bar and you will be redirected to your account. If you won the prize, you should have the amount available in your balance. Click the **WITHDRAW** button, scan QR code and approve transaction. Once transaction is mined, check your uPort mobile app, the credit will have been added to your Identity Contract.
+
+## US-08
+Click on **LOGOUT** button, account icon and YOURS sections will hide, and all your challenges will show up again in their respective sections (OPEN, ONGOING and CLOSED). 
 
 
 
