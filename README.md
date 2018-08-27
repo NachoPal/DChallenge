@@ -1,5 +1,45 @@
 # What my project does?
-DChallenge is a Ethereum based Dapp where people can participate in different challenges/contests. e 
+DChallenge is a Ethereum based Dapp where people can participate in different challenges/contests and submit videos to prove they have completed them. At the end, a winner will be chosen among all participants. There is an app's owner/admin in charge of creating and launching new appealing challenges. Challenges are formed by a thumbnail, summary, description and an entry fee in Wei units. In addition, every challenge will go through three different status, **OPEN**, **ONGOING**, and **CLOSED**. These periods are defined by two storage variables based on Unix epoch time: `openTime` and `closeTime`. **OPEN** is the period of time between challenge creation and `openTime`, **ONGOING** the period between `openTime` and `closeTime`, and **CLOSED** the period from `closeTime` onwards.
+
+## OPEN status
+Users can participate in the challenge. For doing that they need first to login with uPort and pay the entry fee.
+
+## ONGOING status
+Only users that signed in the challenge are allowed to submit a video. To prevent users from sending old videos that were not recorded during this period, or videos that they do not own, I developed a trusted timestamping and ownership proof system.
+
+When the user wants to record a video to be submitted, a 4 digits **CODE** which is updated every 30 seconds (around 2 blocks) is shown. The first thing the user will have to say on camera is the **CODE**, after that no cuts are allowed to avoid video editions. The **CODE** along with the video's length will prove that it was recorded at certain time and by the user that claims to be the owner.
+
+The **CODE** is calculated as follows: Every 30 seconds current `blockHash` is retrieved and `keccak256` encoded along with the `userAddress`. Due to a very low hash collision chance, the first 4 hex digits are enough as identification.
+
+Video is sent to IPFS, hash retrieved and transaction signed with the following information: `_challengeId`, `_blockNumber`, `_code`, `_videoDuration` and `_ipfsHash`.
+In the contract, the submissions is verified in two ways. First of all, the code is calculated again:
+
+```
+bytes32 blockHash = blockhash(_blockNumber);
+bytes32 code = keccak256(abi.encodePacked(_userAddress, blockHash));
+
+if (_code != code) {
+    return false;
+}
+```
+
+and secondly it is checked if the time since the video was recorded until the transaction was mined is less than the video duration plus a submission delay, being `secondsPerBlock` and `submitDelay` storage variables set by contract's owner depending on current network performance/congestion.
+
+```
+uint currentBlockNumber = block.number;
+uint challengeDuration = _videoDuration.add(submitDelay);
+uint timeBetweenBlocks = (currentBlockNumber.sub(_blockNumber)).mul(secondsPerBlock);
+
+if (timeBetweenBlocks > challengeDuration) {
+    return false;
+}
+```
+
+All uploaded videos where the **CODE** said on camera does not match with the **CODE** the are linked to, or all of those videos where the **video duration** does not match either, will be considered not legit.
+
+## CLOSED status
+
+When submission period is over, Oraclize makes a call to the following API `"https://www.random.org/integers/` getting a random number as response. That number is used to choose the winner between all submissions. Winner gets the jackpot being this added to his balance.
 
 # How to set it up
 I created **two different branches** since there are some front-end code differences depending on what **Web3 provider** is used. In `development` branch the provider is `ganache-cli`, whereas in `rinkeby` it is the testnet Rinkeby via `infura`. Branch `master` is up to date with `rinkeby`, however it will be used in the future as **production branch** for the `mainnet`.
