@@ -1,5 +1,5 @@
 # What my project does?
-DChallenge is a Ethereum based Dapp where people can participate in different challenges/contests and submit videos to prove they have completed them. At the end, a winner will be chosen among all participants. There is an app's owner/admin in charge of creating and launching new appealing challenges. Challenges are formed by a thumbnail, summary, description and an entry fee in Wei units. In addition, every challenge will go through three different status, **OPEN**, **ONGOING**, and **CLOSED**. These periods are defined by two storage variables based on Unix epoch time: `openTime` and `closeTime`. **OPEN** is the period of time between challenge creation and `openTime`, **ONGOING** the period between `openTime` and `closeTime`, and **CLOSED** the period from `closeTime` onwards.
+DChallenge is a Ethereum based Dapp where people can participate in different challenges/contests and submit videos to prove they have completed them. At the end, a winner will be chosen among all participants. There is an app's owner/admin in charge of creating and launching new challenges. Challenges are formed by a thumbnail, summary, description and an entry fee in Wei units. In addition, every challenge will go through three different status, **OPEN**, **ONGOING**, and **CLOSED**. These periods are defined by two storage variables based on Unix epoch time: `openTime` and `closeTime`. **OPEN** is the period of time between challenge creation and `openTime`, **ONGOING** the period between `openTime` and `closeTime`, and **CLOSED** the period from `closeTime` onwards.
 
 ## OPEN status
 Users can participate in the challenge. For doing that they need first to login with uPort and pay the entry fee.
@@ -35,10 +35,10 @@ if (timeBetweenBlocks > challengeDuration) {
 }
 ```
 
-All uploaded videos where the **CODE** said on camera does not match with the **CODE** the are linked to, or all of those videos where the **video duration** does not match either, will be considered not legit.
+All uploaded videos where the **CODE** said on camera does not match with the **CODE** they are linked to, or all of those videos where the **video duration** does not match either, will be considered not legit.
 
 ## CLOSED status
-When submission period is over, Oraclize makes a call to the following API `"https://www.random.org/integers/` getting a random number as response. That number is used to choose the winner between all submissions. Winner gets the jackpot being this added to his balance.
+When submission period is over, **Oraclize** makes a call to the following API `"https://www.random.org/integers/` getting a random number as response. That number is used to choose the winner between all submissions. Winner gets the jackpot, and this is added to his balance.
 
 # How to set it up
 I created **two different branches** since there are some front-end code differences depending on what **Web3 provider** is used. In `development` branch the provider is `ganache-cli`, whereas in `rinkeby` it is the testnet Rinkeby via `infura`. Branch `master` is up to date with `rinkeby`, however it will be used in the future as **production branch** for the `mainnet`.
@@ -165,11 +165,6 @@ In `localhost:8080/account`. Click the **account icon** in the navigation bar an
 ### US-08
 Click on **LOGOUT** button, account icon and YOURS sections will hide, and all your challenges will show up again in their respective sections (OPEN, ONGOING and CLOSED).
 
-
-
-
-
-
 # Tests
 ## Set up (in order)
   * Go to `$ ~/Development/DChallenge`
@@ -236,23 +231,34 @@ To make it possible there is a `beforeAll` hook where an **implementation** is s
 
   * Test **reverting when trying to upgrade to the same implementation**. If the owner tries to upgrade to the same implementation the transaction should revert. Send transaction to `upgradeTo(address implementation)`, if it fails tests pass.
 
+# Design Patterns
 
+# Security tools / Common Attacks
 
+# Library / EthPM
+**Oraclize** contracts are installed via EthPM while I also import the library `SafeMath.sol`
 
+# Additional Requirements
+Smart Contracts are properly commented according to Solidity documentation.
 
+# Stretch requirements
+## IPFS
+It is used to store chalenge's thumbnail(image), videos(video), summary(html) and description(html) files.
 
+## uPort
+It is used to login and signing transactions by users. Owner signs transactions with Metamask when creating challenges.
 
+## Oracle
+**Oraclize** is used to close the challenges automatically when `now == closeTime` and to get a random number from an external API.
 
+## Project implements an upgradable pattern.
+Yes. It is explained in **Design Patterns** section.
 
+## Testnet Deployment
+Contracts have been deployed to Rinkeby and addresses can be found in `deployed_addresses.txt`
 
-
-
-
-
-
-
-
-
+## License
+Copyright (C) 2018 DChallenge
 
 #SECURITY
 - using Library SafeMath to avoid overflow and underflow.
