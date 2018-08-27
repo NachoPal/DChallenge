@@ -1,4 +1,5 @@
 # What my project does?
+DChallenge is a Ethereum based Dapp where people can participate in different challenges/contests. e 
 
 # How to set it up
 I created **two different branches** since there are some front-end code differences depending on what **Web3 provider** is used. In `development` branch the provider is `ganache-cli`, whereas in `rinkeby` it is the testnet Rinkeby via `infura`. Branch `master` is up to date with `rinkeby`, however it will be used in the future as **production branch** for the `mainnet`.
