@@ -38,7 +38,6 @@ if (timeBetweenBlocks > challengeDuration) {
 All uploaded videos where the **CODE** said on camera does not match with the **CODE** the are linked to, or all of those videos where the **video duration** does not match either, will be considered not legit.
 
 ## CLOSED status
-
 When submission period is over, Oraclize makes a call to the following API `"https://www.random.org/integers/` getting a random number as response. That number is used to choose the winner between all submissions. Winner gets the jackpot being this added to his balance.
 
 # How to set it up
