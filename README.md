@@ -1,10 +1,10 @@
 # What my project does?
-DChallenge is a Ethereum based Dapp where people can participate in different challenges/contests and submit videos to prove they have completed them. At the end, a winner will be chosen among all participants. There is an app's owner/admin in charge of creating and launching new challenges. Challenges are formed by a thumbnail, summary, description and an entry fee in Wei units. In addition, every challenge will go through three different status, **OPEN**, **ONGOING**, and **CLOSED**. These periods are defined by two storage variables based on Unix epoch time: `openTime` and `closeTime`. **OPEN** is the period of time between challenge creation and `openTime`, **ONGOING** the period between `openTime` and `closeTime`, and **CLOSED** the period from `closeTime` onwards.
+DChallenge is a Ethereum based Dapp where people can participate in different challenges/contests and submit videos to prove they have completed them. At the end, a winner will be chosen among all participants. There is an app's owner/admin in charge of creating and launching new challenges. Challenges are formed by a thumbnail, summary, description and an entry fee in Wei units. In addition, every challenge will go through three different states, **OPEN**, **ONGOING**, and **CLOSED**. These periods are defined by two storage variables based on Unix epoch time: `openTime` and `closeTime`. **OPEN** is the period of time between challenge creation and `openTime`, **ONGOING** the period between `openTime` and `closeTime`, and **CLOSED** the period from `closeTime` onwards.
 
-## OPEN status
+## OPEN
 Users can participate in the challenge. For doing that they need first to login with uPort and pay the entry fee.
 
-## ONGOING status
+## ONGOING
 Only users that signed in the challenge are allowed to submit a video. To prevent users from sending old videos that were not recorded during this period, or videos that they do not own, I developed a trusted timestamping and ownership proof system.
 
 When the user wants to record a video to be submitted, a 4 digits **CODE** which is updated every 30 seconds (around 2 blocks) is shown. The first thing the user will have to say on camera is the **CODE**, after that no cuts are allowed to avoid video editions. The **CODE** along with the video's length will prove that it was recorded at certain time and by the user that claims to be the owner.
@@ -37,8 +37,8 @@ if (timeBetweenBlocks > challengeDuration) {
 
 All uploaded videos where the **CODE** said on camera does not match with the **CODE** they are linked to, or all of those videos where the **video duration** does not match either, will be considered not legit.
 
-## CLOSED status
-When submission period is over, **Oraclize** makes a call to the following API `"https://www.random.org/integers/` getting a random number as response. That number is used to choose the winner between all submissions. Winner gets the jackpot, and this is added to his balance.
+## CLOSED
+When submission period is over, **Oraclize** makes a call to the following API `"https://www.random.org/integers/` getting a random number as response. That number is used to choose the winner between all submissions. Winner gets the jackpot, and this is added to his available balance ready to be withdrawn.
 
 # How to set it up
 I created **two different branches** since there are some front-end code differences depending on what **Web3 provider** is used. In `development` branch the provider is `ganache-cli`, whereas in `rinkeby` it is the testnet Rinkeby via `infura`. Branch `master` is up to date with `rinkeby`, however it will be used in the future as **production branch** for the `mainnet`.
@@ -154,10 +154,10 @@ In `localhost:8080/open-challenges`. To be able to participate in a challenge yo
 In `localhost:8080/open-challenges`. Once you are logged, click your challenge's **PARTICIPATE** button. **Scan the QR code** and again, uPort mobile app will ask for confirmation. Once the transaction is confirmed, you will be redirected to **YOURS** section (the challenge will disappear from **OPEN CHALLENGES**). Number of participants and jackpot will be updated.
 
 ### US-05
-In `localhost:8080/your-open-challenges`. Click your **challenge Title**, you will be redirected to the challenge view `localhost:8080/challenge/:id`, being `:id` the **id** of your challenge. Wait until the challenge change to ONGOING status. Click the **SUBMIT** button. A modal will pop up, **ACCEPT** the CODE, select the video named `video.mp4` you can find in the repository's root folder and **SEND** it to IPFS. Once the video is uploaded, click **SUBMIT**. Scan the QR code and approve the transaction in uPort. Once the transaction is confirmed, your video will be included in the view and the number of submissions updated.  
+In `localhost:8080/your-open-challenges`. Click your **challenge Title**, you will be redirected to the challenge view `localhost:8080/challenge/:id`, being `:id` the **id** of your challenge. Wait until the challenge change to ONGOING state. Click the **SUBMIT** button. A modal will pop up, **ACCEPT** the CODE, select the video named `video.mp4` you can find in the repository's root folder and **SEND** it to IPFS. Once the video is uploaded, click **SUBMIT**. Scan the QR code and approve the transaction in uPort. Once the transaction is confirmed, your video will be included in the view and the number of submissions updated.  
 
 ### US-06
-In `localhost:8080/challenge/:id`. After submission, wait until the submission period ends and challenge status change to CLOSED, then the page will be refreshed automatically, and if the Oraclize transaction has not been yet mined, you will see **CHOOSING WINNER...** in he **VIDEOS** section. Once Oraclize transaction is mined, and the challenge closed, you will see who is the winner.
+In `localhost:8080/challenge/:id`. After submission, wait until the submission period ends and challenge state change to CLOSED, then the page will be refreshed automatically, and if the Oraclize transaction has not been yet mined, you will see **CHOOSING WINNER...** in he **VIDEOS** section. Once Oraclize transaction is mined, and the challenge closed, you will see who is the winner.
 
 ### US-07
 In `localhost:8080/account`. Click the **account icon** in the navigation bar and you will be redirected to your account. If you won the prize, you should have the amount available in your balance. Click the **WITHDRAW** button, scan QR code and approve transaction. Once transaction is mined, check your uPort mobile app, the credit will have been added to your Identity Contract.
@@ -274,16 +274,56 @@ Even being very helpful in my Dapp, where there are 3 states, **OPEN**, **ONGOIN
 Not used as I considered it was unnecessary having already a **Circuit Breaker**.
 
 ## Upgradeability pattern
-After a thorough research of all upgradeability patters, I decided that 
+After a thorough research of all upgradeability patters, I decided that the best one was **Upgradeability using unstructured storage**, which is actually the one used in [ZeppelinOS](https://zeppelinos.org/). This idea builds on upgradeability using inherited storage but redefining the storage structure of the contracts required for upgradeability purpose. The idea here is to use fixed storage slots to store the required data for upgradeability purpose, this is the upgradeability owner and the implementation address. Inline assembly is used to store and access mentioned variables in fixed storage positions indexing them with custom keys using `keccak256`.
 
+To summarize, there is a main contract `OwnedUpgradeabilityProxy.sol` which inherit from `UpgradeabilityProxy` that handles upgradeability (owner and implementation), and from `Proxy.sol`, where the fallback function is. The fallback function will make message calls to the implementation contract. In this way the storage and the logic are completely independent, so if any bug is encountered in the implementation you just need to switch to a new contract without losing the stored data.
 
+In this Dapp the proxy points to a `DChallenge.sol` contract implementation, where the logic is.
 
 # Security tools / Common Attacks
 ## Security tools
 I made use of the following Security Tools:
   * [SmartCheck](https://tool.smartdec.net/)
   * [SolCheck](https://github.com/federicobond/solcheck)
+
 ## Common Attacks
+I'm going to describe what measures has been taken to ensure that the contract `DChallenge.sol` is not susceptible to common attacks. The rest of contracts in this project are from **Oraclize**, **Zeppelin** or **ConsenSys**, so that they are already well audited.
+
+### Reentrancy and Race Conditions
+The only external call to an unknown address in my contract is the one in `userWithdraw` function. To avoid this kind of attack I used the **pull over push payments** pattern where the user has to call the function and also `transfer()` is used over `call()` to transfer the balance.
+
+```
+function userWithdraw(uint _amount) external whenNotPaused {
+    require(balances[msg.sender] >= _amount);
+    balances[msg.sender] -= _amount;
+    msg.sender.transfer(_amount);
+}
+```
+
+### Integer Overflow and Underflow
+To avoid this attack I made use of the library `SafeMath.sol` and use it in the mathematical operations susceptible to attacks.
+
+### Denial of Service - revert
+There is not any `require` in `DChallenge.sol` that can block forever the normal flow of the app.
+
+### Denial of Service - block gas limit.
+In the function `orderChallengesToCloseById((uint _closeTime))`, because of being a loop depending on the length of an array, block gas limit might be reached. That situation would happen if `_closeTime` is a very low value compared with the rest of challenges, and the array size of challenges to be closed is very long. That could have been solved controlling `msg.gas` inside the loop, but since it is an internal function called by Owner, a trusted party, and specially because stoping the execution without reverting wouldn't have the expected function behavior, I did not take any action.
+
+The solution to this is to build an own API to be called by **Oraclize**, where challenges closing order is tracked. In this way would be just necessary to reply with the index value of `challengesClosingOrder`, avoiding ordering challenges based on `closeTime` during creation.
+
+### Forcibly Sending Ether to a Contract
+There are two lines where the contract depends on its balance.
+`if (oraclize_getPrice("URL") > address(this).balance)`
+and
+`require(balances[msg.sender] >= _amount);`
+
+In both situations we check that the balance should be equal or bigger than a certain amount, never smaller than, so receiving unexpected ETH from another account is not a possible attack.
+
+I did not implement any fallback in the contract, since its gonna be always called via `delegatecall()` from the proxy contract. It means that if the call's function signature does not match with any of the functions of `DChallenge.sol` it will produce an exception in `Proxy.sol` fallback.
+
+
+
+
 
 
 
@@ -304,7 +344,7 @@ It is used to login and signing transactions by users. Owner signs transactions 
 ## Oracle
 **Oraclize** is used to close the challenges automatically when `now == closeTime` and to get a random number from an external API.
 
-## Project implements an upgradable pattern.
+## Project implements an upgradable pattern
 Yes. It is explained in **Design Patterns** section.
 
 ## Testnet Deployment
