@@ -114,6 +114,7 @@ If you run into some error, please, try to follow the steps again from the begin
 
 ## Set up (in order)
   * Go to `$ ~/Rinkeby/DChallenge`.
+  * Copy `video_chrome.mp4` and `video_firefox.ogv` from `$ ~/Development/DChallenge` (I could not add the current videos in `rinkeby` branch sorry, they are like void files).
   * Run `$ npm start`.
   * Make sure you have installed the Metamask plugin in your browser.
   * In Metamask, switch to **Rinkeby Test Net**.
