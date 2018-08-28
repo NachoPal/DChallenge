@@ -27,7 +27,7 @@ class OpenView extends Component {
     } else {
       this.props.participate(
         this.props.challenge.id,
-        this.props.user.details.address,
+        this.props.user.details.networkAddress,
         this.props.challenge.bettingPrice,
         () => this.props.history.push(YOUR_CHALLENGES_PATH),
         (open, txHash) => {

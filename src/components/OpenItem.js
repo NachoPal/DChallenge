@@ -34,7 +34,7 @@ class OpenItem extends Component {
     } else {
       this.props.participate(
         this.props.item.id,
-        this.props.user.details.address,
+        this.props.user.details.networkAddress,
         this.props.item.bettingPrice,
         () => this.props.history.push(YOUR_CHALLENGES_PATH),
         (open, txHash) => {

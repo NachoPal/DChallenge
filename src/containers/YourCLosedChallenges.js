@@ -12,7 +12,7 @@ class YourClosedChallenges extends Component {
   constructor(props) {
     super(props);
     if(this.props.user.logged == true) {
-      this.props.fetchYourClosedChallenges(this.props.user.details.address);
+      this.props.fetchYourClosedChallenges(this.props.user.details.networkAddress);
     }
   }
 

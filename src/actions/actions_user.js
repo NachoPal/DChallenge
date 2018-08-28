@@ -64,7 +64,7 @@ export function fetchUserChallengesIndex(user, callback) {
       topics: [
         encodedEventSignature("challengeParticipation", implementationAbi),
         null,
-        userAddressTo32Bytes(user.details.address)
+        userAddressTo32Bytes(user.details.networkAddress)
       ]
     }).then((logs) => {
       const participatingIndex = getChallengesIndex(logs, "challengeParticipation");
@@ -74,7 +74,7 @@ export function fetchUserChallengesIndex(user, callback) {
         topics: [
           encodedEventSignature("challengeSubmission", implementationAbi),
           null,
-          userAddressTo32Bytes(user.details.address)
+          userAddressTo32Bytes(user.details.networkAddress)
         ]
       }).then((logs) => {
         const submissionIndex = getChallengesIndex(logs, "challengeSubmission");

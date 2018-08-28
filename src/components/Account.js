@@ -9,13 +9,13 @@ var mnid = require('mnid');
 class Account extends Component {
   constructor(props) {
     super(props);
-    this.props.fetchUserBalance(this.props.user.details.address);
+    this.props.fetchUserBalance(this.props.user.details.networkAddress);
     this.withdraw = this.withdraw.bind(this);
   }
 
   withdraw() {
     const { user } = this.props;
-    this.props.withdrawBalance(user.details.address, user.balance);
+    this.props.withdrawBalance(user.details.networkAddress, user.balance);
   }
 
   renderWithdrawButton() {

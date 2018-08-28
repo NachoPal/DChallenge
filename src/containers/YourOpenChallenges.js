@@ -12,8 +12,8 @@ class YourOpenChallenges extends Component {
   constructor(props) {
     super(props);
     if(this.props.user.logged == true) {
-      this.props.fetchYourOpenChallenges(this.props.user.details.address);
-      this.props.updateYourOpenChallenges(this.props.user.details.address);
+      this.props.fetchYourOpenChallenges(this.props.user.details.networkAddress);
+      this.props.updateYourOpenChallenges(this.props.user.details.networkAddress);
     }
   }
 

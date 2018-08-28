@@ -28,7 +28,7 @@ class Code extends Component {
 
   setIntervals() {
     this.props.acceptButtonClicked(false);
-    this.props.getConfirmedBlockNumber(this.props.user.details.address)
+    this.props.getConfirmedBlockNumber(this.props.user.details.networkAddress)
     this.setState({counting: true});
 
     //Only for development
@@ -40,7 +40,7 @@ class Code extends Component {
   }
 
   getBlock() {
-    this.props.getConfirmedBlockNumber(this.props.user.details.address);
+    this.props.getConfirmedBlockNumber(this.props.user.details.networkAddress);
     this.setState({seconds: 0 })
     this.setState({seconds: 30 })
     this.setState({counting: true});
