@@ -11,7 +11,7 @@ const Web3 = require('web3-v1');
 //     mnemonic,
 //     walletAPIUrl
 // );
-var web3 = new Web3(new Web3.providers.WebsocketProvider('wss://rinkeby.infura.io/ws'));
+var web3 = new Web3(new Web3.providers.WebsocketProvider('wss://rinkeby.infura.io/_ws'));
 
 
 //var web3 = new Web3(new Web3.providers.HttpProvider(`https://rinkeby.infura.io/${INFURA_API_KEY}`));
