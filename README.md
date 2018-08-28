@@ -351,5 +351,5 @@ Contracts have been deployed to Rinkeby and addresses can be found in `deployed_
 ## License
 Copyright (C) 2018 DChallenge.
 
-#Take a look at my Blog :)
+# Take a look at my Blog :)
 http://www.rubyonblockchain.com/ (Still only in Spanish)
