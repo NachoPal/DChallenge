@@ -41,13 +41,13 @@ All uploaded videos where the **CODE** said on camera does not match with the **
 When submission period is over, **Oraclize** makes a call to the following API `"https://www.random.org/integers/` getting a random number as response. That number is used to choose the winner between all submissions. Winner gets the jackpot, and this is added to his available balance ready to be withdrawn.
 
 # How to set it up
-I created **two different branches** since there are some front-end code differences depending on what **Web3 provider** is used. In `development` branch the provider is `ganache-cli`, whereas in `rinkeby` it is the testnet Rinkeby via `infura`. Branch `master` is up to date with `rinkeby`, however it will be used in the future as **production branch** for the `mainnet`.
+I created **two different branches** since there are some front-end code differences depending on what **Web3 provider** is used. In `development` branch the provider is `ganache-cli`, whereas in `rinkeby` it is the testnet Rinkeby via `infura`. Branch `master` is up to date with `rinkeby`, however it will be used in the future as **production branch** for the `mainnet` and for updating the project while peer evaluation.
 
-In addition, **signing transactions with uPort is not possible using a local RPC testnet** since there is no way for uPort servers to interact with the deployed contracts in the local network. There are only two possible options to be able to sign transactions with uPort, either to deploy the smart contracts to a testnet such as Rinkeby, or to set up a local private network with a JSON RPC public endpoint making use of [lambda-olorum](https://github.com/uport-project/lambda-olorun). For the sake of simplicity for evaluators, I decided not to set up a local private network run by a Geth node.
+In addition, **signing transactions with uPort is not possible using a local RPC testnet** since there is no way for uPort servers to interact with the deployed contracts in the local network. There are only two possible options to be able to sign transactions with uPort, either to deploy the smart contracts to a testnet such as Rinkeby, or to set up a local private network with a JSON RPC public endpoint making use of [lambda-olorum](https://github.com/uport-project/lambda-olorun). For the sake of simplicity for evaluators, I decided not to set up a local private network run by a Geth node. A **uPort** mobile app update is coming soon, and in the worst of the situations it will happen during peer evaluation, breaking the app functionality. Because of that, I created another branch `uport_update` where I tried to prevent future errors and keep my app working. Unfortunately, I can not ensure it will work as it is obviously impossible to test before the update is released and maybe future changes are needed.
 
 In regard Contracts code, there is an inevitable difference depending on the provider. For using Oraclize in a local RPC testnet it is necessary to hardcode in the contract constructor the OAR (Oraclize Address Resolver) address provided by [ethereum-bridge](https://github.com/oraclize/ethereum-bridge). Contracts from both branches are exactly the same with the exception of the following line in the constructor for the `development` branch: `OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);`. Therefore, passing tests in `development` ensures successful testing in `rinkeby` branch as well.
 
-To summarize, `development` branch will be use to **run the tests** against `ganache-cli`, whereas `rinkeby` will be used to **interact with the front-end** being able in this way to sign transactions with **uPort**.
+To summarize, the branches used for evaluating are: `development` branch will be use to **run the tests** against `ganache-cli`, whereas `rinkeby` will be used to **interact with the front-end** being able in this way to sign transactions with **uPort**.
 
 Because of **uPort** having a dependency on **web3 v0.19** I needed to install **web3 v1.0.0** under other name to avoid conflicts and be able to use **Web Sockets**. To make it possible I made use of the package `npm-install-version`.
 
@@ -56,6 +56,7 @@ Because of **uPort** having a dependency on **web3 v0.19** I needed to install *
   * Nodejs 10.9.0
   * Truffle 4.1.13
   * Ganache-cli 6.1.6
+  * Chrome (recommended browser)
 
 ## Steps (in order)
 Before going through the next sections, follow these steps. If after this set up you encounter any error running the Dapp or its tests, make sure you have installed the same versions, specially in **Truffle** and **Ganache-cli** cases.
@@ -105,7 +106,7 @@ Before going through the next sections, follow these steps. If after this set up
 # Interacting with the Dapp
 In this section we are gonna test the app through the UI/front-end. When you clone the `rinkeby` branch repository you will notice that the `/build` projects with the contracts artifacts is available, this is because they are already pointing to the deployed contracts in Rinkeby testnet. So do not remove it and do not run the migrations again.
 
-If you run into some error, please, try to follow the steps again from the beginning before evaluation. Sometimes **INFURA** or **IPFS** connections fails and I don't catch the exceptions everywhere yet.
+If you run into some error, please, try to follow the steps again from the beginning before evaluation and if the error persist, contact me in `ignacio.palacios.santos@gmail.com`. Sometimes **INFURA** or **IPFS** connections fails and I don't catch the exceptions everywhere yet. Right now the provider for Rinkeby is `wss://rinkeby.infura.io/_ws`, in case it fails try switching to `wss://rinkeby.infura.io/ws`. You can find the code line in `/src/initializers/web3.js:10`.
 
 ## Set up (in order)
   * Go to `$ ~/Rinkeby/DChallenge`.
@@ -142,8 +143,8 @@ In `localhost:8080/admin`. In the section **CREATE A CHALLENGE** I recommend you
   * **Thumbnail**: Add the image named `thumbnail.jpeg` you can find in the repository's root folder.
   * **Summary**: Add the document named `summary.html` you can find in the repository's root folder.
   * **Description**: Add the document named `description.html` you can find in the repository's root folder.
-  * **OpenTime**: Set it to a minimum of 360 seconds. It will provide you enough time to participate in the challenge.
-  * **CloseTime**: Set it to a minimum of 720 seconds. It will provide you enough time to submit a video in the challenge.
+  * **OpenTime**: Set it to a minimum of 360 seconds, but I recommend more since transactions sometimes take too long to be mined, being the challenge already in ONGOING state by that time. Set around 700 seconds, even if you have to wait more, but you will be sure that you will not have to repeat the process. That will provide you enough time to participate in the challenge.
+  * **CloseTime**: Set it to a minimum of 720 seconds or 360 seconds more than OpenTime. It will provide you enough time to submit a video in the challenge.
 
 **Submit the challenge**, and after the files are uploaded to IPFS, you will be asked to sign the transaction with Metamask and redirected to **OPEN CHALLENGES** section. When the transaction is mined, the new challenge will show up (if it doesn't show up, refresh the page).
 
@@ -154,7 +155,7 @@ In `localhost:8080/open-challenges`. To be able to participate in a challenge yo
 In `localhost:8080/open-challenges`. Once you are logged, click your challenge's **PARTICIPATE** button. **Scan the QR code** and again, uPort mobile app will ask for confirmation. Once the transaction is confirmed, you will be redirected to **YOURS** section (the challenge will disappear from **OPEN CHALLENGES**). Number of participants and jackpot will be updated.
 
 ### US-05
-In `localhost:8080/your-open-challenges`. Click your **challenge Title**, you will be redirected to the challenge view `localhost:8080/challenge/:id`, being `:id` the **id** of your challenge. Wait until the challenge change to ONGOING state. Click the **SUBMIT** button. A modal will pop up, **ACCEPT** the CODE, select the video named `video.mp4` you can find in the repository's root folder and **SEND** it to IPFS. Once the video is uploaded, click **SUBMIT**. Scan the QR code and approve the transaction in uPort. Once the transaction is confirmed, your video will be included in the view and the number of submissions updated.  
+In `localhost:8080/your-open-challenges`. Click your **challenge Title**, you will be redirected to the challenge view `localhost:8080/challenge/:id`, being `:id` the **id** of your challenge. Wait until the challenge change to ONGOING state. Click the **SUBMIT** button. A modal will pop up, **ACCEPT** the CODE, select the video named `video_firfox.ogv` (in firefox) or `video_chrome.mp4` (in chrome) you can find in the repository's root folder and **SEND** it to IPFS. Once the video is uploaded, click **SUBMIT**. Scan the QR code and approve the transaction in uPort. Once the transaction is confirmed, your video will be included in the view and the number of submissions updated.  
 
 ### US-06
 In `localhost:8080/challenge/:id`. After submission, wait until the submission period ends and challenge state change to CLOSED, then the page will be refreshed automatically, and if the Oraclize transaction has not been yet mined, you will see **CHOOSING WINNER...** in he **VIDEOS** section. Once Oraclize transaction is mined, and the challenge closed, you will see who is the winner.
@@ -341,11 +342,14 @@ It is used to login and signing transactions by users. Owner signs transactions 
 ## Oracle
 **Oraclize** is used to close the challenges automatically when `now == closeTime` and to get a random number from an external API.
 
-## Project implements an upgradable pattern
-Yes. It is explained in **Design Patterns** section.
+## Project implements an upgradeable pattern
+Yes, it does. It is explained in **Design Patterns** section.
 
 ## Testnet Deployment
 Contracts have been deployed to Rinkeby and addresses can be found in `deployed_addresses.txt`
 
 ## License
 Copyright (C) 2018 DChallenge.
+
+#Take a look at my Blog :)
+http://www.rubyonblockchain.com/ (Still only in Spanish)

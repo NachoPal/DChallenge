@@ -1,0 +1,2 @@
+OwnedUpgradeabilityProxy.sol: 0x424ce611805cdc13abd8afd56c998a9dd8c06139
+DChallenge.sol: 0x277d2ec73283907d641ddf1d8c0f40df0f9b485b
