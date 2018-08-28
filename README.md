@@ -348,7 +348,7 @@ Yes, it does. It is explained in **Design Patterns** section.
 ## Testnet Deployment
 Contracts have been deployed to Rinkeby and addresses can be found in `deployed_addresses.txt`
 
-## License
+# License
 Copyright (C) 2018 DChallenge.
 
 # Take a look at my Blog :)
