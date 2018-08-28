@@ -304,29 +304,26 @@ function userWithdraw(uint _amount) external whenNotPaused {
 To avoid this attack I made use of the library `SafeMath.sol` and use it in the mathematical operations susceptible to attacks.
 
 ### Denial of Service - revert
-There is not any `require` in `DChallenge.sol` that can block forever the normal flow of the app.
+I made sure there is not any `require` in `DChallenge.sol` that can block the normal flow of the app forever.
 
 ### Denial of Service - block gas limit.
-In the function `orderChallengesToCloseById((uint _closeTime))`, because of being a loop depending on the length of an array, block gas limit might be reached. That situation would happen if `_closeTime` is a very low value compared with the rest of challenges, and the array size of challenges to be closed is very long. That could have been solved controlling `msg.gas` inside the loop, but since it is an internal function called by Owner, a trusted party, and specially because stoping the execution without reverting wouldn't have the expected function behavior, I did not take any action.
+In the function `orderChallengesToCloseById((uint _closeTime))`, because of being a loop depending on the length of an array, block gas limit might be reached. That situation would happen if `_closeTime` is a very low value compared with the rest of challenges, and the array size of challenges to be closed is very long. That could have been solved controlling `gasleft()` inside the loop, but since it is an internal function called only by Owner, a trusted party, and specially because stoping the execution without reverting wouldn't have the expected function behavior, I did not take any action.
 
 The solution to this is to build an own API to be called by **Oraclize**, where challenges closing order is tracked. In this way would be just necessary to reply with the index value of `challengesClosingOrder`, avoiding ordering challenges based on `closeTime` during creation.
 
 ### Forcibly Sending Ether to a Contract
-There are two lines where the contract depends on its balance.
-`if (oraclize_getPrice("URL") > address(this).balance)`
+There are two lines where the contract depends on its balance,
+```
+if (oraclize_getPrice("URL") > address(this).balance)
+```
 and
-`require(balances[msg.sender] >= _amount);`
+```
+require(balances[msg.sender] >= _amount);
+```
 
 In both situations we check that the balance should be equal or bigger than a certain amount, never smaller than, so receiving unexpected ETH from another account is not a possible attack.
 
 I did not implement any fallback in the contract, since its gonna be always called via `delegatecall()` from the proxy contract. It means that if the call's function signature does not match with any of the functions of `DChallenge.sol` it will produce an exception in `Proxy.sol` fallback.
-
-
-
-
-
-
-
 
 # Library / EthPM
 **Oraclize** contracts are installed via EthPM and I also import the library `SafeMath.sol`
@@ -352,13 +349,3 @@ Contracts have been deployed to Rinkeby and addresses can be found in `deployed_
 
 ## License
 Copyright (C) 2018 DChallenge.
-
-#SECURITY
-- using Library SafeMath to avoid overflow and underflow.
-
-
-
-#VULNERABILITIES
-- The use of 'now' in verifySubmission and the modifiers challengeIsOpen and challengeIsOngoing
-- Doesn't have a fallback with revert() to reject ETH.
-- Cuando se ordenan los inidices de los challenges para ser cerrados se puede superar el limite del gas del block, contrlarlo con gasleft()
