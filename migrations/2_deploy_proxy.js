@@ -1,10 +1,8 @@
-//var Players = artifacts.require("./Players.sol");
 var OwnedUpgradeabilityProxy = artifacts.require("./OwnedUpgradeabilityProxy.sol");
 
 module.exports = function(deployer) {
-  //deployer.deploy(Players);
   deployer.deploy(
     OwnedUpgradeabilityProxy,
-    {value: 500000000000000000}
+    {value: 100000000000000000}
   );
 };

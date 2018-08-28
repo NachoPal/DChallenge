@@ -19,7 +19,7 @@ export function fetchYourOngoingChallenges(userAddress) {
 
   return (dispatch) => {
     web3.eth.getPastLogs({
-      fromBlock: 1,
+      fromBlock: "0x1",
       address: proxyAddress,
       topics: [encodedEventSignature("challengeParticipation", implementationAbi), null, userAddress]
     }).then((logs) => {
@@ -36,7 +36,7 @@ export function fetchYourOngoingChallenges(userAddress) {
         });
 
         web3.eth.getPastLogs({
-          fromBlock: 1,
+          fromBlock: "0x1",
           address: proxyAddress,
           topics: [encodedEventSignature("challengeCreation", implementationAbi), challengesId]
         }).then((logs) => {

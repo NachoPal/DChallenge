@@ -6,10 +6,10 @@ const isWinner = (winner) => {
   }
 }
 
-const Video = ({ video, winner }) => {
+const Video = ({ video, winner}) => {
   return(
-    <div className="row">
-      <div className="col-md-4 even">
+    <div className="row video-container">
+      <div className="col-md-4">
         {isWinner(winner)}
         <div className="row"><b>User address:</b> {video.userAddress}</div>
         <div className="row"><b>CODE:</b> {(video.code.slice(2,6)).toUpperCase()}</div>

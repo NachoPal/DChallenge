@@ -27,8 +27,7 @@ var mnid = require('mnid');
 export function userLogin() {
   return(dispatch) => {
     const userCredentials = uport.requestCredentials({
-      requested: ['name', 'country', 'avatar', 'email', 'phone'],
-      notifications: true // We want this if we want to recieve credentials
+      requested: ['name', 'country', 'avatar', 'email', 'phone']
     });
 
     userCredentials.then( response => {
@@ -60,7 +59,7 @@ export function userLogout(location, callback) {
 export function fetchUserChallengesIndex(user, callback) {
   return(dispatch) => {
     web3.eth.getPastLogs({
-      fromBlock: 1,
+      fromBlock: "0x1",
       address: proxyAddress,
       topics: [
         encodedEventSignature("challengeParticipation", implementationAbi),
@@ -70,7 +69,7 @@ export function fetchUserChallengesIndex(user, callback) {
     }).then((logs) => {
       const participatingIndex = getChallengesIndex(logs, "challengeParticipation");
       web3.eth.getPastLogs({
-        fromBlock: 1,
+        fromBlock: "0x1",
         address: proxyAddress,
         topics: [
           encodedEventSignature("challengeSubmission", implementationAbi),
@@ -95,7 +94,7 @@ export function fetchUserBalance(userAddress) {
     const inputs = {
       userAddress: userAddress
     }
-    web3.eth.call(proxyOptions("balances", inputs, 0))
+    web3.eth.call(proxyOptions("balances", inputs, 0, false))
     .then((balance) => {
       balance = parseInt(decodeParameters("balances", implementationAbi, balance)["0"]);
       return dispatch({
@@ -108,24 +107,25 @@ export function fetchUserBalance(userAddress) {
 
 export function withdrawBalance(userAddress, amount) {
   return (dispatch) => {
-    web3meta.eth.getAccounts((error, accounts) => {
-      web3meta.eth.defaultAccount = accounts[0];
+    //web3meta.eth.getAccounts((error, accounts) => {
+      //web3.eth.defaultAccount = accounts[0];
 
       const inputs = {
         amount: amount,
         userAddress: mnid.decode(userAddress).address
       }
-
-      web3meta.eth.sendTransaction(proxyOptions("userWithdraw", inputs, 0), (error, txHash) => {
+      const web3uport = uport.getWeb3()
+      //web3meta.eth.sendTransaction(proxyOptions("userWithdraw", inputs, 0, true), (error, txHash) => {
+      web3uport.eth.sendTransaction(proxyOptions("userWithdraw", inputs, 0), (error, txHash) => {
         if(!error) {
           return dispatch({
             type: WITHDRAW_USER_BALANCE,
-            patyload: 0
+            payload: 0
           });
         } else {
           console.log("Withdraw error");
         }
       });
-    });
+    //});
   }
 }

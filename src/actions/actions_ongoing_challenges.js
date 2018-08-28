@@ -12,7 +12,7 @@ import buildChallengesObject from './helpers/build_challenges_object';
 export function fetchOngoingChallenges() {
   return (dispatch) => {
     web3.eth.getPastLogs({
-      fromBlock: 1,
+      fromBlock: "0x1",
       address: proxyAddress,
       topics: [encodedEventSignature("challengeCreation", implementationAbi)]
     }).then((logs) => {

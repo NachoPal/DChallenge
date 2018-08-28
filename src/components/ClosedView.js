@@ -1,8 +1,9 @@
 import React,{ Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchVideos } from '../actions';
+import { fetchVideos, updateWinnerVideo } from '../actions';
 import Video from '../components/Video';
+import Loading from 'react-loading-components';
 import { URL_IPFS } from '../initializers/ipfs';
 
 
@@ -10,14 +11,30 @@ class ClosedView extends Component {
   constructor(props) {
     super(props);
     this.props.fetchVideos(this.props.challenge.id);
+    this.props.updateWinnerVideo(this.props.challenge.id);
   }
 
   renderWinnerVideo() {
     if(this.props.challenge.submissions > 0) {
-      const video = this.props.challenge.winnerVideo;
-      return(
-        <Video video={video} key={video.code} winner={true}/>
-      );
+      if(this.props.challenge.winnerVideo) {
+        const video = this.props.challenge.winnerVideo;
+        return(
+          <Video video={video} key={video.code} winner={true}/>
+        );
+      } else {
+        return(
+          <div className="row">
+            <div className="col-md-4">
+              <h3>Choosing the winner...</h3>
+            </div>
+            <div className="col-md-3">
+              <div className="row" id="video-submit-loader">
+                <Loading type='oval' width={50} height={50} style={{marginTop: 10}} fill='#000'/>
+              </div>
+            </div>
+          </div>
+        );
+      }
     }
   }
 
@@ -76,7 +93,8 @@ function mapStateToProps({ user }) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    fetchVideos
+    fetchVideos,
+    updateWinnerVideo
   }, dispatch);
 }
 

@@ -9,7 +9,8 @@ import {
   LANDING_PATH,
   YOUR_CHALLENGES_PATH,
   CHALLENGE_PATH,
-  ACCOUNT_PATH
+  ACCOUNT_PATH,
+  ADMIN_PATH
 } from '../initializers/routes';
 import TopNav from '../containers/TopNav';
 import Landing from '../containers/Landing';
@@ -19,6 +20,7 @@ import ClosedChallenges from '../containers/ClosedChallenges';
 import YourChallenges from '../containers/YourChallenges';
 import ChallengeView from '../components/ChallengeView';
 import Account from '../components/Account';
+import Admin from '../components/Admin';
 
 
 const App = function() {
@@ -28,6 +30,7 @@ const App = function() {
             <Route path="/" component={TopNav}/>
           <Switch>
             <Route path={`${CHALLENGE_PATH}/:id`} component={ChallengeView} />
+            <Route path={ADMIN_PATH} component={Admin} />
             <Route path={ACCOUNT_PATH} component={Account} />
             <Route path={YOUR_CHALLENGES_PATH} component={YourChallenges} />
             <Route path={CLOSED_CHALLENGES_PATH} component={ClosedChallenges} />

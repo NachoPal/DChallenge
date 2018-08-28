@@ -8,7 +8,7 @@ module.exports = function(callback) {
   const implementation = require('../src/initializers/implementation_info.js');
   const implementationAddress = implementation.implementationAddress;
   const implementationAbi = implementation.implementationAbi;
-
+  
   const challengeInputs = (index) => {
     return {
       title: web3.utils.asciiToHex(`My challenge #${index}`),

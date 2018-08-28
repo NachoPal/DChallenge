@@ -137,7 +137,7 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
     )
         external
     {
-        OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
+        //OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
         oraclize_setProof(proofType_TLSNotary | proofStorage_IPFS);
         submitDelay = _submitDelay;
         txDelay = _txDelay;
@@ -203,28 +203,20 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
 
     /** @dev User participates in a Challenge.
       * @param _challengeId ID of the challenge the user is participating.
-      * @param _userAddress uPort address of the user who is participating.
       */
     function participate(
-        uint _challengeId,
-        address _userAddress
+        uint _challengeId
     )
         external
         payable
-        userHasNotParticipated(_challengeId, _userAddress)
+        userHasNotParticipated(_challengeId, msg.sender)
         whenNotPaused
         challengeIsOpen(_challengeId)
     {
         require(msg.value >= challenges[_challengeId].bettingPrice);
-        //Signing transactions with uPort
-        //challenges[_challengeId].participants[msg.sender] = true;
-        //challenges[_challengeId].participantsCounter++;
-        //emit challengeParticipation(_challengeId, msg.sender);
-
-        //Whitout signing transactions with uPort
-        challenges[_challengeId].participants[_userAddress] = true;
+        challenges[_challengeId].participants[msg.sender] = true;
         challenges[_challengeId].participantsCounter++;
-        emit challengeParticipation(_challengeId, _userAddress);
+        emit challengeParticipation(_challengeId, msg.sender);
     }
 
     /** @dev User submits a video for a challenge.
@@ -233,37 +225,34 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
       * @param _code Code proving timestamp and user ownership.
       * @param _videoDuration Duration of the submitted video.
       * @param _ipfsHash Ipfs hash pointing where the video has been stored.
-      * @param _userAddress uPort address of the user who is submitting the video.
       */
     function submit (
         uint _challengeId,
         uint _blockNumber,
         bytes32 _code,
         uint _videoDuration,
-        string _ipfsHash,
-        address _userAddress
+        string _ipfsHash
     )
         external
-        userHasNotSubmitted(_challengeId, _userAddress)
+        userHasNotSubmitted(_challengeId, msg.sender)
         whenNotPaused
         challengeIsOngoing(_challengeId)
         returns(bool)
     {
-        require(userIsParticipating(_challengeId, _userAddress));
-        require(verifySubmission(_blockNumber, _code, _userAddress, _videoDuration) == true);
-        challenges[_challengeId].submissionsIndex.push(_userAddress);
-        challenges[_challengeId].submissions[_userAddress] = true;
-        emit challengeSubmission(_challengeId, _userAddress, _code, _videoDuration, _ipfsHash);
+        require(userIsParticipating(_challengeId, msg.sender));
+        require(verifySubmission(_blockNumber, _code, msg.sender, _videoDuration) == true);
+        challenges[_challengeId].submissionsIndex.push(msg.sender);
+        challenges[_challengeId].submissions[msg.sender] = true;
+        emit challengeSubmission(_challengeId, msg.sender, _code, _videoDuration, _ipfsHash);
         return true;
     }
 
     /** @dev User withdraws his balance.
       * @param _amount Amount to withdraw.
-      * @param _userAddress uPort address of the user
       */
-    function userWithdraw(uint _amount, address _userAddress) external whenNotPaused {
-        require(balances[_userAddress] >= _amount);
-        balances[_userAddress] -= _amount;
+    function userWithdraw(uint _amount) external whenNotPaused {
+        require(balances[msg.sender] >= _amount);
+        balances[msg.sender] -= _amount;
         msg.sender.transfer(_amount);
     }
 
@@ -308,11 +297,8 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
         uint id = challengesCounter;
         uint length = challengesClosingOrder.length;
         uint startIndex = challengesClosingOrderStartIndex;
-      //------------------------------
-      //challengesClosingOrder.push(id);
-      //------------------------------
 
-        if (length == 0) {
+        if (length == startIndex) {
             challengesClosingOrder.push(id);
         } else {
             for (uint i=length-1; i >= startIndex; i--) {
@@ -320,21 +306,21 @@ contract DChallenge is Ownable, Pausable, usingOraclize {
                     challengesClosingOrder.push(id);
                     break;
                 }
-              if (_closeTime >= challenges[challengesClosingOrder[i]].closeTime) {
-                  challengesClosingOrder.length = length + 1;
-                  for (uint j=length; j > i; j--) {
-                      challengesClosingOrder[j] = challengesClosingOrder[j-1];
-                  }
-                  challengesClosingOrder[i+1] = id;
-                  break;
-              }
-              if (i == startIndex) {
-                  challengesClosingOrder.length = length + 1;
-                  for (uint k=length; k > i; k--) {
-                      challengesClosingOrder[k] = challengesClosingOrder[k-1];
-                  }
-                  challengesClosingOrder[i] = id;
-                  break;
+                if (_closeTime >= challenges[challengesClosingOrder[i]].closeTime) {
+                    challengesClosingOrder.length = length + 1;
+                    for (uint j=length; j > i; j--) {
+                        challengesClosingOrder[j] = challengesClosingOrder[j-1];
+                    }
+                    challengesClosingOrder[i+1] = id;
+                    break;
+                }
+                if (i == startIndex) {
+                    challengesClosingOrder.length = length + 1;
+                    for (uint k=length; k > i; k--) {
+                        challengesClosingOrder[k] = challengesClosingOrder[k-1];
+                    }
+                    challengesClosingOrder[i] = id;
+                    break;
               }
             }
         }

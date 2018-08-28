@@ -4,6 +4,7 @@ import { implementationAbi } from '../initializers/implementation_info';
 import {
   FETCH_CHALLENGE,
   FETCH_VIDEOS,
+  UPDATE_VIDEOS,
   REMOVE_CHALLENGE_DATA
 } from '../initializers/action_types';
 import {
@@ -17,7 +18,7 @@ import getVideosHash from './helpers/get_videos_hash';
 export function fetchChallenge(id) {
   return (dispatch) => {
     web3.eth.getPastLogs({
-      fromBlock: 1,
+      fromBlock: "0x1",
       address: proxyAddress,
       topics: [
         encodedEventSignature("challengeCreation", implementationAbi),
@@ -32,7 +33,7 @@ export function fetchChallenge(id) {
 export function fetchVideos(id) {
   return (dispatch) => {
     web3.eth.getPastLogs({
-      fromBlock: 1,
+      fromBlock: "0x1",
       address: proxyAddress,
       topics: [
         encodedEventSignature("challengeSubmission", implementationAbi),
@@ -41,6 +42,42 @@ export function fetchVideos(id) {
     }).then((logs) => {
           return getVideosHash(logs, dispatch, FETCH_VIDEOS);
       });
+  }
+}
+
+export function updateVideos(id) {
+  return dispatch => {
+    const subscription = web3.eth.subscribe('logs', {
+      address: proxyAddress,
+      topics: [
+        encodedEventSignature("challengeSubmission", implementationAbi),
+        numberTo32bytes(id)
+      ]
+    }, (error, result) => {
+        if(!error) {}
+    }).on("data", (logs) => {
+      return getVideosHash([logs], dispatch, UPDATE_VIDEOS);
+    }).on("changed", (logs) => {
+
+    });
+  }
+}
+
+export function updateWinnerVideo(id) {
+  return (dispatch) => {
+    const subscription = web3.eth.subscribe('logs', {
+      address: proxyAddress,
+      topics: [
+        encodedEventSignature("challengeClosed", implementationAbi),
+        numberTo32bytes(id)
+      ]
+    }, (error, result) => {
+        if(!error) {}
+    }).on("data", (logs) => {
+      location.reload();
+    }).on("changed", (logs) => {
+
+    });
   }
 }
 

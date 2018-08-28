@@ -10,6 +10,7 @@ import {
   FETCH_CLOSED_CHALLENGES,
   FETCH_YOUR_CLOSED_CHALLENGES,
   UPDATE_OPEN_CHALLENGES,
+  UPDATE_YOUR_OPEN_CHALLENGES,
   FETCH_CHALLENGE
 } from '../../initializers/action_types';
 
@@ -30,7 +31,7 @@ export default (logs, dispatch, action) => {
                     });
 
   _.map(decodedLogs, (decodedLog) => {
-      promises.push(web3.eth.call(proxyOptions('challenges', {id: parseInt(decodedLog.id)}, 0)));
+      promises.push(web3.eth.call(proxyOptions('challenges', {id: parseInt(decodedLog.id)}, 0, false)));
   });
 
 
@@ -57,7 +58,7 @@ export default (logs, dispatch, action) => {
         }
 
         promises2.push(web3.eth.getPastLogs({
-          fromBlock: 1,
+          fromBlock: "0x1",
           address: proxyAddress,
           topics: [
             encodedEventSignature("challengeParticipation", implementationAbi),
@@ -66,7 +67,7 @@ export default (logs, dispatch, action) => {
         }));
 
         promises3.push(web3.eth.getPastLogs({
-          fromBlock: 1,
+          fromBlock: "0x1",
           address: proxyAddress,
           topics: [
             encodedEventSignature("challengeSubmission", implementationAbi),
@@ -79,7 +80,7 @@ export default (logs, dispatch, action) => {
 
         if((decodedLogs[count].status == "closed" && closedChallenges) || (decodedLogs[count].status == "closed" && fetchChallenge)) {
           promises4.push(web3.eth.getPastLogs({
-            fromBlock: 1,
+            fromBlock: "0x1",
             address: proxyAddress,
             topics: [
               encodedEventSignature("challengeClosed", implementationAbi),
@@ -125,6 +126,8 @@ export default (logs, dispatch, action) => {
               return decodedLog.status == "open";
             case FETCH_YOUR_OPEN_CHALLENGES:
               return decodedLog.status == "open";
+            case UPDATE_YOUR_OPEN_CHALLENGES:
+              return decodedLog.status == "open";
             case FETCH_ONGOING_CHALLENGES:
               return decodedLog.status == "ongoing";
             case FETCH_YOUR_ONGOING_CHALLENGES:
@@ -140,31 +143,35 @@ export default (logs, dispatch, action) => {
 
         Promise.all(promises4).then(logs => {
           var count = 0;
-          _.map(logs, log => {
-            var decoded = web3.eth.abi.decodeLog(
-                            getAbiByFunctionNames(implementationAbi)["challengeClosed"].inputs,
-                            log[0].data,
-                            _.drop(log[0].topics)
-                          );
-            if(!_.isEmpty(decodedLogs)) {
-              decodedLogs[count]["winner"] = decoded.winner;
+            _.map(logs, log => {
+              if(!_.isEmpty(log)){
+                var decoded = web3.eth.abi.decodeLog(
+                                getAbiByFunctionNames(implementationAbi)["challengeClosed"].inputs,
+                                log[0].data,
+                                _.drop(log[0].topics)
+                              );
+                if(!_.isEmpty(decodedLogs)) {
+                  decodedLogs[count]["winner"] = decoded.winner;
 
-              if(decodedLogs[count].winner == true) {
-                decodedLogs[count]["winnerAddress"] = decoded.winnerAddress;
-                decodedLogs[count]["prizeAmount"] = decoded.prizeAmount;
-                decodedLogs[count]["randomNumber"] = decoded.randomNumber;
+                  if(decodedLogs[count].winner == true) {
+                    decodedLogs[count]["winnerAddress"] = decoded.winnerAddress;
+                    decodedLogs[count]["prizeAmount"] = decoded.prizeAmount;
+                    decodedLogs[count]["randomNumber"] = decoded.randomNumber;
 
-                const winnerSubmission = decodedLogs[count].submissionsData[decoded.winnerAddress];
-                decodedLogs[count]["winnerVideo"] = {};
-                decodedLogs[count].winnerVideo["code"] = winnerSubmission.code;
-                decodedLogs[count].winnerVideo["duration"] = winnerSubmission.videoDuration;
-                decodedLogs[count].winnerVideo["ipfsHash"] = winnerSubmission.ipfsHash;
-                decodedLogs[count].winnerVideo["userAddress"] = decoded.winnerAddress;
+                    const winnerSubmission = decodedLogs[count].submissionsData[decoded.winnerAddress];
+                    decodedLogs[count]["winnerVideo"] = {};
+                    decodedLogs[count].winnerVideo["code"] = winnerSubmission.code;
+                    decodedLogs[count].winnerVideo["duration"] = winnerSubmission.videoDuration;
+                    decodedLogs[count].winnerVideo["ipfsHash"] = winnerSubmission.ipfsHash;
+                    decodedLogs[count].winnerVideo["userAddress"] = decoded.winnerAddress;
+                  }
+                }
+
+                count++;
               }
-            }
+            });
+          //}
 
-            count++;
-          });
 
           var payload = null;
 
@@ -181,11 +188,11 @@ export default (logs, dispatch, action) => {
               case FETCH_ONGOING_CHALLENGES:
                 payload = _.orderBy(payload, 'closeTime', 'asc');
               case FETCH_CLOSED_CHALLENGES:
-                payload = _.orderBy(payload, 'closeTime', 'asc');
+                payload = _.orderBy(payload, 'closeTime', 'desc');
             }
             payload = _.mapKeys(decodedLogs, 'id')
           }
-
+          
           return dispatch({
                    type: action,
                    payload: payload

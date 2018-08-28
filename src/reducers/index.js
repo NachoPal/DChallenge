@@ -1,4 +1,6 @@
 import { combineReducers } from 'redux';
+import {reducer as FormReducer } from 'redux-form';
+
 import OpenChallengesReducer from './reducer_open_challenges';
 import OngoingChallengesReducer from './reducer_ongoing_challenges';
 import ClosedChallengesReducer from './reducer_closed_challenges';
@@ -12,6 +14,8 @@ import YourClosedChallengesReducer from './reducer_your_closed_challenges';
 
 import ChallengeViewReducer from './reducer_challenge_view';
 
+import OwnerReducer from './reducer_owner';
+
 
 const rootReducer = combineReducers({
   challenge: ChallengeViewReducer,
@@ -23,6 +27,8 @@ const rootReducer = combineReducers({
   yourOngoing: YourOngoingChallengesReducer,
   yourClosed: YourClosedChallengesReducer,
   submit: SubmitChallengeReducer,
+  form: FormReducer,
+  owner: OwnerReducer
 });
 
 export default rootReducer;
